@@ -9,13 +9,8 @@ using System.Threading.Tasks;
 
 namespace BL.Services
 {
-    public class StudentService : BaseService, IService
+    public class StudentService : PersonService, IService
     {
-        public void Dispose()
-        {
-            
-        }
-
         private Student MapDtoToEntity(StudentDto dto)
         {
             return new Student();
@@ -33,12 +28,8 @@ namespace BL.Services
                 uow.Repository<Student>(repo =>
                 {
                     Student student = MapDtoToEntity(dto);
-                    student.Person = Service<PersonService, Person>(service =>
-                    {
-                        Person person = service.MapDtoToEntity(dto);
-                        service.AddPerson(person);
-                        return person;
-                    });
+                    student.Person = MapDtoToPersonEntity(dto);
+                    student.Person.ContactInfo = MapDtoToContactInfoEntity(dto);
                     repo.Add(student);
                 });
             });
@@ -48,9 +39,22 @@ namespace BL.Services
         {
             Db.UnitOfWork(uow =>
             {
-                Service<PersonService>(service => service.UpdatePerson(service.MapDtoToEntity(dto)));
-                uow.Repository<Student>(repo => repo.Update(MapDtoToEntity(dto)));
+                uow.Repository<Student>(repo =>
+                {
+                    Student student = MapDtoToEntity(dto);
+                    repo.Update(student);
+                });
             });
+        }
+
+        public void UpdateStudentPersonalInfo(StudentDto dto)
+        {
+            UpdatePersonalInfo(MapDtoToPersonEntity(dto));
+        }
+
+        public void UpdateStudentContactInfo(StudentDto dto)
+        {
+            UpdateContactInfo(MapDtoToContactInfoEntity(dto));
         }
     }
 }

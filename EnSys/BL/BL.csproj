@@ -47,10 +47,13 @@
     <Compile Include="Dto\PersonDto.cs" />
     <Compile Include="Dto\SubjectDto.cs" />
     <Compile Include="Dto\InstructorDto.cs" />
+    <Compile Include="Interfaces\IContactInfo.cs" />
+    <Compile Include="Interfaces\IPersonInfo.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CourseService.cs" />
-    <Compile Include="Services\PersonService.cs" />
     <Compile Include="Services\RoomService.cs" />
+    <Compile Include="Services\ClassService.cs" />
+    <Compile Include="Services\PersonService.cs" />
     <Compile Include="Services\SubjectService.cs" />
     <Compile Include="Services\InstructorService.cs" />
     <Compile Include="Services\StudentService.cs" />
@@ -68,6 +71,7 @@
       <Name>Util</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

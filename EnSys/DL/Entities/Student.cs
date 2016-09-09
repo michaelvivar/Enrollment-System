@@ -24,9 +24,9 @@ namespace DL.Entities
         [ForeignKey("CourseId")]
         public Course Course { get; set; }
 
-        public int CreatedBy { get; set; }
-        [ForeignKey("CreatedBy")]
-        public virtual User User { get; set; }
+        //public int CreatedBy { get; set; }
+        //[ForeignKey("CreatedBy")]
+        //public virtual User User { get; set; }
 
         public int PersonId { get; set; }
         [ForeignKey("PersonId")]

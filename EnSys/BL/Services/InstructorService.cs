@@ -10,13 +10,8 @@ using Util.Enums;
 
 namespace BL.Services
 {
-    public class InstructorService : BaseService, IService
+    public class InstructorService : PersonService, IService
     {
-        public void Dispose()
-        {
-            
-        }
-
         private Instrcutor MapDtoToEntity(InstructorDto dto)
         {
             return new Instrcutor();
@@ -34,12 +29,8 @@ namespace BL.Services
                 uow.Repository<Instrcutor>(repo =>
                 {
                     Instrcutor teacher = MapDtoToEntity(dto);
-                    teacher.Person = Service<PersonService, Person>(service =>
-                    {
-                        Person person = service.MapDtoToEntity(dto);
-                        service.AddPerson(person);
-                        return person;
-                    });
+                    teacher.Person = MapDtoToPersonEntity(dto);
+                    teacher.Person.ContactInfo = MapDtoToContactInfoEntity(dto);
                     repo.Add(teacher);
                 });
             });
@@ -49,9 +40,18 @@ namespace BL.Services
         {
             Db.UnitOfWork(uow =>
             {
-                Service<PersonService>(service => service.UpdatePerson(service.MapDtoToEntity(dto)));
                 uow.Repository<Instrcutor>(repo => repo.Update(MapDtoToEntity(dto)));
             });
+        }
+
+        public void UpdateInstructorPersonalInfo(InstructorDto dto)
+        {
+            UpdatePersonalInfo(MapDtoToPersonEntity(dto));
+        }
+
+        public void UpdateInstructorContactInfo(InstructorDto dto)
+        {
+            UpdateContactInfo(MapDtoToContactInfoEntity(dto));
         }
 
         public void ActivateTeacher(int id)

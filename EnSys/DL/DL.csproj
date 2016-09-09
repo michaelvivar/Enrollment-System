@@ -52,6 +52,7 @@
     <Compile Include="Context.cs" />
     <Compile Include="Db.cs" />
     <Compile Include="Entities\ClassSchedule.cs" />
+    <Compile Include="Entities\ContactInfo.cs" />
     <Compile Include="Entities\Course.cs" />
     <Compile Include="Entities\CourseSubjectMapping.cs" />
     <Compile Include="Entities\Person.cs" />

@@ -1,4 +1,5 @@
 ﻿using BL.Dto;
+using BL.Interfaces;
 using DL;
 using DL.Entities;
 using System;
@@ -9,30 +10,31 @@ using System.Threading.Tasks;
 
 namespace BL.Services
 {
-    internal class PersonService : IService
+    public abstract class PersonService : BaseService, IDisposable
     {
-        public Person MapDtoToEntity(PersonDto dto)
+        public void Dispose()
+        {
+            
+        }
+
+        protected Person MapDtoToPersonEntity(IPersonInfo dto)
         {
             return new Person();
         }
 
-        public Person AddPerson(Person person)
+        protected ContactInfo MapDtoToContactInfoEntity(IContactInfo dto)
         {
-            return Db.UnitOfWork(uow => uow.Repository<Person, Person>(repo =>
-            {
-                repo.Add(person);
-                return person;
-            }));
+            return new ContactInfo();
         }
 
-        public void UpdatePerson(Person person)
+        protected void UpdatePersonalInfo(Person entity)
         {
-            Db.UnitOfWork(uow => uow.Repository<Person>(repo => repo.Update(person)));
+            Db.UnitOfWork(uow => uow.Repository<Person>(repo => repo.Update(entity)));
         }
 
-        public void Dispose()
+        protected void UpdateContactInfo(ContactInfo entity)
         {
-            throw new NotImplementedException();
+            Db.UnitOfWork(uow => uow.Repository<ContactInfo>(repo => repo.Update(entity)));
         }
     }
 }

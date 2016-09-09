@@ -17,20 +17,23 @@ namespace DL
 
         public void Repository<TEntity>(Action<IRepository<TEntity>> action) where TEntity : class
         {
-            if (Container.Any(o => o.Type != typeof(TEntity)))
-            {
-                Container.Add(new RepositoryContainer(typeof(TEntity), new Repository<TEntity>(Context)));
-            }
-            action.Invoke((IRepository<TEntity>)Container.Find(o => o.Type == typeof(TEntity)).Repository);
+            action.Invoke(GetRepository<TEntity>());
         }
 
         public TOut Repository<TEntity, TOut>(Func<IRepository<TEntity>, TOut> action) where TEntity : class
         {
+            return action.Invoke(GetRepository<TEntity>());
+        }
+
+        private IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
+        {
             if (Container.Any(o => o.Type != typeof(TEntity)))
             {
-                Container.Add(new RepositoryContainer(typeof(TEntity), new Repository<TEntity>(Context)));
+                IRepository<TEntity> repository = new Repository<TEntity>(Context);
+                Container.Add(new RepositoryContainer(typeof(TEntity), repository));
+                return repository;
             }
-            return action.Invoke((IRepository<TEntity>)Container.Find(o => o.Type == typeof(TEntity)).Repository);
+            return (IRepository<TEntity>)Container.Find(o => o.Type == typeof(TEntity)).Repository;
         }
 
         public void SaveChanges()

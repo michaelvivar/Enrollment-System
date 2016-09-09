@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Util.Enums;
 
 namespace DL.Entities
 {
@@ -18,6 +19,9 @@ namespace DL.Entities
         [Required]
         public DateTime BirthDate { get; set; }
         [Required]
-        public int Gender { get; set; }
+        public Gender Gender { get; set; }
+
+        public int ContactInfoId { get; set; }
+        public virtual ContactInfo ContactInfo { get; set; }
     }
 }
