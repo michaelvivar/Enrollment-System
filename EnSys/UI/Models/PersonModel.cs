@@ -1,14 +1,14 @@
-﻿using BL.Interfaces;
+﻿using BL.Dto;
+using BL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 using Util.Enums;
 
-namespace BL.Dto
+namespace UI.Models
 {
-    public class PersonDto : IPersonInfo
+    public class PersonModel : IPersonInfo
     {
         public int Id { get; set; }
         public string FirstName { get; set; }

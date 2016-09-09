@@ -22,9 +22,19 @@ namespace BL.Services
             return new Person();
         }
 
+        protected IPersonInfo MapEntityToPersonInfo(Person entity)
+        {
+            return new PersonDto();
+        }
+
         protected ContactInfo MapDtoToContactInfoEntity(IContactInfo dto)
         {
             return new ContactInfo();
+        }
+
+        protected IContactInfo MapEntityToContactInfo(ContactInfo entity)
+        {
+            return new ContactInfoDto();
         }
 
         protected void UpdatePersonalInfo(Person entity)
@@ -36,5 +46,9 @@ namespace BL.Services
         {
             Db.UnitOfWork(uow => uow.Repository<ContactInfo>(repo => repo.Update(entity)));
         }
+
+        public abstract IPersonInfo GetPersonInfo(int id);
+
+        public abstract IContactInfo GetContactInfo(int id);
     }
 }

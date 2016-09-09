@@ -8,7 +8,7 @@ namespace BL.Interfaces
 {
     public interface IContactInfo
     {
-        int ContactInfoId { get; set; }
+        int Id { get; set; }
         string Email { get; set; }
         string Telephone { get; set; }
         string Mobile { get; set; }

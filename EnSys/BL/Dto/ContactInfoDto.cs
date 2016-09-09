@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace BL.Dto
 {
-    public class InstructorDto : IInstructor
+    public class ContactInfoDto : IContactInfo
     {
         public int Id { get; set; }
-        public IPersonInfo PersonInfo { get; set; }
-        public IContactInfo ContactInfo { get; set; }
+        public string Email { get; set; }
+        public string Telephone { get; set; }
+        public string Mobile { get; set; }
     }
 }

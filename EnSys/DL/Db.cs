@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Linq;
+
 namespace DL
 {
     public static class Db
@@ -43,6 +45,14 @@ namespace DL
                 {
                     return (TOut)Convert.ChangeType(e.Message, typeof(TOut));
                 }
+            }
+        }
+
+        public static TOut Context<TOut>(Func<Context, TOut> action)
+        { 
+            using (Context context = new Context())
+            {
+                return action.Invoke(context);
             }
         }
     }

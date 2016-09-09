@@ -7,12 +7,10 @@ using Util.Enums;
 
 namespace BL.Interfaces
 {
-    public interface IPersonInfo
+    public interface IInstructor
     {
         int Id { get; set; }
-        string FirstName { get; set; }
-        string LastName { get; set; }
-        DateTime BirthDate { get; set; }
-        Gender Gender { get; set; }
+        IPersonInfo PersonInfo { get; set; }
+        IContactInfo ContactInfo { get; set; }
     }
 }

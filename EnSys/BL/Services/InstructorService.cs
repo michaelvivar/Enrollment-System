@@ -1,4 +1,5 @@
 ﻿using BL.Dto;
+using BL.Interfaces;
 using DL;
 using DL.Entities;
 using System;
@@ -29,8 +30,8 @@ namespace BL.Services
                 uow.Repository<Instrcutor>(repo =>
                 {
                     Instrcutor teacher = MapDtoToEntity(dto);
-                    teacher.Person = MapDtoToPersonEntity(dto);
-                    teacher.Person.ContactInfo = MapDtoToContactInfoEntity(dto);
+                    teacher.Person = MapDtoToPersonEntity(dto.PersonInfo);
+                    teacher.Person.ContactInfo = MapDtoToContactInfoEntity(dto.ContactInfo);
                     repo.Add(teacher);
                 });
             });
@@ -46,12 +47,12 @@ namespace BL.Services
 
         public void UpdateInstructorPersonalInfo(InstructorDto dto)
         {
-            UpdatePersonalInfo(MapDtoToPersonEntity(dto));
+            UpdatePersonalInfo(MapDtoToPersonEntity(dto.PersonInfo));
         }
 
         public void UpdateInstructorContactInfo(InstructorDto dto)
         {
-            UpdateContactInfo(MapDtoToContactInfoEntity(dto));
+            UpdateContactInfo(MapDtoToContactInfoEntity(dto.ContactInfo));
         }
 
         public void ActivateTeacher(int id)
@@ -71,6 +72,22 @@ namespace BL.Services
                 Instrcutor teacher = repo.Get(id);
                 teacher.Status = Status.Deactive;
                 repo.Update(teacher);
+            }));
+        }
+
+        public override IPersonInfo GetPersonInfo(int id)
+        {
+            return Db.UnitOfWork(uow => uow.Repository<Instrcutor, IPersonInfo>(repo =>
+            {
+                return repo.Get(o => o.Id == id).Select(o => MapEntityToPersonInfo(o.Person)).SingleOrDefault();
+            }));
+        }
+
+        public override IContactInfo GetContactInfo(int id)
+        {
+            return Db.UnitOfWork(uow => uow.Repository<Instrcutor, IContactInfo>(repo =>
+            {
+                return repo.Get(o => o.Id == id).Select(o => MapEntityToContactInfo(o.Person.ContactInfo)).SingleOrDefault();
             }));
         }
     }

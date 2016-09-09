@@ -46,7 +46,7 @@ namespace DL
             return Context.Set<TEntity>().Find(id);
         }
 
-        public IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>> predicate)
+        public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate)
         {
             return Context.Set<TEntity>().Where(predicate);
         }
@@ -56,7 +56,7 @@ namespace DL
             return Context.Set<TEntity>().SingleOrDefault(predicate);
         }
 
-        public IEnumerable<TEntity> All()
+        public IQueryable<TEntity> All()
         {
             return Context.Set<TEntity>().AsQueryable();
         }
@@ -70,8 +70,8 @@ namespace DL
         void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entities);
         TEntity Get(int id);
-        IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>> predicate);
+        IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate);
         TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate);
-        IEnumerable<TEntity> All();
+        IQueryable<TEntity> All();
     }
 }
