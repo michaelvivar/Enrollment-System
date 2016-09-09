@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{32912A2D-6684-4A68-9C44-8E33F5331300}</ProjectGuid>
+    <ProjectGuid>{CEC0C9F2-2235-4AC4-B6C5-707AC2A420D4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BL</RootNamespace>
-    <AssemblyName>BL</AssemblyName>
+    <RootNamespace>Util</RootNamespace>
+    <AssemblyName>Util</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,7 +31,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -41,32 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dto\CourseDto.cs" />
-    <Compile Include="Dto\RoomDto.cs" />
-    <Compile Include="Dto\StudentDto.cs" />
-    <Compile Include="Dto\PersonDto.cs" />
-    <Compile Include="Dto\SubjectDto.cs" />
-    <Compile Include="Dto\InstructorDto.cs" />
-    <Compile Include="Services\BaseService.cs" />
-    <Compile Include="Services\CourseService.cs" />
-    <Compile Include="Services\PersonService.cs" />
-    <Compile Include="Services\RoomService.cs" />
-    <Compile Include="Services\SubjectService.cs" />
-    <Compile Include="Services\InstructorService.cs" />
-    <Compile Include="Services\StudentService.cs" />
-    <Compile Include="Services\SampleService.cs" />
-    <Compile Include="Transaction.cs" />
+    <Compile Include="Enums\Status.cs" />
+    <Compile Include="Enums\YearLevel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DL\DL.csproj">
-      <Project>{7d440537-c4b8-45a0-92fe-e910b1b4731a}</Project>
-      <Name>DL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Util\Util.csproj">
-      <Project>{CEC0C9F2-2235-4AC4-B6C5-707AC2A420D4}</Project>
-      <Name>Util</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

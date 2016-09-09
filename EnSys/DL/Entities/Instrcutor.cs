@@ -9,20 +9,14 @@ using Util.Enums;
 
 namespace DL.Entities
 {
-    public class Student
+    public class Instrcutor
     {
         [Key]
         public int Id { get; set; }
         [Required]
-        public YearLevel Level { get; set; }
-        [Required]
         public Status Status { get; set; }
         [Required]
         public DateTime CreatedDate { get; set; }
-
-        public int CourseId { get; set; }
-        [ForeignKey("CourseId")]
-        public Course Course { get; set; }
 
         public int CreatedBy { get; set; }
         [ForeignKey("CreatedBy")]

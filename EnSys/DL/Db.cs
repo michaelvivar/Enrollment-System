@@ -23,18 +23,25 @@ namespace DL
             }
             else
             {
-                using (DbContext context = new Context())
+                try
                 {
-                    StaticContext = context;
-                    StaticUnitOfWork = new UnitOfWork(StaticContext);
-                    var o = action.Invoke(StaticUnitOfWork);
-                    if (StaticContext.ChangeTracker.HasChanges())
+                    using (DbContext context = new Context())
                     {
-                        StaticContext.SaveChanges();
+                        StaticContext = context;
+                        StaticUnitOfWork = new UnitOfWork(StaticContext);
+                        var o = action.Invoke(StaticUnitOfWork);
+                        if (StaticContext.ChangeTracker.HasChanges())
+                        {
+                            StaticContext.SaveChanges();
+                        }
+                        StaticContext = null;
+                        StaticUnitOfWork = null;
+                        return o;
                     }
-                    StaticContext = null;
-                    StaticUnitOfWork = null;
-                    return o;
+                }
+                catch (Exception e)
+                {
+                    return (TOut)Convert.ChangeType(e.Message, typeof(TOut));
                 }
             }
         }

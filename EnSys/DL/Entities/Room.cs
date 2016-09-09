@@ -7,17 +7,14 @@ using System.Threading.Tasks;
 
 namespace DL.Entities
 {
-    public class Person
+    public class Room
     {
         [Key]
         public int Id { get; set; }
         [Required]
-        public string FirstName { get; set; }
+        public string Number { get; set; }
+        public string Remarks { get; set; }
         [Required]
-        public string LastName { get; set; }
-        [Required]
-        public DateTime BirthDate { get; set; }
-        [Required]
-        public int Gender { get; set; }
+        public int Capacity { get; set; }
     }
 }
