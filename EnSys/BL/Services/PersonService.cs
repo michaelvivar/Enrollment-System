@@ -17,12 +17,12 @@ namespace BL.Services
             
         }
 
-        protected Person MapDtoToPersonEntity(IPersonInfo dto)
+        protected Person MapDtoToPersonEntity(IPersonalInfo dto)
         {
             return new Person();
         }
 
-        protected IPersonInfo MapEntityToPersonInfo(Person entity)
+        protected IPersonalInfo MapEntityToPersonInfo(Person entity)
         {
             return new PersonDto();
         }
@@ -47,8 +47,8 @@ namespace BL.Services
             Db.UnitOfWork(uow => uow.Repository<ContactInfo>(repo => repo.Update(entity)));
         }
 
-        public abstract IPersonInfo GetPersonInfo(int id);
+        public abstract IPersonalInfo GetStudentPersonalInfo(int id);
 
-        public abstract IContactInfo GetContactInfo(int id);
+        public abstract IContactInfo GetStudentContactInfo(int id);
     }
 }

@@ -10,7 +10,7 @@ namespace BL.Dto
     public class InstructorDto : IInstructor
     {
         public int Id { get; set; }
-        public IPersonInfo PersonInfo { get; set; }
+        public IPersonalInfo PersonInfo { get; set; }
         public IContactInfo ContactInfo { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace UI.Controllers
     public class StudentController : BaseController
     {
         [HttpPost]
-        public ActionResult Create(StudentModel model)
+        public ActionResult Create(StudentWithPersonInfo model)
         {
             if (ModelState.IsValid)
             {
@@ -33,7 +33,7 @@ namespace UI.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditPersonInfo(PersonModel model)
+        public ActionResult EditPersonInfo(PersonalInfoModel model)
         {
             if (ModelState.IsValid)
             {
@@ -50,7 +50,7 @@ namespace UI.Controllers
         [HttpGet]
         public ActionResult EditContactInfo(int id)
         {
-            ContactInfoModel model = Service<StudentService, ContactInfoModel>(service => MapDtoToContactInfoModel(service.GetContactInfo(id)));
+            ContactInfoModel model = Service<StudentService, ContactInfoModel>(service => MapDtoToContactInfoModel(service.GetStudentContactInfo(id)));
             return View(model);
         }
 

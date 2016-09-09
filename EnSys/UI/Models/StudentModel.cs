@@ -10,4 +10,9 @@ namespace UI.Models
     {
 
     }
+
+    public class StudentWithPersonInfo : StudentWithPersonalInfoDto
+    {
+
+    }
 }

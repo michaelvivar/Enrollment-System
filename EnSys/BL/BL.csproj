@@ -57,7 +57,7 @@
     <Compile Include="Dto\SubjectDto.cs" />
     <Compile Include="Dto\InstructorDto.cs" />
     <Compile Include="Interfaces\IContactInfo.cs" />
-    <Compile Include="Interfaces\IPersonInfo.cs" />
+    <Compile Include="Interfaces\IPersonalInfo.cs" />
     <Compile Include="Interfaces\IInstructor.cs" />
     <Compile Include="Interfaces\IStudent.cs" />
     <Compile Include="Services\BaseService.cs" />

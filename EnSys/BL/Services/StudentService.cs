@@ -26,14 +26,14 @@ namespace BL.Services
             return new StudentDto();
         }
 
-        public void AddStudent(IStudentWithPersonInfo dto)
+        public void AddStudent(IStudentWithPersonalInfo dto)
         {
             Db.UnitOfWork(uow =>
             {
                 uow.Repository<Student>(repo =>
                 {
                     Student student = MapDtoToEntity((StudentDto)dto);
-                    student.Person = MapDtoToPersonEntity(dto.PersonInfo);
+                    student.Person = MapDtoToPersonEntity(dto.PersonalInfo);
                     student.Person.ContactInfo = MapDtoToContactInfoEntity(dto.ContactInfo);
                     repo.Add(student);
                 });
@@ -52,7 +52,7 @@ namespace BL.Services
             });
         }
 
-        public void UpdateStudentPersonalInfo(IPersonInfo person)
+        public void UpdateStudentPersonalInfo(IPersonalInfo person)
         {
             UpdatePersonalInfo(MapDtoToPersonEntity(person));
         }
@@ -62,7 +62,7 @@ namespace BL.Services
             UpdateContactInfo(MapDtoToContactInfoEntity(contact));
         }
 
-        public IEnumerable<IStudent> GetByClassId(int id)
+        public IEnumerable<IStudent> GetStudentsByClassId(int id)
         {
             return Db.Context(context =>
             {
@@ -78,7 +78,7 @@ namespace BL.Services
             });
         }
 
-        public override IPersonInfo GetPersonInfo(int id)
+        public override IPersonalInfo GetStudentPersonalInfo(int id)
         {
             return Db.Context(context =>
             {
@@ -97,7 +97,7 @@ namespace BL.Services
             });
         }
 
-        public override IContactInfo GetContactInfo(int id)
+        public override IContactInfo GetStudentContactInfo(int id)
         {
             return Db.Context(context =>
             {

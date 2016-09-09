@@ -75,15 +75,15 @@ namespace BL.Services
             }));
         }
 
-        public override IPersonInfo GetPersonInfo(int id)
+        public override IPersonalInfo GetStudentPersonalInfo(int id)
         {
-            return Db.UnitOfWork(uow => uow.Repository<Instrcutor, IPersonInfo>(repo =>
+            return Db.UnitOfWork(uow => uow.Repository<Instrcutor, IPersonalInfo>(repo =>
             {
                 return repo.Get(o => o.Id == id).Select(o => MapEntityToPersonInfo(o.Person)).SingleOrDefault();
             }));
         }
 
-        public override IContactInfo GetContactInfo(int id)
+        public override IContactInfo GetStudentContactInfo(int id)
         {
             return Db.UnitOfWork(uow => uow.Repository<Instrcutor, IContactInfo>(repo =>
             {

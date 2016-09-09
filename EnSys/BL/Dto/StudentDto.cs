@@ -20,9 +20,9 @@ namespace BL.Dto
         public DateTime CreatedDate { get; set; }
     }
 
-    public class StudentWithPersonInfoDto : StudentDto, IStudentWithPersonInfo
+    public class StudentWithPersonalInfoDto : StudentDto, IStudentWithPersonalInfo
     {
-        public IPersonInfo PersonInfo { get; set; }
+        public IPersonalInfo PersonalInfo { get; set; }
         public IContactInfo ContactInfo { get; set; }
     }
 }

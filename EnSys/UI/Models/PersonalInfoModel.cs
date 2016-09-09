@@ -8,7 +8,7 @@ using Util.Enums;
 
 namespace UI.Models
 {
-    public class PersonModel : IPersonInfo
+    public class PersonalInfoModel : IPersonalInfo
     {
         public int Id { get; set; }
         public string FirstName { get; set; }

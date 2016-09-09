@@ -55,11 +55,6 @@ namespace DL
         {
             return Context.Set<TEntity>().SingleOrDefault(predicate);
         }
-
-        public IQueryable<TEntity> All()
-        {
-            return Context.Set<TEntity>().AsQueryable();
-        }
     }
 
     public interface IRepository<TEntity>
@@ -72,6 +67,5 @@ namespace DL
         TEntity Get(int id);
         IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate);
         TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate);
-        IQueryable<TEntity> All();
     }
 }

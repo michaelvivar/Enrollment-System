@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Util.Enums;
 
 namespace BL.Services
 {
@@ -31,9 +32,9 @@ namespace BL.Services
             return Db.UnitOfWork(uow => uow.Repository<Room, RoomDto>(repo => MapEntityToDto(repo.Get(id))));
         }
 
-        public List<RoomDto> GetAll()
+        public IEnumerable<RoomDto> GetAll()
         {
-            return Db.UnitOfWork(uow => uow.Repository<Room, List<RoomDto>>(repo => repo.All().OrderBy(o => o.Number).Select(o => MapEntityToDto(o)).ToList()));
+            return Db.Context(context => context.Rooms.Where(o => o.Status == Status.Active).OrderBy(o => o.Number).Select(o => MapEntityToDto(o))).ToList();
         }
 
         public void AddRoom(RoomDto dto)

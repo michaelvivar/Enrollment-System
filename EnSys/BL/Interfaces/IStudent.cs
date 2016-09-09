@@ -19,9 +19,9 @@ namespace BL.Interfaces
         string Course { get; set; }
     }
 
-    public interface IStudentWithPersonInfo
+    public interface IStudentWithPersonalInfo
     {
-        IPersonInfo PersonInfo { get; set; }
+        IPersonalInfo PersonalInfo { get; set; }
         IContactInfo ContactInfo { get; set; }
     }
 }

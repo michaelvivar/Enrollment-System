@@ -8,7 +8,7 @@ using Util.Enums;
 
 namespace BL.Dto
 {
-    public class PersonDto : IPersonInfo
+    public class PersonDto : IPersonalInfo
     {
         public int Id { get; set; }
         public string FirstName { get; set; }

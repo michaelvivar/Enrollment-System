@@ -10,7 +10,7 @@ namespace BL.Interfaces
     public interface IInstructor
     {
         int Id { get; set; }
-        IPersonInfo PersonInfo { get; set; }
+        IPersonalInfo PersonInfo { get; set; }
         IContactInfo ContactInfo { get; set; }
     }
 }
