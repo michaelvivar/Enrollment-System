@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dto\ClassScheduleDto.cs" />
     <Compile Include="Dto\ContactInfoDto.cs" />
     <Compile Include="Dto\CourseDto.cs" />
     <Compile Include="Dto\RoomDto.cs" />
@@ -56,14 +57,18 @@
     <Compile Include="Dto\PersonDto.cs" />
     <Compile Include="Dto\SubjectDto.cs" />
     <Compile Include="Dto\InstructorDto.cs" />
+    <Compile Include="Interfaces\IClassSchedule.cs" />
     <Compile Include="Interfaces\IContactInfo.cs" />
+    <Compile Include="Interfaces\ICourse.cs" />
     <Compile Include="Interfaces\IPersonalInfo.cs" />
     <Compile Include="Interfaces\IInstructor.cs" />
+    <Compile Include="Interfaces\IRoom.cs" />
     <Compile Include="Interfaces\IStudent.cs" />
+    <Compile Include="Interfaces\ISubject.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CourseService.cs" />
     <Compile Include="Services\RoomService.cs" />
-    <Compile Include="Services\ClassService.cs" />
+    <Compile Include="Services\ClassScheduleService.cs" />
     <Compile Include="Services\PersonService.cs" />
     <Compile Include="Services\SubjectService.cs" />
     <Compile Include="Services\InstructorService.cs" />

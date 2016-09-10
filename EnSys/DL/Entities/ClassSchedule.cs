@@ -19,7 +19,7 @@ namespace DL.Entities
 
         public int InstructorId { get; set; }
         [ForeignKey("InstructorId")]
-        public virtual Instrcutor Instrcutor { get; set; }
+        public virtual Instructor Instructor { get; set; }
 
         public int SubjectId { get; set; }
         [ForeignKey("SubjectId")]

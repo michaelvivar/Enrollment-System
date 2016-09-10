@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Util.Enums;
 
 namespace DL.Entities
 {
@@ -12,6 +13,7 @@ namespace DL.Entities
     {
         [Key]
         public int Id { get; set; }
+        public YearLevel Level { get; set; }
 
         public int CourseId { get; set; }
         [ForeignKey("CourseId")]

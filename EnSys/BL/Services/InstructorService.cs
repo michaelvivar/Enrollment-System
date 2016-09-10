@@ -13,12 +13,12 @@ namespace BL.Services
 {
     public class InstructorService : PersonService, IService
     {
-        private Instrcutor MapDtoToEntity(IInstructor dto)
+        private Instructor MapDtoToEntity(IInstructor dto)
         {
-            return new Instrcutor();
+            return new Instructor();
         }
 
-        private IInstructor MapEntityToDto(Instrcutor entity)
+        private IInstructor MapEntityToDto(Instructor entity)
         {
             return new InstructorDto();
         }
@@ -27,9 +27,9 @@ namespace BL.Services
         {
             Db.UnitOfWork(uow =>
             {
-                uow.Repository<Instrcutor>(repo =>
+                uow.Repository<Instructor>(repo =>
                 {
-                    Instrcutor teacher = MapDtoToEntity(dto);
+                    Instructor teacher = MapDtoToEntity(dto);
                     teacher.Person = MapDtoToPersonEntity(dto);
                     teacher.Person.ContactInfo = MapDtoToContactInfoEntity(dto);
                     repo.Add(teacher);
@@ -41,26 +41,26 @@ namespace BL.Services
         {
             Db.UnitOfWork(uow =>
             {
-                uow.Repository<Instrcutor>(repo => repo.Update(MapDtoToEntity(dto)));
+                uow.Repository<Instructor>(repo => repo.Update(MapDtoToEntity(dto)));
             });
         }
 
-        public void ActivateTeacher(int id)
+        public void ActivateInstructor(int id)
         {
-            Db.UnitOfWork(uow => uow.Repository<Instrcutor>(repo =>
+            Db.UnitOfWork(uow => uow.Repository<Instructor>(repo =>
             {
-                Instrcutor teacher = repo.Get(id);
+                Instructor teacher = repo.Get(id);
                 teacher.Status = Status.Active;
                 repo.Update(teacher);
             }));
         }
 
-        public void DeactivateTeacher(int id)
+        public void InactivateInstructor(int id)
         {
-            Db.UnitOfWork(uow => uow.Repository<Instrcutor>(repo =>
+            Db.UnitOfWork(uow => uow.Repository<Instructor>(repo =>
             {
-                Instrcutor teacher = repo.Get(id);
-                teacher.Status = Status.Deactive;
+                Instructor teacher = repo.Get(id);
+                teacher.Status = Status.Inactive;
                 repo.Update(teacher);
             }));
         }

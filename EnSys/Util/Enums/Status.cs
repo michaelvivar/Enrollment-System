@@ -8,6 +8,6 @@ namespace Util.Enums
 {
     public enum Status
     {
-        Deactive = 0, Active = 1
+        Inactive = 0, Active = 1
     }
 }

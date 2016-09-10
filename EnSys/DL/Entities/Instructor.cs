@@ -9,7 +9,7 @@ using Util.Enums;
 
 namespace DL.Entities
 {
-    public class Instrcutor
+    public class Instructor
     {
         [Key]
         public int Id { get; set; }

@@ -14,7 +14,7 @@ namespace DL
         public DbSet<ContactInfo> ContactInfo { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseSubjectMapping> CourseSubjectMapping { get; set; }
-        public DbSet<Instrcutor> Instrcutors { get; set; }
+        public DbSet<Instructor> Instrcutors { get; set; }
         public DbSet<Person> Persons { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Student> Students { get; set; }

@@ -60,7 +60,7 @@
     <Compile Include="Entities\Student.cs" />
     <Compile Include="Entities\StudentClassMapping.cs" />
     <Compile Include="Entities\Subject.cs" />
-    <Compile Include="Entities\Instrcutor.cs" />
+    <Compile Include="Entities\Instructor.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository.cs" />

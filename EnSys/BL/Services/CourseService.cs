@@ -1,4 +1,5 @@
 ﻿using BL.Dto;
+using BL.Interfaces;
 using DL;
 using DL.Entities;
 using System;
@@ -17,33 +18,23 @@ namespace BL.Services
 
         }
 
-        private Course MapDtoToEntity(CourseDto dto)
+        private Course MapDtoToEntity(ICourse dto)
         {
             return new Course();
         }
 
-        private CourseDto MapEntityToDto(Course entity)
+        private ICourse MapEntityToDto(Course entity)
         {
             return new CourseDto();
         }
 
-        public List<CourseDto> GetAllActiveCourses()
-        {
-            return GetAllActive().Select(o => MapEntityToDto(o)).ToList();
-        }
-
-        private IEnumerable<Course> GetAllActive()
-        {
-            return Db.UnitOfWork(uow => uow.Repository<Course, IEnumerable<Course>>(repo => repo.Get(o => o.Status == Status.Active)));
-        }
-
-        public void AddCourse(CourseDto dto)
+        public void AddCourse(ICourse dto)
         {
             Db.UnitOfWork(uow => uow.Repository<Course>(repo =>
             {
                 Course course = MapDtoToEntity(dto);
                 repo.Add(course);
-                if (dto.Subjects != null && dto.Subjects.Count > 0)
+                if (dto.Subjects != null && dto.Subjects.Count() > 0)
                 {
                     List<CourseSubjectMapping> mapping = dto.Subjects.Select(subject => new CourseSubjectMapping { Course = course, SubjectId = subject.Id }).ToList();
                     uow.Repository<CourseSubjectMapping>(r => r.AddRange(mapping));
@@ -51,7 +42,7 @@ namespace BL.Services
             }));
         }
 
-        public void UpdateCourse(CourseDto dto)
+        public void UpdateCourse(ICourse dto)
         {
             Db.UnitOfWork(uow => uow.Repository<Course>(repo =>
             {
@@ -61,9 +52,9 @@ namespace BL.Services
             }));
         }
 
-        private void InsertOrDeleteMapping(int courseId, List<SubjectDto> list)
+        private void InsertOrDeleteMapping(int courseId, IEnumerable<ISubject> list)
         {
-            if (list != null && list.Count > 0)
+            if (list != null && list.Count() > 0)
             {
                 Db.UnitOfWork(uow => uow.Repository<CourseSubjectMapping>(repo =>
                 {
@@ -110,16 +101,64 @@ namespace BL.Services
             });
         }
 
-        public void DeactivateCourse(int id)
+        public void InactivateCourse(int id)
         {
             Db.UnitOfWork(uow =>
             {
                 uow.Repository<Course>(repo =>
                 {
                     Course course = repo.Get(id);
-                    course.Status = Status.Deactive;
+                    course.Status = Status.Inactive;
                     repo.Update(course);
                 });
+            });
+        }
+
+        public ICourse GetCourseById(int id)
+        {
+            return Db.Context(context =>
+            {
+                var course = (from a in context.Courses
+                              where a.Status == Status.Active
+                              orderby a.Code
+                              select new CourseDto
+                              {
+                                  Id = a.Id,
+                                  Code = a.Code,
+                                  Remarks = a.Remarks,
+                                  Status = a.Status
+                              }).FirstOrDefault();
+                course.Subjects = (from a in context.CourseSubjectMapping
+                                   join b in context.Subjects
+                                   on a.SubjectId equals b.Id
+                                   where a.CourseId == id && b.Status == Status.Active && a.Course.Status == Status.Active
+                                   select new SubjectDto
+                                   {
+                                       Id = b.Id,
+                                       Code = b.Code,
+                                       Level = b.Level,
+                                       Remarks = b.Remarks,
+                                       Units = b.Units,
+                                       Status = b.Status
+                                   }).ToList();
+                return course;
+            });
+        }
+
+        public IEnumerable<ICourse> GetAllActiveCourses()
+        {
+            return Db.Context(context =>
+            {
+                return (from a in context.Courses
+                        where a.Status == Status.Active
+                        orderby a.Code
+                        select new CourseDto
+                        {
+                            Id = a.Id,
+                            Code = a.Code,
+                            Remarks = a.Remarks,
+                            Status = a.Status
+                        }).ToList();
             });
         }
     }

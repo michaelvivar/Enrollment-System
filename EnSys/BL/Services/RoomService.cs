@@ -1,4 +1,5 @@
 ﻿using BL.Dto;
+using BL.Interfaces;
 using DL;
 using DL.Entities;
 using System;
@@ -17,32 +18,22 @@ namespace BL.Services
             
         }
 
-        private Room MapDtoToEntity(RoomDto dto)
+        private Room MapDtoToEntity(IRoom dto)
         {
             return new Room();
         }
 
-        private RoomDto MapEntityToDto(Room entity)
+        private IRoom MapEntityToDto(Room entity)
         {
             return new RoomDto();
         }
 
-        public RoomDto Get(int id)
-        {
-            return Db.UnitOfWork(uow => uow.Repository<Room, RoomDto>(repo => MapEntityToDto(repo.Get(id))));
-        }
-
-        public IEnumerable<RoomDto> GetAll()
-        {
-            return Db.Context(context => context.Rooms.Where(o => o.Status == Status.Active).OrderBy(o => o.Number).Select(o => MapEntityToDto(o))).ToList();
-        }
-
-        public void AddRoom(RoomDto dto)
+        public void AddRoom(IRoom dto)
         {
             Db.UnitOfWork(ouw => ouw.Repository<Room>(repo => repo.Add(MapDtoToEntity(dto))));
         }
 
-        public void UpdateRoom(RoomDto dto)
+        public void UpdateRoom(IRoom dto)
         {
             Db.UnitOfWork(ouw => ouw.Repository<Room>(repo => repo.Update(MapDtoToEntity(dto))));
         }
@@ -53,6 +44,40 @@ namespace BL.Services
             {
                 Room entity = repo.Get(id);
             }));
+        }
+
+        public IRoom GetRoomById(int id)
+        {
+            return Db.Context(context =>
+            {
+                return (from a in context.Rooms
+                        select new RoomDto
+                        {
+                            Id = a.Id,
+                            Number = a.Number,
+                            Capacity = a.Capacity,
+                            Remarks = a.Remarks,
+                            Status = a.Status
+                        }).FirstOrDefault();
+            });
+        }
+
+        public IEnumerable<IRoom> GetAllRooms()
+        {
+            return Db.Context(context =>
+            {
+                return (from a in context.Rooms
+                        where a.Status == Status.Active
+                        orderby a.Number
+                        select new RoomDto
+                        {
+                            Id = a.Id,
+                            Number = a.Number,
+                            Capacity = a.Capacity,
+                            Remarks = a.Remarks,
+                            Status = a.Status
+                        }).ToList();
+            });
         }
     }
 }

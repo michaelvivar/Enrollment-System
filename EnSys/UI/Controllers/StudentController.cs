@@ -12,6 +12,12 @@ namespace UI.Controllers
 {
     public class StudentController : BaseController
     {
+        public ActionResult Index()
+        {
+            var students = Service<StudentService, IEnumerable<IStudent>>(service => service.GetAllActiveStudents());
+            return View(students);
+        }
+
         [HttpPost]
         public ActionResult Create(StudentModel model)
         {
