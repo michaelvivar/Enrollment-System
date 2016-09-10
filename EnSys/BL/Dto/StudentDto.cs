@@ -8,21 +8,13 @@ using Util.Enums;
 
 namespace BL.Dto
 {
-    public class StudentDto : IStudent
+    public class StudentDto : PersonDto, IStudent
     {
         public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
         public YearLevel Level { get; set; }
         public Status Status { get; set; }
         public int CourseId { get; set; }
         public string Course { get; set; }
         public DateTime CreatedDate { get; set; }
-    }
-
-    public class StudentWithPersonalInfoDto : StudentDto, IStudentWithPersonalInfo
-    {
-        public IPersonalInfo PersonalInfo { get; set; }
-        public IContactInfo ContactInfo { get; set; }
     }
 }

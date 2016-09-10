@@ -36,19 +36,5 @@ namespace BL.Services
         {
             return new ContactInfoDto();
         }
-
-        protected void UpdatePersonalInfo(Person entity)
-        {
-            Db.UnitOfWork(uow => uow.Repository<Person>(repo => repo.Update(entity)));
-        }
-
-        protected void UpdateContactInfo(ContactInfo entity)
-        {
-            Db.UnitOfWork(uow => uow.Repository<ContactInfo>(repo => repo.Update(entity)));
-        }
-
-        public abstract IPersonalInfo GetStudentPersonalInfo(int id);
-
-        public abstract IContactInfo GetStudentContactInfo(int id);
     }
 }

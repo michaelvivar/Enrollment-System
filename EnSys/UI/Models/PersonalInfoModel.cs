@@ -8,9 +8,9 @@ using Util.Enums;
 
 namespace UI.Models
 {
-    public class PersonalInfoModel : IPersonalInfo
+    public class PersonalInfoModel : ContactInfoModel, IPersonalInfo
     {
-        public int Id { get; set; }
+        public int PersonId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }

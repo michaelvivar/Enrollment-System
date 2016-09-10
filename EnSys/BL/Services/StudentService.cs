@@ -26,15 +26,15 @@ namespace BL.Services
             return new StudentDto();
         }
 
-        public void AddStudent(IStudentWithPersonalInfo dto)
+        public void AddStudent(IStudent dto)
         {
             Db.UnitOfWork(uow =>
             {
                 uow.Repository<Student>(repo =>
                 {
-                    Student student = MapDtoToEntity((StudentDto)dto);
-                    student.Person = MapDtoToPersonEntity(dto.PersonalInfo);
-                    student.Person.ContactInfo = MapDtoToContactInfoEntity(dto.ContactInfo);
+                    Student student = MapDtoToEntity(dto);
+                    student.Person = MapDtoToPersonEntity(dto);
+                    student.Person.ContactInfo = MapDtoToContactInfoEntity(dto);
                     repo.Add(student);
                 });
             });
@@ -52,14 +52,65 @@ namespace BL.Services
             });
         }
 
-        public void UpdateStudentPersonalInfo(IPersonalInfo person)
+        public IStudent GetStudentById(int id)
         {
-            UpdatePersonalInfo(MapDtoToPersonEntity(person));
+            return Db.Context(context =>
+            {
+                return (from a in context.Students
+                        join b in context.Persons
+                        on a.PersonId equals b.Id
+                        join c in context.ContactInfo
+                        on b.ContactInfoId equals c.Id
+                        select new StudentDto
+                        {
+                            PersonId = b.Id,
+                            FirstName = b.FirstName,
+                            LastName = b.LastName,
+                            BirthDate = b.BirthDate,
+                            Gender = b.Gender,
+                            ContactInfoId = c.Id,
+                            Email = c.Email,
+                            Telephone = c.Telephone,
+                            Mobile = c.Mobile,
+                            Id = a.Id,
+                            CourseId = a.CourseId,
+                            Course = a.Course.Code,
+                            Level = a.Level,
+                            CreatedDate = a.CreatedDate,
+                            Status = a.Status
+                        }).FirstOrDefault();
+            });
         }
 
-        public void UpdateStudentContactInfo(IContactInfo contact)
+        public IEnumerable<IStudent> GetAllActiveStudents()
         {
-            UpdateContactInfo(MapDtoToContactInfoEntity(contact));
+            return Db.Context(context =>
+            {
+                return (from a in context.Students
+                        join b in context.Persons
+                        on a.PersonId equals b.Id
+                        join c in context.ContactInfo
+                        on a.CourseId equals c.Id
+                        where a.Status == Status.Active
+                        select new StudentDto
+                        {
+                            PersonId = b.Id,
+                            FirstName = b.FirstName,
+                            LastName = b.LastName,
+                            BirthDate = b.BirthDate,
+                            Gender = b.Gender,
+                            ContactInfoId = c.Id,
+                            Email = c.Email,
+                            Telephone = c.Telephone,
+                            Mobile = c.Mobile,
+                            Id = a.Id,
+                            CourseId = a.CourseId,
+                            Course = a.Course.Code,
+                            Level = a.Level,
+                            CreatedDate = a.CreatedDate,
+                            Status = a.Status
+                        }).ToList();
+            });
         }
 
         public IEnumerable<IStudent> GetStudentsByCourseId(int id)
@@ -69,15 +120,26 @@ namespace BL.Services
                 return (from a in context.Students
                         join b in context.Persons
                         on a.PersonId equals b.Id
-                        join c in context.Courses
+                        join c in context.ContactInfo
                         on a.CourseId equals c.Id
                         where a.Status == Status.Active && a.CourseId == id
                         select new StudentDto
                         {
-                            Id = a.Id,
+                            PersonId = b.Id,
                             FirstName = b.FirstName,
                             LastName = b.LastName,
-                            Course = c.Code
+                            BirthDate = b.BirthDate,
+                            Gender = b.Gender,
+                            ContactInfoId = c.Id,
+                            Email = c.Email,
+                            Telephone = c.Telephone,
+                            Mobile = c.Mobile,
+                            Id = a.Id,
+                            CourseId = a.CourseId,
+                            Course = a.Course.Code,
+                            Level = a.Level,
+                            CreatedDate = a.CreatedDate,
+                            Status = a.Status
                         }).ToList();
             });
         }
@@ -91,53 +153,27 @@ namespace BL.Services
                         on a.StudentId equals b.Id
                         join c in context.Persons
                         on b.PersonId equals c.Id
+                        join d in context.ContactInfo
+                        on c.ContactInfoId equals d.Id
                         where a.ClassId == id
                         select new StudentDto
                         {
-                            Id = a.Id,
+                            PersonId = b.Id,
                             FirstName = c.FirstName,
                             LastName = c.LastName,
-                            Course = b.Course.Code
+                            BirthDate = c.BirthDate,
+                            Gender = c.Gender,
+                            ContactInfoId = c.Id,
+                            Email = d.Email,
+                            Telephone = d.Telephone,
+                            Mobile = d.Mobile,
+                            Id = a.Id,
+                            CourseId = b.CourseId,
+                            Course = b.Course.Code,
+                            Level = b.Level,
+                            CreatedDate = b.CreatedDate,
+                            Status = b.Status
                         });
-            });
-        }
-
-        public override IPersonalInfo GetStudentPersonalInfo(int id)
-        {
-            return Db.Context(context =>
-            {
-                return (from a in context.Persons
-                        join b in context.Students
-                        on a.Id equals b.Id
-                        where b.Id == id
-                        select new PersonDto
-                        {
-                            Id = a.Id,
-                            FirstName = a.FirstName,
-                            LastName = a.LastName,
-                            BirthDate = a.BirthDate,
-                            Gender = a.Gender
-                        }).SingleOrDefault();
-            });
-        }
-
-        public override IContactInfo GetStudentContactInfo(int id)
-        {
-            return Db.Context(context =>
-            {
-                return (from a in context.ContactInfo
-                        join b in context.Persons
-                        on a.Id equals b.Id
-                        join c in context.Students
-                        on b.Id equals c.PersonId
-                        where c.Id == id
-                        select new ContactInfoDto
-                        {
-                            Id = a.Id,
-                            Email = a.Email,
-                            Telephone = a.Telephone,
-                            Mobile = a.Mobile
-                        }).SingleOrDefault();
             });
         }
     }

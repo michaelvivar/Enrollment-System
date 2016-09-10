@@ -7,10 +7,8 @@ using Util.Enums;
 
 namespace BL.Interfaces
 {
-    public interface IInstructor
+    public interface IInstructor : IPersonalInfo
     {
         int Id { get; set; }
-        IPersonalInfo PersonInfo { get; set; }
-        IContactInfo ContactInfo { get; set; }
     }
 }

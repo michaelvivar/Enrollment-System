@@ -13,46 +13,36 @@ namespace BL.Services
 {
     public class InstructorService : PersonService, IService
     {
-        private Instrcutor MapDtoToEntity(InstructorDto dto)
+        private Instrcutor MapDtoToEntity(IInstructor dto)
         {
             return new Instrcutor();
         }
 
-        private InstructorDto MapEntityToDto(Instrcutor entity)
+        private IInstructor MapEntityToDto(Instrcutor entity)
         {
             return new InstructorDto();
         }
 
-        public void AddTeacher(InstructorDto dto)
+        public void AddTeacher(IInstructor dto)
         {
             Db.UnitOfWork(uow =>
             {
                 uow.Repository<Instrcutor>(repo =>
                 {
                     Instrcutor teacher = MapDtoToEntity(dto);
-                    teacher.Person = MapDtoToPersonEntity(dto.PersonInfo);
-                    teacher.Person.ContactInfo = MapDtoToContactInfoEntity(dto.ContactInfo);
+                    teacher.Person = MapDtoToPersonEntity(dto);
+                    teacher.Person.ContactInfo = MapDtoToContactInfoEntity(dto);
                     repo.Add(teacher);
                 });
             });
         }
 
-        public void UpdateTeacher(InstructorDto dto)
+        public void UpdateTeacher(IInstructor dto)
         {
             Db.UnitOfWork(uow =>
             {
                 uow.Repository<Instrcutor>(repo => repo.Update(MapDtoToEntity(dto)));
             });
-        }
-
-        public void UpdateInstructorPersonalInfo(InstructorDto dto)
-        {
-            UpdatePersonalInfo(MapDtoToPersonEntity(dto.PersonInfo));
-        }
-
-        public void UpdateInstructorContactInfo(InstructorDto dto)
-        {
-            UpdateContactInfo(MapDtoToContactInfoEntity(dto.ContactInfo));
         }
 
         public void ActivateTeacher(int id)
@@ -75,20 +65,56 @@ namespace BL.Services
             }));
         }
 
-        public override IPersonalInfo GetStudentPersonalInfo(int id)
+        public IInstructor GetInstructorById(int id)
         {
-            return Db.UnitOfWork(uow => uow.Repository<Instrcutor, IPersonalInfo>(repo =>
+            return Db.Context(context =>
             {
-                return repo.Get(o => o.Id == id).Select(o => MapEntityToPersonInfo(o.Person)).SingleOrDefault();
-            }));
+                return (from a in context.Instrcutors
+                        join b in context.Persons
+                        on a.PersonId equals b.Id
+                        join c in context.ContactInfo
+                        on b.ContactInfoId equals c.Id
+                        where a.Id == id
+                        select new InstructorDto
+                        {
+                            Id = a.Id,
+                            PersonId = b.Id,
+                            FirstName = b.FirstName,
+                            LastName = b.LastName,
+                            BirthDate = b.BirthDate,
+                            Gender = b.Gender,
+                            ContactInfoId = c.Id,
+                            Email = c.Email,
+                            Telephone = c.Telephone,
+                            Mobile = c.Mobile
+                        }).FirstOrDefault();
+            });
         }
 
-        public override IContactInfo GetStudentContactInfo(int id)
+        public IEnumerable<IInstructor> GetAllActiveInstructors()
         {
-            return Db.UnitOfWork(uow => uow.Repository<Instrcutor, IContactInfo>(repo =>
+            return Db.Context(context =>
             {
-                return repo.Get(o => o.Id == id).Select(o => MapEntityToContactInfo(o.Person.ContactInfo)).SingleOrDefault();
-            }));
+                return (from a in context.Instrcutors
+                        join b in context.Persons
+                        on a.PersonId equals b.Id
+                        join c in context.ContactInfo
+                        on b.ContactInfoId equals c.Id
+                        where a.Status == Status.Active
+                        select new InstructorDto
+                        {
+                            Id = a.Id,
+                            PersonId = b.Id,
+                            FirstName = b.FirstName,
+                            LastName = b.LastName,
+                            BirthDate = b.BirthDate,
+                            Gender = b.Gender,
+                            ContactInfoId = c.Id,
+                            Email = c.Email,
+                            Telephone = c.Telephone,
+                            Mobile = c.Mobile
+                        }).ToList();
+            });
         }
     }
 }

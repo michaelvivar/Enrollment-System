@@ -7,9 +7,9 @@ using Util.Enums;
 
 namespace BL.Interfaces
 {
-    public interface IPersonalInfo
+    public interface IPersonalInfo : IContactInfo
     {
-        int Id { get; set; }
+        int PersonId { get; set; }
         string FirstName { get; set; }
         string LastName { get; set; }
         DateTime BirthDate { get; set; }

@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace BL.Dto
 {
-    public class InstructorDto : IInstructor
+    public class InstructorDto : PersonDto, IInstructor
     {
         public int Id { get; set; }
-        public IPersonalInfo PersonInfo { get; set; }
-        public IContactInfo ContactInfo { get; set; }
     }
 }

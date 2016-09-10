@@ -9,7 +9,7 @@ namespace UI.Models
 {
     public class ContactInfoModel : IContactInfo
     {
-        public int Id { get; set; }
+        public int ContactInfoId { get; set; }
 
         public string Email { get; set; }
 
