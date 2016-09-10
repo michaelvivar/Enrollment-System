@@ -58,6 +58,7 @@
     <Compile Include="Entities\Person.cs" />
     <Compile Include="Entities\Room.cs" />
     <Compile Include="Entities\Student.cs" />
+    <Compile Include="Entities\StudentClassMapping.cs" />
     <Compile Include="Entities\Subject.cs" />
     <Compile Include="Entities\Instrcutor.cs" />
     <Compile Include="Entities\User.cs" />

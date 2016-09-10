@@ -9,6 +9,14 @@ namespace DL
         private static IUnitOfWork StaticUnitOfWork { get; set; }
         private static DbContext StaticContext { get; set; }
 
+        public static TOut Context<TOut>(Func<Context, TOut> action)
+        {
+            using (Context context = new Context())
+            {
+                return action.Invoke(context);
+            }
+        }
+
         public static void UnitOfWork(Action<IUnitOfWork> action)
         {
             UnitOfWork(uow => {
@@ -45,14 +53,6 @@ namespace DL
                 {
                     return (TOut)Convert.ChangeType(e.Message, typeof(TOut));
                 }
-            }
-        }
-
-        public static TOut Context<TOut>(Func<Context, TOut> action)
-        { 
-            using (Context context = new Context())
-            {
-                return action.Invoke(context);
             }
         }
     }

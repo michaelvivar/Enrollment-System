@@ -62,19 +62,43 @@ namespace BL.Services
             UpdateContactInfo(MapDtoToContactInfoEntity(contact));
         }
 
-        public IEnumerable<IStudent> GetStudentsByClassId(int id)
+        public IEnumerable<IStudent> GetStudentsByCourseId(int id)
         {
             return Db.Context(context =>
             {
                 return (from a in context.Students
-                        where a.Status == Status.Active
+                        join b in context.Persons
+                        on a.PersonId equals b.Id
+                        join c in context.Courses
+                        on a.CourseId equals c.Id
+                        where a.Status == Status.Active && a.CourseId == id
                         select new StudentDto
                         {
                             Id = a.Id,
-                            FirstName = a.Person.FirstName,
-                            LastName = a.Person.LastName,
-                            Course = a.Course.Code
+                            FirstName = b.FirstName,
+                            LastName = b.LastName,
+                            Course = c.Code
                         }).ToList();
+            });
+        }
+
+        public IEnumerable<IStudent> GetStudentsByClassId(int id)
+        {
+            return Db.Context(context =>
+            {
+                return (from a in context.StudentClassMapping
+                        join b in context.Students
+                        on a.StudentId equals b.Id
+                        join c in context.Persons
+                        on b.PersonId equals c.Id
+                        where a.ClassId == id
+                        select new StudentDto
+                        {
+                            Id = a.Id,
+                            FirstName = c.FirstName,
+                            LastName = c.LastName,
+                            Course = b.Course.Code
+                        });
             });
         }
 
