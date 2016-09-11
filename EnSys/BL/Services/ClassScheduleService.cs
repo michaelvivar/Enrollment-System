@@ -52,41 +52,11 @@ namespace BL.Services
             }));
         }
 
-        public IEnumerable<IClassSchedule> GetClassesByStudentId(int id)
-        {
-            return Db.Context(context =>
-            {
-                return (from a in context.StudentClassMapping
-                        join b in context.Classes
-                        on a.StudentId equals b.Id
-                        where a.Id == id
-                        orderby new { b.Day, b.TimeStart }
-                        select new ClassScheduleDto
-                        {
-                            Id = b.Id,
-                            RoomId = b.RoomId,
-                            Room = b.Room.Number,
-                            TimeStart = b.TimeStart,
-                            TimeEnd = b.TimeEnd,
-                            Capacity = b.Capacity,
-                            Day = b.Day,
-                            InstructorId = b.InstructorId,
-                            InstructorFirstName = b.Instructor.Person.FirstName,
-                            InstructorLastName = b.Instructor.Person.LastName,
-                            Remarks = b.Remarks,
-                            SubjectId = b.SubjectId,
-                            Subject = b.Subject.Code
-                        }).ToList();
-            });
-        }
-
-        public IEnumerable<IClassSchedule> GetClassesByRoomId(int id)
+        internal IQueryable<IClassSchedule> AllClasses()
         {
             return Db.Context(context =>
             {
                 return (from a in context.Classes
-                        where a.RoomId == id
-                        orderby new { a.Day, a.TimeStart }
                         select new ClassScheduleDto
                         {
                             Id = a.Id,
@@ -102,8 +72,34 @@ namespace BL.Services
                             Remarks = a.Remarks,
                             SubjectId = a.SubjectId,
                             Subject = a.Subject.Code
-                        }).ToList();
+                        });
             });
+        }
+
+        public IEnumerable<IClassSchedule> GetClassesByStudentId(int id)
+        {
+            return Db.Context(context =>
+            {
+                return (from a in context.StudentClassMapping
+                        join b in AllClasses()
+                        on a.StudentId equals b.Id
+                        where a.Id == id
+                        orderby b.Day, b.TimeStart
+                        select b);
+            });
+        }
+
+        public IEnumerable<IClassSchedule> GetClassesByInstructorId(int id)
+        {
+            return Db.Context(context =>
+            {
+                return AllClasses().Where(o => o.InstructorId == id).OrderBy(o => o.Day).ThenBy(o => o.TimeStart).ToList();
+            });
+        }
+
+        public IEnumerable<IClassSchedule> GetClassesByRoomId(int id)
+        {
+            return AllClasses().Where(o => o.RoomId == id).OrderBy(o => o.Day).ThenBy(o => o.TimeStart).ToList();
         }
     }
 }

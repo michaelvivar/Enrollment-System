@@ -20,7 +20,7 @@ namespace BL.Services
             return new InstructorDto();
         }
 
-        public void AddTeacher(IInstructor dto)
+        public void AddInstructor(IInstructor dto)
         {
             Db.UnitOfWork(uow =>
             {
@@ -34,7 +34,7 @@ namespace BL.Services
             });
         }
 
-        public void UpdateTeacher(IInstructor dto)
+        public void UpdateInstructor(IInstructor dto)
         {
             Db.UnitOfWork(uow =>
             {
@@ -88,7 +88,7 @@ namespace BL.Services
             });
         }
 
-        public IEnumerable<IInstructor> GetAllActiveInstructors()
+        internal IQueryable<IInstructor> AllInstructors()
         {
             return Db.Context(context =>
             {
@@ -97,7 +97,6 @@ namespace BL.Services
                         on a.PersonId equals b.Id
                         join c in context.ContactInfo
                         on b.ContactInfoId equals c.Id
-                        where a.Status == Status.Active
                         select new InstructorDto
                         {
                             Id = a.Id,
@@ -110,8 +109,21 @@ namespace BL.Services
                             Email = c.Email,
                             Telephone = c.Telephone,
                             Mobile = c.Mobile
-                        }).ToList();
+                        });
             });
+        }
+
+        public IEnumerable<IInstructor> GetAllActiveInstructors()
+        {
+            return AllInstructors().Where(o => o.Status == Status.Active)
+                .OrderBy(o => o.FirstName).ThenBy(o => o.LastName).ToList();
+        }
+
+        public IEnumerable<IDropDownMenuITem> GetRecordsBindToDropDown()
+        {
+            return AllInstructors().Where(o => o.Status == Status.Active)
+                .OrderBy(o => o.FirstName).ThenBy(o => o.LastName)
+                .Select(o => new DropDownMenuItemDto { Text = o.FirstName + " " + o.LastName, Value = o.Id }).ToList();
         }
     }
 }

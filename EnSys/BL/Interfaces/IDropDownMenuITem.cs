@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Util.Enums;
 
 namespace BL.Interfaces
 {
-    public interface IInstructor : IPersonalInfo
+    public interface IDropDownMenuITem
     {
-        int Id { get; set; }
-        Status Status { get; set; }
+        object Group { get; set; }
+        int Value { get; set; }
+        string Text { get; set; }
     }
 }

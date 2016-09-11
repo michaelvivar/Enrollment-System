@@ -116,7 +116,7 @@ namespace BL.Services
             return Db.Context(context =>
             {
                 var course = (from a in context.Courses
-                              where a.Status == Status.Active
+                              where a.Status == Status.Active && a.Id == id
                               orderby a.Code
                               select new CourseDto
                               {
@@ -125,6 +125,7 @@ namespace BL.Services
                                   Remarks = a.Remarks,
                                   Status = a.Status
                               }).FirstOrDefault();
+
                 course.Subjects = (from a in context.CourseSubjectMapping
                                    join b in context.Subjects
                                    on a.SubjectId equals b.Id
@@ -142,21 +143,30 @@ namespace BL.Services
             });
         }
 
-        public IEnumerable<ICourse> GetAllActiveCourses()
+        internal IQueryable<ICourse> AllCourses()
         {
             return Db.Context(context =>
             {
                 return (from a in context.Courses
-                        where a.Status == Status.Active
-                        orderby a.Code
                         select new CourseDto
                         {
                             Id = a.Id,
                             Code = a.Code,
                             Remarks = a.Remarks,
                             Status = a.Status
-                        }).ToList();
+                        });
             });
+        }
+
+        public IEnumerable<ICourse> GetAllActiveCourses()
+        {
+            return AllCourses().Where(o => o.Status == Status.Active).OrderBy(o => o.Code).ToList();
+        }
+
+        public IEnumerable<IDropDownMenuITem> GetRecordsBindToDropDown()
+        {
+            return AllCourses().Where(o => o.Status == Status.Active).OrderBy(o => o.Code)
+                .Select(o => new DropDownMenuItemDto { Text = o.Code, Value = o.Id }).ToList();
         }
     }
 }

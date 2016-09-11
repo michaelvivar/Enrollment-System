@@ -14,6 +14,6 @@ namespace BL.Interfaces
         int Units { get; set; }
         string Remarks { get; set; }
         Status Status { get; set; }
-        string Course { get; set; }
+        YearLevel Level { get; set; }
     }
 }

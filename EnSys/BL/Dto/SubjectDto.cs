@@ -12,6 +12,5 @@ namespace BL.Dto
         public string Remarks { get; set; }
         public Status Status { get; set; }
         public int Units { get; set; }
-        public string Course { get; set; }
     }
 }

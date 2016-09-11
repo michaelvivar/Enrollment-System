@@ -7,13 +7,24 @@ namespace DL
     public static class Db
     {
         private static IUnitOfWork StaticUnitOfWork { get; set; }
-        private static DbContext StaticContext { get; set; }
+        private static Context StaticContext { get; set; }
 
         public static TOut Context<TOut>(Func<Context, TOut> action)
         {
-            using (Context context = new Context())
+            if (StaticContext != null)
             {
-                return action.Invoke(context);
+                return action.Invoke(StaticContext);
+            }
+            else
+            {
+                using (Context context = new Context())
+                {
+                    StaticContext = context;
+                    var o = action.Invoke(context);
+                    StaticContext = null;
+                    StaticUnitOfWork = null;
+                    return o;
+                }
             }
         }
 
@@ -35,7 +46,7 @@ namespace DL
             {
                 try
                 {
-                    using (DbContext context = new Context())
+                    using (Context context = new Context())
                     {
                         StaticContext = context;
                         StaticUnitOfWork = new UnitOfWork(StaticContext);

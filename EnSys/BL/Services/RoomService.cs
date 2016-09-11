@@ -62,13 +62,11 @@ namespace BL.Services
             });
         }
 
-        public IEnumerable<IRoom> GetAllRooms()
+        public IEnumerable<IRoom> AllRooms()
         {
             return Db.Context(context =>
             {
                 return (from a in context.Rooms
-                        where a.Status == Status.Active
-                        orderby a.Number
                         select new RoomDto
                         {
                             Id = a.Id,
@@ -76,8 +74,19 @@ namespace BL.Services
                             Capacity = a.Capacity,
                             Remarks = a.Remarks,
                             Status = a.Status
-                        }).ToList();
+                        });
             });
+        }
+
+        public IEnumerable<IRoom> GetAllRooms()
+        {
+            return AllRooms().Where(o => o.Status == Status.Active).OrderBy(o => o.Number).ToList();
+        }
+
+        public IEnumerable<IDropDownMenuITem> GetRecordsBindToDropDown()
+        {
+            return AllRooms().Where(o => o.Status == Status.Active).OrderBy(o => o.Number)
+                .Select(o => new DropDownMenuItemDto { Text = o.Number, Value = o.Id }).ToList();
         }
     }
 }

@@ -67,27 +67,26 @@ namespace BL.Services
             }));
         }
 
-        public ISubject GetSubjectById(int id)
+        internal IQueryable<ISubject> AllSubjects()
         {
             return Db.Context(context =>
             {
-                return (from a in context.CourseSubjectMapping
-                        join b in context.Subjects
-                        on a.SubjectId equals b.Id
-                        join c in context.Courses
-                        on a.CourseId equals c.Id
-                        where a.SubjectId == id
+                return (from a in context.Subjects
                         select new SubjectDto
                         {
-                            Id = b.Id,
-                            Code = b.Code,
-                            Level = b.Level,
-                            Remarks = b.Remarks,
-                            Status = b.Status,
-                            Units = b.Units,
-                            Course = c.Code
-                        }).FirstOrDefault();
+                            Id = a.Id,
+                            Code = a.Code,
+                            Level = a.Level,
+                            Remarks = a.Remarks,
+                            Status = a.Status,
+                            Units = a.Units
+                        });
             });
+        }
+
+        public ISubject GetSubjectById(int id)
+        {
+            return AllSubjects().Where(o => o.Id == id).FirstOrDefault();
         }
 
         public IEnumerable<ISubject> GetSubjectByCourseId(int id)
@@ -95,23 +94,19 @@ namespace BL.Services
             return Db.Context(context =>
             {
                 return (from a in context.CourseSubjectMapping
-                        join b in context.Subjects
+                        join b in AllSubjects()
                         on a.SubjectId equals b.Id
-                        join c in context.Courses
-                        on a.CourseId equals c.Id
                         where a.CourseId == id && b.Status == Status.Active
                         orderby a.Level
-                        select new SubjectDto
-                        {
-                            Id = b.Id,
-                            Code = b.Code,
-                            Level = b.Level,
-                            Remarks = b.Remarks,
-                            Status = b.Status,
-                            Units = b.Units,
-                            Course = c.Code
-                        }).ToList();
+                        select b).ToList();
             });
+        }
+
+        public IEnumerable<IDropDownMenuITem> GetRecordsBindToDropDown()
+        {
+            return AllSubjects().Where(o => o.Status == Status.Active)
+                .OrderBy(o => o.Level).ThenBy(o => o.Code)
+                .Select(o => new DropDownMenuItemDto { Group = o.Level, Text = o.Code, Value = o.Id }).ToList();
         }
     }
 }
