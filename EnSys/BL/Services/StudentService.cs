@@ -36,30 +36,24 @@ namespace BL.Services
 
         public void AddStudent(IStudent dto)
         {
-            UnitOfWork(uow =>
+            Repository<Student>(repo =>
             {
-                uow.Repository<Student>(repo =>
-                {
-                    Student student = MapDtoToEntity(dto);
-                    student.CreatedDate = DateTime.Now;
-                    student.Person = MapDtoToPersonEntity(dto);
-                    student.Person.ContactInfo = MapDtoToContactInfoEntity(dto);
-                    repo.Add(student);
-                });
+                Student student = MapDtoToEntity(dto);
+                student.CreatedDate = DateTime.Now;
+                student.Person = MapDtoToPersonEntity(dto);
+                student.Person.ContactInfo = MapDtoToContactInfoEntity(dto);
+                repo.Add(student);
             });
         }
 
         public void UpdateStudent(IStudent dto)
         {
-            UnitOfWork(uow =>
+            Repository<Student>(repo =>
             {
-                uow.Repository<Student>(repo =>
-                {
-                    Student student = MapDtoToEntity(dto);
-                    repo.Update(student, "Status", "CreatedDate");
-                    UpdatePersonalInfo(dto);
-                    UpdateContactInfo(dto);
-                });
+                Student student = MapDtoToEntity(dto);
+                repo.Update(student, "Status", "CreatedDate");
+                UpdatePersonalInfo(dto);
+                UpdateContactInfo(dto);
             });
         }
 

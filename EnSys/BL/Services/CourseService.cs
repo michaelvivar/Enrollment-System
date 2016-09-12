@@ -20,43 +20,56 @@ namespace BL.Services
 
         private Course MapDtoToEntity(ICourse dto)
         {
-            return new Course();
+            return new Course
+            {
+                Id = dto.Id,
+                Code = dto.Code,
+                Remarks = dto.Remarks,
+                Status = dto.Status
+            };
         }
 
         private ICourse MapEntityToDto(Course entity)
         {
-            return new CourseDto();
+            return new CourseDto
+            {
+                Id = entity.Id,
+                Code = entity.Code,
+                Remarks = entity.Remarks,
+                Status = entity.Status
+            };
         }
 
         public void AddCourse(ICourse dto)
         {
-            UnitOfWork(uow => uow.Repository<Course>(repo =>
+            Repository<Course>(repo =>
             {
                 Course course = MapDtoToEntity(dto);
+                course.Status = Status.Active;
                 repo.Add(course);
                 if (dto.Subjects != null && dto.Subjects.Count() > 0)
                 {
                     List<CourseSubjectMapping> mapping = dto.Subjects.Select(subject => new CourseSubjectMapping { Course = course, SubjectId = subject.Id }).ToList();
-                    uow.Repository<CourseSubjectMapping>(r => r.AddRange(mapping));
+                    Repository<CourseSubjectMapping>(r => r.AddRange(mapping));
                 }
-            }));
+            });
         }
 
         public void UpdateCourse(ICourse dto)
         {
-            UnitOfWork(uow => uow.Repository<Course>(repo =>
+            Repository<Course>(repo =>
             {
                 Course course = MapDtoToEntity(dto);
                 repo.Update(course);
                 InsertOrDeleteMapping(course.Id, dto.Subjects);
-            }));
+            });
         }
 
         private void InsertOrDeleteMapping(int courseId, IEnumerable<ISubject> list)
         {
             if (list != null && list.Count() > 0)
             {
-                UnitOfWork(uow => uow.Repository<CourseSubjectMapping>(repo =>
+                Repository<CourseSubjectMapping>(repo =>
                 {
                     var mapping = repo.Get(o => o.CourseId == courseId).ToList();
                     var delete = mapping.Where(o => !list.Select(s => s.Id).Contains(o.SubjectId));
@@ -70,47 +83,41 @@ namespace BL.Services
                     });
                     if (insert != null && insert.Count() > 0)
                         repo.AddRange(insert);
-                }));
+                });
             }
             else
             {
-                UnitOfWork(uow => uow.Repository<CourseSubjectMapping>(repo =>
+                Repository<CourseSubjectMapping>(repo =>
                 {
                     var mapping = repo.Get(o => o.CourseId == courseId);
                     if (mapping != null && mapping.Count() > 0)
                         repo.RemoveRange(mapping);
-                }));
+                });
             }
         }
 
         public void DeleteCourse(int id)
         {
-            UnitOfWork(uow => uow.Repository<Course>(repo => repo.Remove(repo.SingleOrDefault(o => o.Id == id))));
+            Repository<Course>(repo => repo.Remove(repo.SingleOrDefault(o => o.Id == id)));
         }
 
         public void ActivateCourse(int id)
         {
-            UnitOfWork(uow =>
+            Repository<Course>(repo =>
             {
-                uow.Repository<Course>(repo =>
-                {
-                    Course course = repo.Get(id);
-                    course.Status = Status.Active;
-                    repo.Update(course);
-                });
+                Course course = repo.Get(id);
+                course.Status = Status.Active;
+                repo.Update(course);
             });
         }
 
         public void InactivateCourse(int id)
         {
-            UnitOfWork(uow =>
+            Repository<Course>(repo =>
             {
-                uow.Repository<Course>(repo =>
-                {
-                    Course course = repo.Get(id);
-                    course.Status = Status.Inactive;
-                    repo.Update(course);
-                });
+                Course course = repo.Get(id);
+                course.Status = Status.Inactive;
+                repo.Update(course);
             });
         }
 

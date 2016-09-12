@@ -55,12 +55,12 @@ namespace BL.Services
 
         protected void UpdatePersonalInfo(IPersonalInfo dto)
         {
-            UnitOfWork(uow => uow.Repository<Person>(repo => repo.Update(MapDtoToPersonEntity(dto))));
+            Repository<Person>(repo => repo.Update(MapDtoToPersonEntity(dto)));
         }
 
         protected void UpdateContactInfo(IContactInfo dto)
         {
-            UnitOfWork(uow => uow.Repository<ContactInfo>(repo => repo.Update(MapDtoToContactInfoEntity(dto))));
+            Repository<ContactInfo>(repo => repo.Update(MapDtoToContactInfoEntity(dto)));
         }
     }
 

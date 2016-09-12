@@ -38,7 +38,7 @@ namespace UI.Models
                 yield return new ValidationResult(string.Format("Please fill atleast one of the contact information"));
             }
 
-            if (BirthDate < (DateTime)SqlDateTime.MinValue)
+            if (BirthDate < (DateTime)SqlDateTime.MinValue && BirthDate > DateTime.Now)
             {
                 hasError = true;
                 yield return new ValidationResult(string.Format("Invalid date of birth!"));

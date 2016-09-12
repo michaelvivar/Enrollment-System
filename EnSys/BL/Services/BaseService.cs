@@ -9,34 +9,31 @@ namespace BL.Services
 {
     public abstract class BaseService
     {
-        protected readonly Context _context;
-
+        private readonly Context _context;
         public BaseService(Context context) { _context = context; }
 
-        protected void Service<TService>(Action<TService> action) where TService : IService, new()
+
+        protected void Service<TService>(Action<TService> action) where TService : IService
         {
             Transaction.Service(_context, action);
         }
-
-        protected TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService, new()
+        protected TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService
         {
             return Transaction.Service(_context, action);
         }
-
         protected TOut Query<TOut>(Func<Context, TOut> action)
         {
             return Db.Context(_context, action);
         }
-
-        protected TOut UnitOfWork<TOut>(Func<IUnitOfWork, TOut> action)
+        protected void Repository<TEntity>(Action<IRepository<TEntity>> action) where TEntity : class
         {
-            return Db.UnitOfWork(_context, action);
+            action.Invoke(new Repository<TEntity>(_context));
+        }
+        protected TOut Repository<TEntity, TOut>(Func<IRepository<TEntity>, TOut> action) where TEntity : class
+        {
+            return action.Invoke(new Repository<TEntity>(_context));
         }
 
-        protected void UnitOfWork(Action<IUnitOfWork> action)
-        {
-            Db.UnitOfWork(_context, uow => { action.Invoke(uow); return string.Empty; });
-        }
 
         protected IQueryable<IStudent> Students()
         {
@@ -109,7 +106,6 @@ namespace BL.Services
                         Units = a.Units
                     });
         }
-
         protected IQueryable<IClassSchedule> Classes()
         {
             return (from a in _context.Classes
@@ -142,7 +138,6 @@ namespace BL.Services
                         Status = a.Status
                     });
         }
-
         protected IQueryable<IOption> Options()
         {
             return (from a in _context.Options
