@@ -31,6 +31,14 @@ namespace DL
             Context.Entry(entity).State = EntityState.Modified;
         }
 
+        public void Update(TEntity entity, params string[] exclude)
+        {
+            var entry = Context.Entry(entity);
+            entry.State = EntityState.Modified;
+            foreach (string name in exclude)
+                entry.Property(name).IsModified = false;
+        }
+
         public void Remove(TEntity entity)
         {
             Context.Set<TEntity>().Remove(entity);
@@ -62,6 +70,7 @@ namespace DL
         void Add(TEntity entity);
         void AddRange(IEnumerable<TEntity> entities);
         void Update(TEntity entity);
+        void Update(TEntity entity, params string[] exclude);
         void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entities);
         TEntity Get(int id);

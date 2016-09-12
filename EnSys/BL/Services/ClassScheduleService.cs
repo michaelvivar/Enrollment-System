@@ -10,6 +10,8 @@ namespace BL.Services
 {
     public class ClassScheduleService : BaseService, IService
     {
+        public ClassScheduleService(Context context) : base(context) { }
+
         public void Dispose()
         {
             
@@ -27,7 +29,7 @@ namespace BL.Services
 
         public void AddClassSchedule(IClassSchedule dto)
         {
-            Db.UnitOfWork(uow => uow.Repository<ClassSchedule>(repo =>
+            UnitOfWork(uow => uow.Repository<ClassSchedule>(repo =>
             {
                 IList<ClassSchedule> classes = new List<ClassSchedule>();
                 foreach(DayOfWeek day in dto.Days)
@@ -40,48 +42,24 @@ namespace BL.Services
 
         public void UpdateClassSchedule(IClassSchedule dto)
         {
-            Db.UnitOfWork(uow => uow.Repository<ClassSchedule>(repo => repo.Update(MapDtoToEntity(dto))));
+            UnitOfWork(uow => uow.Repository<ClassSchedule>(repo => repo.Update(MapDtoToEntity(dto))));
         }
 
         public void DeleteClassSchedule(int id)
         {
-            Db.UnitOfWork(uow => uow.Repository<ClassSchedule>(repo =>
+            UnitOfWork(uow => uow.Repository<ClassSchedule>(repo =>
             {
                 ClassSchedule entity = repo.Get(id);
                 repo.Remove(entity);
             }));
         }
 
-        internal IQueryable<IClassSchedule> AllClasses()
-        {
-            return Db.Context(context =>
-            {
-                return (from a in context.Classes
-                        select new ClassScheduleDto
-                        {
-                            Id = a.Id,
-                            RoomId = a.RoomId,
-                            Room = a.Room.Number,
-                            TimeStart = a.TimeStart,
-                            TimeEnd = a.TimeEnd,
-                            Capacity = a.Capacity,
-                            Day = a.Day,
-                            InstructorId = a.InstructorId,
-                            InstructorFirstName = a.Instructor.Person.FirstName,
-                            InstructorLastName = a.Instructor.Person.LastName,
-                            Remarks = a.Remarks,
-                            SubjectId = a.SubjectId,
-                            Subject = a.Subject.Code
-                        });
-            });
-        }
-
         public IEnumerable<IClassSchedule> GetClassesByStudentId(int id)
         {
-            return Db.Context(context =>
+            return Query(context =>
             {
                 return (from a in context.StudentClassMapping
-                        join b in AllClasses()
+                        join b in Classes()
                         on a.StudentId equals b.Id
                         where a.Id == id
                         orderby b.Day, b.TimeStart
@@ -91,15 +69,12 @@ namespace BL.Services
 
         public IEnumerable<IClassSchedule> GetClassesByInstructorId(int id)
         {
-            return Db.Context(context =>
-            {
-                return AllClasses().Where(o => o.InstructorId == id).OrderBy(o => o.Day).ThenBy(o => o.TimeStart).ToList();
-            });
+            return Classes().Where(o => o.InstructorId == id).OrderBy(o => o.Day).ThenBy(o => o.TimeStart).ToList();
         }
 
         public IEnumerable<IClassSchedule> GetClassesByRoomId(int id)
         {
-            return AllClasses().Where(o => o.RoomId == id).OrderBy(o => o.Day).ThenBy(o => o.TimeStart).ToList();
+            return Classes().Where(o => o.RoomId == id).OrderBy(o => o.Day).ThenBy(o => o.TimeStart).ToList();
         }
     }
 }

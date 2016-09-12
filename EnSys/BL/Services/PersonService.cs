@@ -12,6 +12,8 @@ namespace BL.Services
 {
     public abstract class PersonService : BaseService, IDisposable
     {
+        public PersonService(Context context) : base(context) { }
+
         public void Dispose()
         {
             
@@ -19,7 +21,15 @@ namespace BL.Services
 
         protected Person MapDtoToPersonEntity(IPersonalInfo dto)
         {
-            return new Person();
+            return new Person
+            {
+                Id = dto.PersonId,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                BirthDate = dto.BirthDate,
+                Gender = dto.Gender,
+                ContactInfoId = dto.ContactInfoId
+            };
         }
 
         protected IPersonalInfo MapEntityToPersonInfo(Person entity)
@@ -29,12 +39,38 @@ namespace BL.Services
 
         protected ContactInfo MapDtoToContactInfoEntity(IContactInfo dto)
         {
-            return new ContactInfo();
+            return new ContactInfo
+            {
+                Id = dto.ContactInfoId,
+                Email = dto.Email,
+                Telephone = dto.Telephone,
+                Mobile = dto.Mobile,
+            };
         }
 
         protected IContactInfo MapEntityToContactInfo(ContactInfo entity)
         {
             return new ContactInfoDto();
+        }
+
+        protected void UpdatePersonalInfo(IPersonalInfo dto)
+        {
+            UnitOfWork(uow => uow.Repository<Person>(repo => repo.Update(MapDtoToPersonEntity(dto))));
+        }
+
+        protected void UpdateContactInfo(IContactInfo dto)
+        {
+            UnitOfWork(uow => uow.Repository<ContactInfo>(repo => repo.Update(MapDtoToContactInfoEntity(dto))));
+        }
+    }
+
+    public class PersonValidatorService : BaseService, IService
+    {
+        public PersonValidatorService(Context context) : base(context) { }
+
+        public void Dispose()
+        {
+            
         }
     }
 }

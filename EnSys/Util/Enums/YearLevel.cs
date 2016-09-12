@@ -8,6 +8,6 @@ namespace Util.Enums
 {
     public enum YearLevel
     {
-        First = 1, Second, Third, Fourth, Fifth
+        First = 1, Second, Third, Fourth
     }
 }

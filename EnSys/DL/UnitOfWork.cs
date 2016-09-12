@@ -27,7 +27,7 @@ namespace DL
 
         private IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
         {
-            if (Container.Any(o => o.Type != typeof(TEntity)))
+            if (!Container.Any(o => o.Type == typeof(TEntity)))
             {
                 IRepository<TEntity> repository = new Repository<TEntity>(Context);
                 Container.Add(new RepositoryContainer(typeof(TEntity), repository));

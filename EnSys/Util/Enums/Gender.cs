@@ -8,6 +8,6 @@ namespace Util.Enums
 {
     public enum Gender
     {
-        Female, Male
+        Male = 1, Female = 2
     }
 }

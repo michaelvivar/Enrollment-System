@@ -2,6 +2,7 @@
 using BL.Interfaces;
 using DL;
 using DL.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Util.Enums;
@@ -10,6 +11,8 @@ namespace BL.Services
 {
     public class CourseService : BaseService, IService
     {
+        public CourseService(Context context) : base(context) { }
+
         public void Dispose()
         {
 
@@ -27,7 +30,7 @@ namespace BL.Services
 
         public void AddCourse(ICourse dto)
         {
-            Db.UnitOfWork(uow => uow.Repository<Course>(repo =>
+            UnitOfWork(uow => uow.Repository<Course>(repo =>
             {
                 Course course = MapDtoToEntity(dto);
                 repo.Add(course);
@@ -41,7 +44,7 @@ namespace BL.Services
 
         public void UpdateCourse(ICourse dto)
         {
-            Db.UnitOfWork(uow => uow.Repository<Course>(repo =>
+            UnitOfWork(uow => uow.Repository<Course>(repo =>
             {
                 Course course = MapDtoToEntity(dto);
                 repo.Update(course);
@@ -53,7 +56,7 @@ namespace BL.Services
         {
             if (list != null && list.Count() > 0)
             {
-                Db.UnitOfWork(uow => uow.Repository<CourseSubjectMapping>(repo =>
+                UnitOfWork(uow => uow.Repository<CourseSubjectMapping>(repo =>
                 {
                     var mapping = repo.Get(o => o.CourseId == courseId).ToList();
                     var delete = mapping.Where(o => !list.Select(s => s.Id).Contains(o.SubjectId));
@@ -71,7 +74,7 @@ namespace BL.Services
             }
             else
             {
-                Db.UnitOfWork(uow => uow.Repository<CourseSubjectMapping>(repo =>
+                UnitOfWork(uow => uow.Repository<CourseSubjectMapping>(repo =>
                 {
                     var mapping = repo.Get(o => o.CourseId == courseId);
                     if (mapping != null && mapping.Count() > 0)
@@ -82,12 +85,12 @@ namespace BL.Services
 
         public void DeleteCourse(int id)
         {
-            Db.UnitOfWork(uow => uow.Repository<Course>(repo => repo.Remove(repo.SingleOrDefault(o => o.Id == id))));
+            UnitOfWork(uow => uow.Repository<Course>(repo => repo.Remove(repo.SingleOrDefault(o => o.Id == id))));
         }
 
         public void ActivateCourse(int id)
         {
-            Db.UnitOfWork(uow =>
+            UnitOfWork(uow =>
             {
                 uow.Repository<Course>(repo =>
                 {
@@ -100,7 +103,7 @@ namespace BL.Services
 
         public void InactivateCourse(int id)
         {
-            Db.UnitOfWork(uow =>
+            UnitOfWork(uow =>
             {
                 uow.Repository<Course>(repo =>
                 {
@@ -113,7 +116,7 @@ namespace BL.Services
 
         public ICourse GetCourseById(int id)
         {
-            return Db.Context(context =>
+            return Query(context =>
             {
                 var course = (from a in context.Courses
                               where a.Status == Status.Active && a.Id == id
@@ -143,30 +146,18 @@ namespace BL.Services
             });
         }
 
-        internal IQueryable<ICourse> AllCourses()
-        {
-            return Db.Context(context =>
-            {
-                return (from a in context.Courses
-                        select new CourseDto
-                        {
-                            Id = a.Id,
-                            Code = a.Code,
-                            Remarks = a.Remarks,
-                            Status = a.Status
-                        });
-            });
-        }
-
         public IEnumerable<ICourse> GetAllActiveCourses()
         {
-            return AllCourses().Where(o => o.Status == Status.Active).OrderBy(o => o.Code).ToList();
+            return Courses().Where(o => o.Status == Status.Active).OrderBy(o => o.Code).ToList();
         }
 
-        public IEnumerable<IDropDownMenuITem> GetRecordsBindToDropDown()
+        public IEnumerable<IOption> GetRecordsBindToDropDown()
         {
-            return AllCourses().Where(o => o.Status == Status.Active).OrderBy(o => o.Code)
-                .Select(o => new DropDownMenuItemDto { Text = o.Code, Value = o.Id }).ToList();
+            return Query(context =>
+            {
+                return Courses().Where(o => o.Status == Status.Active).OrderBy(o => o.Code)
+                    .Select(o => new OptionDto { Text = o.Code, Value = o.Id }).ToList();
+            });
         }
     }
 }

@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Util.Enums;
 
 namespace BL.Interfaces
 {
-    public interface IDropDownMenuITem
+    public interface IOption
     {
-        object Group { get; set; }
-        int Value { get; set; }
+        int Id { get; set; }
+        OptionType Type { get; set; }
         string Text { get; set; }
+        int Value { get; set; }
+        object Group { get; set; }
     }
 }

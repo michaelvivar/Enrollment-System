@@ -9,6 +9,7 @@ using Util.Enums;
 
 namespace DL.Entities
 {
+    [Table("Student")]
     public class Student
     {
         [Key]

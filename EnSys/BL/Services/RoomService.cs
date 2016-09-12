@@ -13,6 +13,7 @@ namespace BL.Services
 {
     public class RoomService : BaseService, IService
     {
+        public RoomService(Context context) : base(context) { }
         public void Dispose()
         {
             
@@ -23,24 +24,19 @@ namespace BL.Services
             return new Room();
         }
 
-        private IRoom MapEntityToDto(Room entity)
-        {
-            return new RoomDto();
-        }
-
         public void AddRoom(IRoom dto)
         {
-            Db.UnitOfWork(ouw => ouw.Repository<Room>(repo => repo.Add(MapDtoToEntity(dto))));
+            UnitOfWork(ouw => ouw.Repository<Room>(repo => repo.Add(MapDtoToEntity(dto))));
         }
 
         public void UpdateRoom(IRoom dto)
         {
-            Db.UnitOfWork(ouw => ouw.Repository<Room>(repo => repo.Update(MapDtoToEntity(dto))));
+            UnitOfWork(ouw => ouw.Repository<Room>(repo => repo.Update(MapDtoToEntity(dto))));
         }
 
         public void DeleteRoom(int id)
         {
-            Db.UnitOfWork(ouw => ouw.Repository<Room>(repo =>
+            UnitOfWork(ouw => ouw.Repository<Room>(repo =>
             {
                 Room entity = repo.Get(id);
             }));
@@ -48,45 +44,18 @@ namespace BL.Services
 
         public IRoom GetRoomById(int id)
         {
-            return Db.Context(context =>
-            {
-                return (from a in context.Rooms
-                        select new RoomDto
-                        {
-                            Id = a.Id,
-                            Number = a.Number,
-                            Capacity = a.Capacity,
-                            Remarks = a.Remarks,
-                            Status = a.Status
-                        }).FirstOrDefault();
-            });
-        }
-
-        public IEnumerable<IRoom> AllRooms()
-        {
-            return Db.Context(context =>
-            {
-                return (from a in context.Rooms
-                        select new RoomDto
-                        {
-                            Id = a.Id,
-                            Number = a.Number,
-                            Capacity = a.Capacity,
-                            Remarks = a.Remarks,
-                            Status = a.Status
-                        });
-            });
+            return Rooms().Where(o => o.Id == id).FirstOrDefault();
         }
 
         public IEnumerable<IRoom> GetAllRooms()
         {
-            return AllRooms().Where(o => o.Status == Status.Active).OrderBy(o => o.Number).ToList();
+            return Rooms().Where(o => o.Status == Status.Active).OrderBy(o => o.Number).ToList();
         }
 
-        public IEnumerable<IDropDownMenuITem> GetRecordsBindToDropDown()
+        public IEnumerable<IOption> GetRecordsBindToDropDown()
         {
-            return AllRooms().Where(o => o.Status == Status.Active).OrderBy(o => o.Number)
-                .Select(o => new DropDownMenuItemDto { Text = o.Number, Value = o.Id }).ToList();
+            return Rooms().Where(o => o.Status == Status.Active).OrderBy(o => o.Number)
+                    .Select(o => new OptionDto { Text = o.Number, Value = o.Id }).ToList();
         }
     }
 }

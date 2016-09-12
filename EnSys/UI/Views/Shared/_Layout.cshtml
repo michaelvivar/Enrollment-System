@@ -38,5 +38,57 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('form').validate({
+                ignore: []
+            });
+            $('.date-picker').each(function () {
+                var startView = ($(this).data('startView') >= 0) ? $(this).data('startView') : 2;
+                $(this).datepicker({
+                    autoclose: true,
+                    startView: startView
+                });
+                if ($(this).val() == '1/1/0001 12:00:00 AM') {
+                    $(this).val('');
+                }
+                else {
+                    $(this).val($(this).val().split(' ')[0]);
+                }
+            });
+            $('select[data-url]').each(function () {
+                var $this = $(this);
+                var value;
+                if ($this.find('option').length > 0) {
+                    value = $this.find('option').first().attr('value');
+                    $this.find('option').remove();
+                }
+                else {
+                    $this.prepend('<option></option>');
+                }
+                var url = $this.data('url');
+                $.ajax({
+                    url: url,
+                    async: true,
+                    success: function (result) {
+                        var ele = $this.select2({
+                            data: $.map(result, function (e, i) {
+                                return { id: e.Value, text: e.Text };
+                            }),
+                            placeholder: 'Select a Record',
+                            minimumResultsForSearch: Infinity
+                        });
+                        if (typeof value != 'undefined' && value > 0) {
+                            ele.val(value).trigger('change');
+                        }
+                        else {
+                            ele.val('').trigger('change');
+                        }
+                            
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

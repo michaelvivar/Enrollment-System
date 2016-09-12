@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Util.Enums;
 
 namespace DL.Entities
 {
+    [Table("Subject")]
     public class Subject
     {
         [Key]

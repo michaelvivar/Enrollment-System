@@ -5,15 +5,17 @@ namespace DL
 {
     public class Context : DbContext
     {
-        internal Context()
+        public Context() : base("name=EnSysContext")
         {
             Configuration.LazyLoadingEnabled = false;
+            //Database.SetInitializer(new Initializer());
         }
 
         public DbSet<ClassSchedule> Classes { get; set; }
         public DbSet<ContactInfo> ContactInfo { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseSubjectMapping> CourseSubjectMapping { get; set; }
+        public DbSet<Option> Options { get; set; } 
         public DbSet<Instructor> Instrcutors { get; set; }
         public DbSet<Person> Persons { get; set; }
         public DbSet<Room> Rooms { get; set; }

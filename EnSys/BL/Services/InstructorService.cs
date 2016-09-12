@@ -10,6 +10,8 @@ namespace BL.Services
 {
     public class InstructorService : PersonService, IService
     {
+        public InstructorService(Context context) : base(context) { }
+
         private Instructor MapDtoToEntity(IInstructor dto)
         {
             return new Instructor();
@@ -22,7 +24,7 @@ namespace BL.Services
 
         public void AddInstructor(IInstructor dto)
         {
-            Db.UnitOfWork(uow =>
+            UnitOfWork(uow =>
             {
                 uow.Repository<Instructor>(repo =>
                 {
@@ -36,7 +38,7 @@ namespace BL.Services
 
         public void UpdateInstructor(IInstructor dto)
         {
-            Db.UnitOfWork(uow =>
+            UnitOfWork(uow =>
             {
                 uow.Repository<Instructor>(repo => repo.Update(MapDtoToEntity(dto)));
             });
@@ -44,7 +46,7 @@ namespace BL.Services
 
         public void ActivateInstructor(int id)
         {
-            Db.UnitOfWork(uow => uow.Repository<Instructor>(repo =>
+            UnitOfWork(uow => uow.Repository<Instructor>(repo =>
             {
                 Instructor teacher = repo.Get(id);
                 teacher.Status = Status.Active;
@@ -54,7 +56,7 @@ namespace BL.Services
 
         public void InactivateInstructor(int id)
         {
-            Db.UnitOfWork(uow => uow.Repository<Instructor>(repo =>
+            UnitOfWork(uow => uow.Repository<Instructor>(repo =>
             {
                 Instructor teacher = repo.Get(id);
                 teacher.Status = Status.Inactive;
@@ -64,66 +66,19 @@ namespace BL.Services
 
         public IInstructor GetInstructorById(int id)
         {
-            return Db.Context(context =>
-            {
-                return (from a in context.Instrcutors
-                        join b in context.Persons
-                        on a.PersonId equals b.Id
-                        join c in context.ContactInfo
-                        on b.ContactInfoId equals c.Id
-                        where a.Id == id
-                        select new InstructorDto
-                        {
-                            Id = a.Id,
-                            PersonId = b.Id,
-                            FirstName = b.FirstName,
-                            LastName = b.LastName,
-                            BirthDate = b.BirthDate,
-                            Gender = b.Gender,
-                            ContactInfoId = c.Id,
-                            Email = c.Email,
-                            Telephone = c.Telephone,
-                            Mobile = c.Mobile
-                        }).FirstOrDefault();
-            });
-        }
-
-        internal IQueryable<IInstructor> AllInstructors()
-        {
-            return Db.Context(context =>
-            {
-                return (from a in context.Instrcutors
-                        join b in context.Persons
-                        on a.PersonId equals b.Id
-                        join c in context.ContactInfo
-                        on b.ContactInfoId equals c.Id
-                        select new InstructorDto
-                        {
-                            Id = a.Id,
-                            PersonId = b.Id,
-                            FirstName = b.FirstName,
-                            LastName = b.LastName,
-                            BirthDate = b.BirthDate,
-                            Gender = b.Gender,
-                            ContactInfoId = c.Id,
-                            Email = c.Email,
-                            Telephone = c.Telephone,
-                            Mobile = c.Mobile
-                        });
-            });
+            return Instructors().Where(o => o.Id == id).FirstOrDefault();
         }
 
         public IEnumerable<IInstructor> GetAllActiveInstructors()
         {
-            return AllInstructors().Where(o => o.Status == Status.Active)
-                .OrderBy(o => o.FirstName).ThenBy(o => o.LastName).ToList();
+            return Instructors().Where(o => o.Status == Status.Active)
+                    .OrderBy(o => o.FirstName).ThenBy(o => o.LastName).ToList();
         }
 
-        public IEnumerable<IDropDownMenuITem> GetRecordsBindToDropDown()
+        public IEnumerable<IOption> GetRecordsBindToDropDown()
         {
-            return AllInstructors().Where(o => o.Status == Status.Active)
-                .OrderBy(o => o.FirstName).ThenBy(o => o.LastName)
-                .Select(o => new DropDownMenuItemDto { Text = o.FirstName + " " + o.LastName, Value = o.Id }).ToList();
+            return Instructors().OrderBy(o => o.FirstName).ThenBy(o => o.LastName)
+                    .Select(o => new OptionDto { Text = o.FirstName + " " + o.LastName, Id = o.Id }).ToList();
         }
     }
 }

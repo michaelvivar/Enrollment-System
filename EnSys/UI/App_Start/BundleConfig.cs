@@ -21,10 +21,14 @@ namespace UI
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
+                      "~/Scripts/select2.js",
+                      "~/Scripts/bootstrap-datepicker.js",
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/css/select2.css",
+                      "~/Content/bootstrap-datepicker3.css",
                       "~/Content/site.css"));
         }
     }

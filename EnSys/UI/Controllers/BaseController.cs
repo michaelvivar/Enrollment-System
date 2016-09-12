@@ -10,11 +10,11 @@ namespace UI.Controllers
 {
     public abstract class BaseController : Controller
     {
-        protected void Service<TService>(Action<TService> action) where TService : IService, new()
+        protected void Service<TService>(Action<TService> action) where TService : IService
         {
             Transaction.Service(action);
         }
-        protected TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService, new()
+        protected TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService
         {
             return Transaction.Service(action);
         }

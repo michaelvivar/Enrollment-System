@@ -9,6 +9,7 @@ using Util.Enums;
 
 namespace DL.Entities
 {
+    [Table("Instructor")]
     public class Instructor
     {
         [Key]
@@ -18,9 +19,9 @@ namespace DL.Entities
         [Required]
         public DateTime CreatedDate { get; set; }
 
-        public int CreatedBy { get; set; }
-        [ForeignKey("CreatedBy")]
-        public virtual User User { get; set; }
+        //public int CreatedBy { get; set; }
+        //[ForeignKey("CreatedBy")]
+        //public virtual User User { get; set; }
 
         public int PersonId { get; set; }
         [ForeignKey("PersonId")]

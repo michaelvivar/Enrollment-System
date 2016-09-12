@@ -52,7 +52,7 @@
     <Compile Include="Dto\ClassScheduleDto.cs" />
     <Compile Include="Dto\ContactInfoDto.cs" />
     <Compile Include="Dto\CourseDto.cs" />
-    <Compile Include="Dto\DropDownMenuItemDto.cs" />
+    <Compile Include="Dto\OptionDto.cs" />
     <Compile Include="Dto\RoomDto.cs" />
     <Compile Include="Dto\StudentDto.cs" />
     <Compile Include="Dto\PersonDto.cs" />
@@ -61,7 +61,7 @@
     <Compile Include="Interfaces\IClassSchedule.cs" />
     <Compile Include="Interfaces\IContactInfo.cs" />
     <Compile Include="Interfaces\ICourse.cs" />
-    <Compile Include="Interfaces\IDropDownMenuITem.cs" />
+    <Compile Include="Interfaces\IOption.cs" />
     <Compile Include="Interfaces\IPersonalInfo.cs" />
     <Compile Include="Interfaces\IInstructor.cs" />
     <Compile Include="Interfaces\IRoom.cs" />
@@ -72,6 +72,8 @@
     <Compile Include="Services\RoomService.cs" />
     <Compile Include="Services\ClassScheduleService.cs" />
     <Compile Include="Services\PersonService.cs" />
+    <Compile Include="Services\OptionService.cs" />
+    <Compile Include="Services\ValidatorService.cs" />
     <Compile Include="Services\SubjectService.cs" />
     <Compile Include="Services\InstructorService.cs" />
     <Compile Include="Services\StudentService.cs" />

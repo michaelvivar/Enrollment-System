@@ -13,6 +13,8 @@ namespace BL.Services
 {
     public class SubjectService : BaseService, IService
     {
+        public SubjectService(Context context) : base(context) { }
+
         public void Dispose()
         {
             
@@ -30,17 +32,17 @@ namespace BL.Services
 
         public void AddSubject(ISubject dto)
         {
-            Db.UnitOfWork(uow => uow.Repository<Subject>(repo => repo.Add(MapDtoToEntity(dto))));
+            UnitOfWork(uow => uow.Repository<Subject>(repo => repo.Add(MapDtoToEntity(dto))));
         }
 
         public void UpdateSubject(ISubject dto)
         {
-            Db.UnitOfWork(uow => uow.Repository<Subject>(repo => repo.Update(MapDtoToEntity(dto))));
+            UnitOfWork(uow => uow.Repository<Subject>(repo => repo.Update(MapDtoToEntity(dto))));
         }
 
         public void DeleteSubject(int id)
         {
-            Db.UnitOfWork(uow => uow.Repository<Subject>(repo =>
+            UnitOfWork(uow => uow.Repository<Subject>(repo =>
             {
                 Subject subject = repo.Get(id);
                 repo.Remove(subject);
@@ -49,7 +51,7 @@ namespace BL.Services
 
         public void ActivateSubject(int id)
         {
-            Db.UnitOfWork(uow => uow.Repository<Subject>(repo =>
+            UnitOfWork(uow => uow.Repository<Subject>(repo =>
             {
                 Subject entity = repo.Get(id);
                 entity.Status = Status.Active;
@@ -59,7 +61,7 @@ namespace BL.Services
 
         public void InactivateSubject(int id)
         {
-            Db.UnitOfWork(uow => uow.Repository<Subject>(repo =>
+            UnitOfWork(uow => uow.Repository<Subject>(repo =>
             {
                 Subject entity = repo.Get(id);
                 entity.Status = Status.Inactive;
@@ -67,34 +69,17 @@ namespace BL.Services
             }));
         }
 
-        internal IQueryable<ISubject> AllSubjects()
-        {
-            return Db.Context(context =>
-            {
-                return (from a in context.Subjects
-                        select new SubjectDto
-                        {
-                            Id = a.Id,
-                            Code = a.Code,
-                            Level = a.Level,
-                            Remarks = a.Remarks,
-                            Status = a.Status,
-                            Units = a.Units
-                        });
-            });
-        }
-
         public ISubject GetSubjectById(int id)
         {
-            return AllSubjects().Where(o => o.Id == id).FirstOrDefault();
+            return Subjects().Where(o => o.Id == id).FirstOrDefault();
         }
 
         public IEnumerable<ISubject> GetSubjectByCourseId(int id)
         {
-            return Db.Context(context =>
+            return Query(context =>
             {
                 return (from a in context.CourseSubjectMapping
-                        join b in AllSubjects()
+                        join b in Subjects()
                         on a.SubjectId equals b.Id
                         where a.CourseId == id && b.Status == Status.Active
                         orderby a.Level
@@ -102,11 +87,11 @@ namespace BL.Services
             });
         }
 
-        public IEnumerable<IDropDownMenuITem> GetRecordsBindToDropDown()
+        public IEnumerable<IOption> GetRecordsBindToDropDown()
         {
-            return AllSubjects().Where(o => o.Status == Status.Active)
+            return Subjects().Where(o => o.Status == Status.Active)
                 .OrderBy(o => o.Level).ThenBy(o => o.Code)
-                .Select(o => new DropDownMenuItemDto { Group = o.Level, Text = o.Code, Value = o.Id }).ToList();
+                .Select(o => new OptionDto { Group = o.Level, Text = o.Code, Value = o.Id }).ToList();
         }
     }
 }
