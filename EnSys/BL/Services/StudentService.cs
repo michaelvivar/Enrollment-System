@@ -16,7 +16,7 @@ namespace BL.Services
 {
     public class StudentService : PersonService, IService
     {
-        public StudentService(Context context) : base(context) { }
+        internal StudentService(Context context) : base(context) { }
 
         private Student MapDtoToEntity(IStudent dto)
         {

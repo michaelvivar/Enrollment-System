@@ -15,11 +15,6 @@ namespace BL.Services
     {
         public SubjectService(Context context) : base(context) { }
 
-        public void Dispose()
-        {
-            
-        }
-
         private Subject MapDtoToEntity(ISubject dto)
         {
             return new Subject();

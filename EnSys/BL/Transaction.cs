@@ -1,6 +1,7 @@
 ﻿using BL.Services;
 using DL;
 using System;
+using System.Runtime.Serialization;
 
 namespace BL
 {
@@ -15,7 +16,7 @@ namespace BL
             });
         }
 
-        public static void Service<TService>(Context context, Action<TService> action) where TService : IService
+        internal static void Service<TService>(Context context, Action<TService> action) where TService : IService
         {
             Service<TService, string>(context, service =>
             {
@@ -26,21 +27,17 @@ namespace BL
 
         public static TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService
         {
-            Context context = new Context();
-            var o = Service(context, action);
-            if (context.ChangeTracker.HasChanges())
-            {
-                context.SaveChanges();
-            }
-            context.Dispose();
+            //TService service = (TService)Activator.CreateInstance(typeof(TService));
+            TService service = (TService)FormatterServices.GetUninitializedObject(typeof(TService));
+            var o = action.Invoke(service);
+            service.Dispose();
             return o;
         }
 
-        public static TOut Service<TService, TOut>(Context context, Func<TService, TOut> action) where TService : IService
+        internal static TOut Service<TService, TOut>(Context context, Func<TService, TOut> action) where TService : IService
         {
             TService service = (TService)Activator.CreateInstance(typeof(TService), context);
             var o = action.Invoke(service);
-            service.Dispose();
             return o;
         }
     }

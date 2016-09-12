@@ -13,11 +13,6 @@ namespace BL.Services
     {
         public OptionService(Context context) : base(context) { }
 
-        public void Dispose()
-        {
-            
-        }
-
         public IEnumerable<IOption> GetRecordsBindToDropDown(OptionType type)
         {
             return Query(context => Options().Where(o => o.Type == type).ToList());

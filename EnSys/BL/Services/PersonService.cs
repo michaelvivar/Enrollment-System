@@ -10,14 +10,9 @@ using System.Threading.Tasks;
 
 namespace BL.Services
 {
-    public abstract class PersonService : BaseService, IDisposable
+    public abstract class PersonService : BaseService
     {
         public PersonService(Context context) : base(context) { }
-
-        public void Dispose()
-        {
-            
-        }
 
         protected Person MapDtoToPersonEntity(IPersonalInfo dto)
         {
@@ -67,10 +62,5 @@ namespace BL.Services
     public class PersonValidatorService : BaseService, IService
     {
         public PersonValidatorService(Context context) : base(context) { }
-
-        public void Dispose()
-        {
-            
-        }
     }
 }

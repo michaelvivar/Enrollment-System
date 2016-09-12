@@ -12,11 +12,6 @@ namespace BL.Services
     {
         public ClassScheduleService(Context context) : base(context) { }
 
-        public void Dispose()
-        {
-            
-        }
-
         private IClassSchedule MapEntityToDto(ClassSchedule entity)
         {
             return new ClassScheduleDto();

@@ -14,10 +14,6 @@ namespace BL.Services
     public class RoomService : BaseService, IService
     {
         public RoomService(Context context) : base(context) { }
-        public void Dispose()
-        {
-            
-        }
 
         private Room MapDtoToEntity(IRoom dto)
         {

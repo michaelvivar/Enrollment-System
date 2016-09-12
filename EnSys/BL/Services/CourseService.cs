@@ -13,11 +13,6 @@ namespace BL.Services
     {
         public CourseService(Context context) : base(context) { }
 
-        public void Dispose()
-        {
-
-        }
-
         private Course MapDtoToEntity(ICourse dto)
         {
             return new Course

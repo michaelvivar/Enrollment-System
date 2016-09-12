@@ -11,11 +11,6 @@ namespace BL.Services
     {
         public ValidatorService(Context context) : base(context) { }
 
-        public void Dispose()
-        {
-            
-        }
-
         public bool CheckPersonExists(int id, string firstName, string lastName, DateTime birthdate)
         {
             var records = Query(context => context.Persons.Where(o => o.FirstName == firstName && o.LastName == lastName && o.BirthDate == birthdate).Select(o => o.Id));
