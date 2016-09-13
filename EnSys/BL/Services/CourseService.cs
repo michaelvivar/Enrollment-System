@@ -50,8 +50,7 @@ namespace BL.Services
             Repository<Course>(repo =>
             {
                 Course course = MapDtoToEntity(dto);
-                repo.Update(course);
-                InsertOrDeleteMapping(course.Id, dto.Subjects);
+                repo.Update(course, "Status");
             });
         }
 
