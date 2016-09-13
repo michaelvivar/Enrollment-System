@@ -20,12 +20,13 @@ namespace BL.Services
 
         private Course MapDtoToEntity(ICourse dto)
         {
-            return new Course();
-        }
-
-        private ICourse MapEntityToDto(Course entity)
-        {
-            return new CourseDto();
+            return new Course
+            {
+                Id = dto.Id,
+                Code = dto.Code,
+                Remarks = dto.Remarks,
+                Status = dto.Status
+            };
         }
 
         public void AddCourse(ICourse dto)
@@ -34,11 +35,6 @@ namespace BL.Services
             {
                 Course course = MapDtoToEntity(dto);
                 repo.Add(course);
-                if (dto.Subjects != null && dto.Subjects.Count() > 0)
-                {
-                    List<CourseSubjectMapping> mapping = dto.Subjects.Select(subject => new CourseSubjectMapping { Course = course, SubjectId = subject.Id }).ToList();
-                    uow.Repository<CourseSubjectMapping>(r => r.AddRange(mapping));
-                }
             }));
         }
 
@@ -47,8 +43,7 @@ namespace BL.Services
             UnitOfWork(uow => uow.Repository<Course>(repo =>
             {
                 Course course = MapDtoToEntity(dto);
-                repo.Update(course);
-                InsertOrDeleteMapping(course.Id, dto.Subjects);
+                repo.Update(course, "Status");
             }));
         }
 

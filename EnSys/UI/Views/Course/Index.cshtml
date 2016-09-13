@@ -1,10 +1,10 @@
-﻿@model IEnumerable<UI.Models.StudentModel>
+﻿@model IEnumerable<UI.Models.CourseModel>
 
 @{
-    ViewBag.Title = "Students";
+    ViewBag.Title = "Courses";
 }
 
-<h2>Students</h2>
+<h2>Courses</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })
@@ -12,16 +12,13 @@
 <table class="table">
     <tr>
         <th>
-            Name
+            @Html.DisplayNameFor(model => model.Code)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Level)
+            @Html.DisplayNameFor(model => model.Remarks)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Course)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreatedDate)
+            @Html.DisplayNameFor(model => model.Status)
         </th>
         <th></th>
     </tr>
@@ -29,16 +26,13 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
+            @Html.DisplayFor(modelItem => item.Code)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Level) Year
+            @Html.DisplayFor(modelItem => item.Remarks)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Course)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreatedDate)
+            @Html.DisplayFor(modelItem => item.Status)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
