@@ -11,7 +11,7 @@ namespace DL
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         private DbContext Context { get; set; }
-        internal Repository(DbContext context)
+        public Repository(DbContext context)
         {
             Context = context;
         }

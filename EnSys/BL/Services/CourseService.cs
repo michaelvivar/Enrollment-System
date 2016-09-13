@@ -11,12 +11,7 @@ namespace BL.Services
 {
     public class CourseService : BaseService, IService
     {
-        public CourseService(Context context) : base(context) { }
-
-        public void Dispose()
-        {
-
-        }
+        internal CourseService(Context context) : base(context) { }
 
         private Course MapDtoToEntity(ICourse dto)
         {
@@ -29,29 +24,42 @@ namespace BL.Services
             };
         }
 
+        private ICourse MapEntityToDto(Course entity)
+        {
+            return new CourseDto
+            {
+                Id = entity.Id,
+                Code = entity.Code,
+                Remarks = entity.Remarks,
+                Status = entity.Status
+            };
+        }
+
         public void AddCourse(ICourse dto)
         {
-            UnitOfWork(uow => uow.Repository<Course>(repo =>
+            Repository<Course>(repo =>
             {
                 Course course = MapDtoToEntity(dto);
+                course.Status = Status.Active;
                 repo.Add(course);
-            }));
+            });
         }
 
         public void UpdateCourse(ICourse dto)
         {
-            UnitOfWork(uow => uow.Repository<Course>(repo =>
+            Repository<Course>(repo =>
             {
                 Course course = MapDtoToEntity(dto);
-                repo.Update(course, "Status");
-            }));
+                repo.Update(course);
+                InsertOrDeleteMapping(course.Id, dto.Subjects);
+            });
         }
 
-        private void InsertOrDeleteMapping(int courseId, IEnumerable<ISubject> list)
+        public void InsertOrDeleteMapping(int courseId, IEnumerable<ISubject> list)
         {
             if (list != null && list.Count() > 0)
             {
-                UnitOfWork(uow => uow.Repository<CourseSubjectMapping>(repo =>
+                Repository<CourseSubjectMapping>(repo =>
                 {
                     var mapping = repo.Get(o => o.CourseId == courseId).ToList();
                     var delete = mapping.Where(o => !list.Select(s => s.Id).Contains(o.SubjectId));
@@ -65,47 +73,41 @@ namespace BL.Services
                     });
                     if (insert != null && insert.Count() > 0)
                         repo.AddRange(insert);
-                }));
+                });
             }
             else
             {
-                UnitOfWork(uow => uow.Repository<CourseSubjectMapping>(repo =>
+                Repository<CourseSubjectMapping>(repo =>
                 {
                     var mapping = repo.Get(o => o.CourseId == courseId);
                     if (mapping != null && mapping.Count() > 0)
                         repo.RemoveRange(mapping);
-                }));
+                });
             }
         }
 
         public void DeleteCourse(int id)
         {
-            UnitOfWork(uow => uow.Repository<Course>(repo => repo.Remove(repo.SingleOrDefault(o => o.Id == id))));
+            Repository<Course>(repo => repo.Remove(repo.SingleOrDefault(o => o.Id == id)));
         }
 
         public void ActivateCourse(int id)
         {
-            UnitOfWork(uow =>
+            Repository<Course>(repo =>
             {
-                uow.Repository<Course>(repo =>
-                {
-                    Course course = repo.Get(id);
-                    course.Status = Status.Active;
-                    repo.Update(course);
-                });
+                Course course = repo.Get(id);
+                course.Status = Status.Active;
+                repo.Update(course);
             });
         }
 
         public void InactivateCourse(int id)
         {
-            UnitOfWork(uow =>
+            Repository<Course>(repo =>
             {
-                uow.Repository<Course>(repo =>
-                {
-                    Course course = repo.Get(id);
-                    course.Status = Status.Inactive;
-                    repo.Update(course);
-                });
+                Course course = repo.Get(id);
+                course.Status = Status.Inactive;
+                repo.Update(course);
             });
         }
 

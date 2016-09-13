@@ -13,11 +13,7 @@ namespace BL.Services
 {
     public class RoomService : BaseService, IService
     {
-        public RoomService(Context context) : base(context) { }
-        public void Dispose()
-        {
-            
-        }
+        internal RoomService(Context context) : base(context) { }
 
         private Room MapDtoToEntity(IRoom dto)
         {
@@ -26,20 +22,20 @@ namespace BL.Services
 
         public void AddRoom(IRoom dto)
         {
-            UnitOfWork(ouw => ouw.Repository<Room>(repo => repo.Add(MapDtoToEntity(dto))));
+            Repository<Room>(repo => repo.Add(MapDtoToEntity(dto)));
         }
 
         public void UpdateRoom(IRoom dto)
         {
-            UnitOfWork(ouw => ouw.Repository<Room>(repo => repo.Update(MapDtoToEntity(dto))));
+            Repository<Room>(repo => repo.Update(MapDtoToEntity(dto)));
         }
 
         public void DeleteRoom(int id)
         {
-            UnitOfWork(ouw => ouw.Repository<Room>(repo =>
+            Repository<Room>(repo =>
             {
                 Room entity = repo.Get(id);
-            }));
+            });
         }
 
         public IRoom GetRoomById(int id)

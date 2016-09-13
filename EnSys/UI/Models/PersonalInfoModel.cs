@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using Util.Enums;
+using Util.Helpers;
 
 namespace UI.Models
 {
@@ -18,6 +19,13 @@ namespace UI.Models
         public string LastName { get; set; }
         [Display(Name = "Birth Date")] [Required]
         public DateTime BirthDate { get; set; }
+        public double Age
+        {
+            get
+            {
+                return BirthDate.Age();
+            }
+        }
         [Required]
         public Gender Gender { get; set; }
         public int GenderId

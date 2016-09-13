@@ -10,12 +10,7 @@ namespace BL.Services
 {
     public class ClassScheduleService : BaseService, IService
     {
-        public ClassScheduleService(Context context) : base(context) { }
-
-        public void Dispose()
-        {
-            
-        }
+        internal ClassScheduleService(Context context) : base(context) { }
 
         private IClassSchedule MapEntityToDto(ClassSchedule entity)
         {
@@ -29,7 +24,7 @@ namespace BL.Services
 
         public void AddClassSchedule(IClassSchedule dto)
         {
-            UnitOfWork(uow => uow.Repository<ClassSchedule>(repo =>
+            Repository<ClassSchedule>(repo =>
             {
                 IList<ClassSchedule> classes = new List<ClassSchedule>();
                 foreach(DayOfWeek day in dto.Days)
@@ -37,21 +32,21 @@ namespace BL.Services
                     classes.Add(MapDtoToEntity(dto));
                 }
                 repo.AddRange(classes);
-            }));
+            });
         }
 
         public void UpdateClassSchedule(IClassSchedule dto)
         {
-            UnitOfWork(uow => uow.Repository<ClassSchedule>(repo => repo.Update(MapDtoToEntity(dto))));
+            Repository<ClassSchedule>(repo => repo.Update(MapDtoToEntity(dto)));
         }
 
         public void DeleteClassSchedule(int id)
         {
-            UnitOfWork(uow => uow.Repository<ClassSchedule>(repo =>
+            Repository<ClassSchedule>(repo =>
             {
                 ClassSchedule entity = repo.Get(id);
                 repo.Remove(entity);
-            }));
+            });
         }
 
         public IEnumerable<IClassSchedule> GetClassesByStudentId(int id)

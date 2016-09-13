@@ -16,7 +16,7 @@ namespace BL.Services
 {
     public class StudentService : PersonService, IService
     {
-        public StudentService(Context context) : base(context) { }
+        internal StudentService(Context context) : base(context) { }
 
         private Student MapDtoToEntity(IStudent dto)
         {
@@ -29,37 +29,27 @@ namespace BL.Services
             };
         }
 
-        private IStudent MapEntityToDto(Student entity)
-        {
-            return new StudentDto();
-        }
-
         public void AddStudent(IStudent dto)
         {
-            UnitOfWork(uow =>
+            Repository<Student>(repo =>
             {
-                uow.Repository<Student>(repo =>
-                {
-                    Student student = MapDtoToEntity(dto);
-                    student.CreatedDate = DateTime.Now;
-                    student.Person = MapDtoToPersonEntity(dto);
-                    student.Person.ContactInfo = MapDtoToContactInfoEntity(dto);
-                    repo.Add(student);
-                });
+                Student student = MapDtoToEntity(dto);
+                student.CreatedDate = DateTime.Now;
+                student.Status = Status.Active;
+                student.Person = MapDtoToPersonEntity(dto);
+                student.Person.ContactInfo = MapDtoToContactInfoEntity(dto);
+                repo.Add(student);
             });
         }
 
         public void UpdateStudent(IStudent dto)
         {
-            UnitOfWork(uow =>
+            Repository<Student>(repo =>
             {
-                uow.Repository<Student>(repo =>
-                {
-                    Student student = MapDtoToEntity(dto);
-                    repo.Update(student, "Status", "CreatedDate");
-                    UpdatePersonalInfo(dto);
-                    UpdateContactInfo(dto);
-                });
+                Student student = MapDtoToEntity(dto);
+                repo.Update(student, "Status", "CreatedDate");
+                UpdatePersonalInfo(dto);
+                UpdateContactInfo(dto);
             });
         }
 

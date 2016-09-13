@@ -10,7 +10,7 @@ namespace BL.Services
 {
     public class InstructorService : PersonService, IService
     {
-        public InstructorService(Context context) : base(context) { }
+        internal InstructorService(Context context) : base(context) { }
 
         private Instructor MapDtoToEntity(IInstructor dto)
         {
@@ -24,44 +24,38 @@ namespace BL.Services
 
         public void AddInstructor(IInstructor dto)
         {
-            UnitOfWork(uow =>
+            Repository<Instructor>(repo =>
             {
-                uow.Repository<Instructor>(repo =>
-                {
-                    Instructor teacher = MapDtoToEntity(dto);
-                    teacher.Person = MapDtoToPersonEntity(dto);
-                    teacher.Person.ContactInfo = MapDtoToContactInfoEntity(dto);
-                    repo.Add(teacher);
-                });
+                Instructor teacher = MapDtoToEntity(dto);
+                teacher.Person = MapDtoToPersonEntity(dto);
+                teacher.Person.ContactInfo = MapDtoToContactInfoEntity(dto);
+                repo.Add(teacher);
             });
         }
 
         public void UpdateInstructor(IInstructor dto)
         {
-            UnitOfWork(uow =>
-            {
-                uow.Repository<Instructor>(repo => repo.Update(MapDtoToEntity(dto)));
-            });
+            Repository<Instructor>(repo => repo.Update(MapDtoToEntity(dto)));
         }
 
         public void ActivateInstructor(int id)
         {
-            UnitOfWork(uow => uow.Repository<Instructor>(repo =>
+            Repository<Instructor>(repo =>
             {
                 Instructor teacher = repo.Get(id);
                 teacher.Status = Status.Active;
                 repo.Update(teacher);
-            }));
+            });
         }
 
         public void InactivateInstructor(int id)
         {
-            UnitOfWork(uow => uow.Repository<Instructor>(repo =>
+            Repository<Instructor>(repo =>
             {
                 Instructor teacher = repo.Get(id);
                 teacher.Status = Status.Inactive;
                 repo.Update(teacher);
-            }));
+            });
         }
 
         public IInstructor GetInstructorById(int id)

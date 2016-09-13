@@ -13,12 +13,7 @@ namespace BL.Services
 {
     public class SubjectService : BaseService, IService
     {
-        public SubjectService(Context context) : base(context) { }
-
-        public void Dispose()
-        {
-            
-        }
+        internal SubjectService(Context context) : base(context) { }
 
         private Subject MapDtoToEntity(ISubject dto)
         {
@@ -32,41 +27,41 @@ namespace BL.Services
 
         public void AddSubject(ISubject dto)
         {
-            UnitOfWork(uow => uow.Repository<Subject>(repo => repo.Add(MapDtoToEntity(dto))));
+            Repository<Subject>(repo => repo.Add(MapDtoToEntity(dto)));
         }
 
         public void UpdateSubject(ISubject dto)
         {
-            UnitOfWork(uow => uow.Repository<Subject>(repo => repo.Update(MapDtoToEntity(dto))));
+            Repository<Subject>(repo => repo.Update(MapDtoToEntity(dto)));
         }
 
         public void DeleteSubject(int id)
         {
-            UnitOfWork(uow => uow.Repository<Subject>(repo =>
+            Repository<Subject>(repo =>
             {
                 Subject subject = repo.Get(id);
                 repo.Remove(subject);
-            }));
+            });
         }
 
         public void ActivateSubject(int id)
         {
-            UnitOfWork(uow => uow.Repository<Subject>(repo =>
+            Repository<Subject>(repo =>
             {
                 Subject entity = repo.Get(id);
                 entity.Status = Status.Active;
                 repo.Update(entity);
-            }));
+            });
         }
 
         public void InactivateSubject(int id)
         {
-            UnitOfWork(uow => uow.Repository<Subject>(repo =>
+            Repository<Subject>(repo =>
             {
                 Subject entity = repo.Get(id);
                 entity.Status = Status.Inactive;
                 repo.Update(entity);
-            }));
+            });
         }
 
         public ISubject GetSubjectById(int id)

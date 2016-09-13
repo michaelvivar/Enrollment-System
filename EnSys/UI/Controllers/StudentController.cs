@@ -19,6 +19,7 @@ namespace UI.Controllers
             return TinyMapper.Map<StudentModel>(dto);
         }
 
+        [Route("")]
         public ActionResult Index()
         {
             IEnumerable<StudentModel> students = Service<StudentService, IEnumerable<StudentModel>>(service => service.GetAllActiveStudents().Select(o => MapDtoToModel(o)));
@@ -37,6 +38,7 @@ namespace UI.Controllers
             if (ModelState.IsValid)
             {
                 Service<StudentService>(service => service.AddStudent(model));
+                return RedirectToAction("Index");
             }
             return View(model);
         }
@@ -53,6 +55,7 @@ namespace UI.Controllers
             if (ModelState.IsValid)
             {
                 Service<StudentService>(service => service.UpdateStudent(model));
+                return RedirectToAction("Index");
             }
             return View(model);
         }

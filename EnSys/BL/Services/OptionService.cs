@@ -11,12 +11,7 @@ namespace BL.Services
 {
     public class OptionService : BaseService, IService
     {
-        public OptionService(Context context) : base(context) { }
-
-        public void Dispose()
-        {
-            
-        }
+        internal OptionService(Context context) : base(context) { }
 
         public IEnumerable<IOption> GetRecordsBindToDropDown(OptionType type)
         {

@@ -38,7 +38,7 @@ namespace UI.Models
                 yield return new ValidationResult(string.Format("Please fill atleast one of the contact information"));
             }
 
-            if (BirthDate < (DateTime)SqlDateTime.MinValue)
+            if (BirthDate < (DateTime)SqlDateTime.MinValue && BirthDate > DateTime.Now)
             {
                 hasError = true;
                 yield return new ValidationResult(string.Format("Invalid date of birth!"));
@@ -50,7 +50,7 @@ namespace UI.Models
                 {
                     bool[] validation = new bool[2];
                     validation[0] = service.CheckPersonExists(PersonId, FirstName, LastName, BirthDate);
-                    validation[1] = service.CheckEmailExists(ContactInfoId, Email);
+                    validation[1] = (string.IsNullOrWhiteSpace(Email) ? false : service.CheckEmailExists(ContactInfoId, Email));
                     return validation;
                 });
 

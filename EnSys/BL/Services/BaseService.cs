@@ -7,36 +7,35 @@ using System.Linq;
 
 namespace BL.Services
 {
-    public abstract class BaseService
+    public abstract class BaseService : IDisposable
     {
-        protected readonly Context _context;
+        //private Context Context { get { if (_context == null) { _context = new Context(); } return _context; } }
+        //private Context Context { get { return _contexts; } }
+        private Context _context { get; set; }
+        internal BaseService(Context context) { _context = context; }
 
-        public BaseService(Context context) { _context = context; }
 
-        protected void Service<TService>(Action<TService> action) where TService : IService, new()
+        protected void Service<TService>(Action<TService> action) where TService : IService
         {
             Transaction.Service(_context, action);
         }
-
-        protected TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService, new()
+        protected TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService
         {
             return Transaction.Service(_context, action);
         }
-
         protected TOut Query<TOut>(Func<Context, TOut> action)
         {
-            return Db.Context(_context, action);
+            return action.Invoke(_context);
+        }
+        protected void Repository<TEntity>(Action<IRepository<TEntity>> action) where TEntity : class
+        {
+            action.Invoke(new Repository<TEntity>(_context));
+        }
+        protected TOut Repository<TEntity, TOut>(Func<IRepository<TEntity>, TOut> action) where TEntity : class
+        {
+            return action.Invoke(new Repository<TEntity>(_context));
         }
 
-        protected TOut UnitOfWork<TOut>(Func<IUnitOfWork, TOut> action)
-        {
-            return Db.UnitOfWork(_context, action);
-        }
-
-        protected void UnitOfWork(Action<IUnitOfWork> action)
-        {
-            Db.UnitOfWork(_context, uow => { action.Invoke(uow); return string.Empty; });
-        }
 
         protected IQueryable<IStudent> Students()
         {
@@ -109,7 +108,6 @@ namespace BL.Services
                         Units = a.Units
                     });
         }
-
         protected IQueryable<IClassSchedule> Classes()
         {
             return (from a in _context.Classes
@@ -142,7 +140,6 @@ namespace BL.Services
                         Status = a.Status
                     });
         }
-
         protected IQueryable<IOption> Options()
         {
             return (from a in _context.Options
@@ -153,6 +150,11 @@ namespace BL.Services
                         Group = a.Group,
                         Type = a.Type
                     });
+        }
+
+        public virtual void Dispose()
+        {
+            
         }
     }
 

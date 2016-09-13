@@ -10,14 +10,9 @@ using System.Threading.Tasks;
 
 namespace BL.Services
 {
-    public abstract class PersonService : BaseService, IDisposable
+    public abstract class PersonService : BaseService
     {
-        public PersonService(Context context) : base(context) { }
-
-        public void Dispose()
-        {
-            
-        }
+        internal PersonService(Context context) : base(context) { }
 
         protected Person MapDtoToPersonEntity(IPersonalInfo dto)
         {
@@ -55,22 +50,17 @@ namespace BL.Services
 
         protected void UpdatePersonalInfo(IPersonalInfo dto)
         {
-            UnitOfWork(uow => uow.Repository<Person>(repo => repo.Update(MapDtoToPersonEntity(dto))));
+            Repository<Person>(repo => repo.Update(MapDtoToPersonEntity(dto)));
         }
 
         protected void UpdateContactInfo(IContactInfo dto)
         {
-            UnitOfWork(uow => uow.Repository<ContactInfo>(repo => repo.Update(MapDtoToContactInfoEntity(dto))));
+            Repository<ContactInfo>(repo => repo.Update(MapDtoToContactInfoEntity(dto)));
         }
     }
 
     public class PersonValidatorService : BaseService, IService
     {
         public PersonValidatorService(Context context) : base(context) { }
-
-        public void Dispose()
-        {
-            
-        }
     }
 }

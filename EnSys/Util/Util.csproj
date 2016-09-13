@@ -44,6 +44,9 @@
     <Compile Include="Enums\Gender.cs" />
     <Compile Include="Enums\Status.cs" />
     <Compile Include="Enums\YearLevel.cs" />
+    <Compile Include="Helpers\DateTimeExtensionHelper.cs" />
+    <Compile Include="Helpers\SafeNavigationEntensionHelper.cs" />
+    <Compile Include="Helpers\TypeExtensionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
