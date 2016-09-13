@@ -31,31 +31,30 @@ namespace BL
 
         public static TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService
         {
-            Context context = new Context();
+            Context context = (Context)Activator.CreateInstance(typeof(Context), BindingFlags.NonPublic | BindingFlags.Instance, null, null, null, null);
             var o = Service(context, action);
             if (context.ChangeTracker.HasChanges())
                 context.SaveChanges();
-            context.SaveChanges();
+            context.Dispose();
             return o;
         }
 
         internal static TOut Service<TService, TOut>(Context context, Func<TService, TOut> action) where TService : IService
         {
             BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-            CultureInfo culture = null;
             Type type = typeof(TService);
             try
             {
                 if (type.GetConstructors(flags).All(c => c.GetParameters().Length == 0))
                 {
-                    TService service = (TService)Activator.CreateInstance(type, flags, null, null, culture, null);
+                    TService service = (TService)Activator.CreateInstance(type, flags, null, null, null, null);
                     var o = action.Invoke(service);
                     service.Dispose();
                     return o;
                 }
                 else
                 {
-                    TService service = (TService)Activator.CreateInstance(type, flags, null, new object[] { context }, culture, null);
+                    TService service = (TService)Activator.CreateInstance(type, flags, null, new object[] { context }, null, null);
                     var o = action.Invoke(service);
                     service.Dispose();
                     return o;

@@ -69,10 +69,12 @@
     <Compile Include="Interfaces\ISubject.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CourseService.cs" />
+    <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\RoomService.cs" />
     <Compile Include="Services\ClassScheduleService.cs" />
     <Compile Include="Services\PersonService.cs" />
     <Compile Include="Services\OptionService.cs" />
+    <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\ValidatorService.cs" />
     <Compile Include="Services\SubjectService.cs" />
     <Compile Include="Services\InstructorService.cs" />

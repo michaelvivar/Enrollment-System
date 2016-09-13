@@ -55,10 +55,7 @@ namespace BL.Services
 
         public IStudent GetStudentById(int id)
         {
-            return Query(context =>
-            {
-                return Students().SingleOrDefault(o => o.Id == id);
-            });
+            return Query(context => Students().SingleOrDefault(o => o.Id == id));
         }
 
         public IEnumerable<IStudent> GetAllActiveStudents()

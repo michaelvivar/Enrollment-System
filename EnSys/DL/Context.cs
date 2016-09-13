@@ -6,7 +6,7 @@ namespace DL
 {
     public class Context : DbContext
     {
-        public Context() : base("name=EnSysContext")
+        internal Context() : base("name=EnSysContext")
         {
             Configuration.LazyLoadingEnabled = false;
             //Database.SetInitializer(new Initializer());
