@@ -1,14 +1,12 @@
-﻿using BL;
-using BL.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using Util.Enums;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace UI.Helpers
+namespace Util.Helpers
 {
-    public static class DateTimeHelperExtension
+    public static class DateTimeExtensionHelper
     {
         public static double Age(this DateTime birthdate)
         {

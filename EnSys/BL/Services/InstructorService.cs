@@ -10,7 +10,7 @@ namespace BL.Services
 {
     public class InstructorService : PersonService, IService
     {
-        public InstructorService(Context context) : base(context) { }
+        internal InstructorService(Context context) : base(context) { }
 
         private Instructor MapDtoToEntity(IInstructor dto)
         {

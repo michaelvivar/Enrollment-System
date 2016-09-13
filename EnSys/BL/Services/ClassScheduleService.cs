@@ -10,7 +10,7 @@ namespace BL.Services
 {
     public class ClassScheduleService : BaseService, IService
     {
-        public ClassScheduleService(Context context) : base(context) { }
+        internal ClassScheduleService(Context context) : base(context) { }
 
         private IClassSchedule MapEntityToDto(ClassSchedule entity)
         {

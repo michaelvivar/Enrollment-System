@@ -13,7 +13,7 @@ namespace BL.Services
 {
     public class RoomService : BaseService, IService
     {
-        public RoomService(Context context) : base(context) { }
+        internal RoomService(Context context) : base(context) { }
 
         private Room MapDtoToEntity(IRoom dto)
         {

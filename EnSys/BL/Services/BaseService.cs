@@ -9,39 +9,40 @@ namespace BL.Services
 {
     public abstract class BaseService : IDisposable
     {
+        //private Context Context { get { if (_context == null) { _context = new Context(); } return _context; } }
+        //private Context Context { get { return _contexts; } }
         private Context _context { get; set; }
-        private Context Context { get { if (_context == null) { _context = new Context(); } return _context; } }
-        public BaseService(Context context) { _context = context; }
+        internal BaseService(Context context) { _context = context; }
 
 
         protected void Service<TService>(Action<TService> action) where TService : IService
         {
-            Transaction.Service(Context, action);
+            Transaction.Service(_context, action);
         }
         protected TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService
         {
-            return Transaction.Service(Context, action);
+            return Transaction.Service(_context, action);
         }
         protected TOut Query<TOut>(Func<Context, TOut> action)
         {
-            return action.Invoke(Context);
+            return action.Invoke(_context);
         }
         protected void Repository<TEntity>(Action<IRepository<TEntity>> action) where TEntity : class
         {
-            action.Invoke(new Repository<TEntity>(Context));
+            action.Invoke(new Repository<TEntity>(_context));
         }
         protected TOut Repository<TEntity, TOut>(Func<IRepository<TEntity>, TOut> action) where TEntity : class
         {
-            return action.Invoke(new Repository<TEntity>(Context));
+            return action.Invoke(new Repository<TEntity>(_context));
         }
 
 
         protected IQueryable<IStudent> Students()
         {
-            return (from a in Context.Students
-                    join b in Context.Persons
+            return (from a in _context.Students
+                    join b in _context.Persons
                     on a.PersonId equals b.Id
-                    join c in Context.ContactInfo
+                    join c in _context.ContactInfo
                     on b.ContactInfoId equals c.Id
                     select new StudentDto
                     {
@@ -64,10 +65,10 @@ namespace BL.Services
         }
         protected IQueryable<IInstructor> Instructors()
         {
-            return (from a in Context.Instrcutors
-                    join b in Context.Persons
+            return (from a in _context.Instrcutors
+                    join b in _context.Persons
                     on a.PersonId equals b.Id
-                    join c in Context.ContactInfo
+                    join c in _context.ContactInfo
                     on b.ContactInfoId equals c.Id
                     select new InstructorDto
                     {
@@ -85,7 +86,7 @@ namespace BL.Services
         }
         protected IQueryable<ICourse> Courses()
         {
-            return (from a in Context.Courses
+            return (from a in _context.Courses
                     select new CourseDto
                     {
                         Id = a.Id,
@@ -96,7 +97,7 @@ namespace BL.Services
         }
         protected IQueryable<ISubject> Subjects()
         {
-            return (from a in Context.Subjects
+            return (from a in _context.Subjects
                     select new SubjectDto
                     {
                         Id = a.Id,
@@ -109,7 +110,7 @@ namespace BL.Services
         }
         protected IQueryable<IClassSchedule> Classes()
         {
-            return (from a in Context.Classes
+            return (from a in _context.Classes
                     select new ClassScheduleDto
                     {
                         Id = a.Id,
@@ -129,7 +130,7 @@ namespace BL.Services
         }
         protected IQueryable<IRoom> Rooms()
         {
-            return (from a in Context.Rooms
+            return (from a in _context.Rooms
                     select new RoomDto
                     {
                         Id = a.Id,
@@ -141,7 +142,7 @@ namespace BL.Services
         }
         protected IQueryable<IOption> Options()
         {
-            return (from a in Context.Options
+            return (from a in _context.Options
                     select new OptionDto
                     {
                         Value = a.Value,
@@ -153,7 +154,7 @@ namespace BL.Services
 
         public virtual void Dispose()
         {
-            _context.Dispose();
+            
         }
     }
 

@@ -11,7 +11,7 @@ namespace BL.Services
 {
     public class CourseService : BaseService, IService
     {
-        public CourseService(Context context) : base(context) { }
+        internal CourseService(Context context) : base(context) { }
 
         private Course MapDtoToEntity(ICourse dto)
         {
@@ -42,11 +42,6 @@ namespace BL.Services
                 Course course = MapDtoToEntity(dto);
                 course.Status = Status.Active;
                 repo.Add(course);
-                if (dto.Subjects != null && dto.Subjects.Count() > 0)
-                {
-                    List<CourseSubjectMapping> mapping = dto.Subjects.Select(subject => new CourseSubjectMapping { Course = course, SubjectId = subject.Id }).ToList();
-                    Repository<CourseSubjectMapping>(r => r.AddRange(mapping));
-                }
             });
         }
 
@@ -60,7 +55,7 @@ namespace BL.Services
             });
         }
 
-        private void InsertOrDeleteMapping(int courseId, IEnumerable<ISubject> list)
+        public void InsertOrDeleteMapping(int courseId, IEnumerable<ISubject> list)
         {
             if (list != null && list.Count() > 0)
             {

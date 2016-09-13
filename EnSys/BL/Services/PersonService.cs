@@ -12,7 +12,7 @@ namespace BL.Services
 {
     public abstract class PersonService : BaseService
     {
-        public PersonService(Context context) : base(context) { }
+        internal PersonService(Context context) : base(context) { }
 
         protected Person MapDtoToPersonEntity(IPersonalInfo dto)
         {

@@ -9,7 +9,7 @@ namespace BL.Services
 {
     public class ValidatorService : BaseService, IService
     {
-        public ValidatorService(Context context) : base(context) { }
+        internal ValidatorService(Context context) : base(context) { }
 
         public bool CheckPersonExists(int id, string firstName, string lastName, DateTime birthdate)
         {

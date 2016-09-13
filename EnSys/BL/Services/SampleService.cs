@@ -7,9 +7,14 @@ using System.Threading.Tasks;
 
 namespace BL.Services
 {
-    public class SampleService : BaseService, IService
+    public class SampleService : IService
     {
-        public SampleService(Context context) : base(context) { }
+        //public SampleService(Context context) : base(context) { }
+
+        internal SampleService()
+        {
+
+        }
 
         public void Dispose()
         {

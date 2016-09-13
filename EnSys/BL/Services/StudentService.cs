@@ -29,17 +29,13 @@ namespace BL.Services
             };
         }
 
-        private IStudent MapEntityToDto(Student entity)
-        {
-            return new StudentDto();
-        }
-
         public void AddStudent(IStudent dto)
         {
             Repository<Student>(repo =>
             {
                 Student student = MapDtoToEntity(dto);
                 student.CreatedDate = DateTime.Now;
+                student.Status = Status.Active;
                 student.Person = MapDtoToPersonEntity(dto);
                 student.Person.ContactInfo = MapDtoToContactInfoEntity(dto);
                 repo.Add(student);

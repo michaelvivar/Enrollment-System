@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-using UI.Helpers;
 using Util.Enums;
+using Util.Helpers;
 
 namespace UI.Models
 {

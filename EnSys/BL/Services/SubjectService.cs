@@ -13,7 +13,7 @@ namespace BL.Services
 {
     public class SubjectService : BaseService, IService
     {
-        public SubjectService(Context context) : base(context) { }
+        internal SubjectService(Context context) : base(context) { }
 
         private Subject MapDtoToEntity(ISubject dto)
         {
