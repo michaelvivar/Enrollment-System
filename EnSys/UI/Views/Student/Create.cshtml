@@ -39,13 +39,39 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Level, htmlAttributes: new { @class = "control-label col-md-4" })
             <div class="col-md-8">
-                <select id="CourseId" name="Level" data-url="/DropDownMenu/YearLevels" class="form-control">
+                <select id="Level" name="Level" data-url="/DropDownMenu/YearLevels" class="form-control">
                     @if (Model.LevelId > 0)
                     {
                         <option value="@Model.LevelId"></option>
                     }
                 </select>
                 @Html.ValidationMessageFor(model => model.Level, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SectionId, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                <select id="SectionId" name="SectionId" data-url="/DropDownMenu/Sections"  data-cascadefrom="Level" class="form-control">
+                    @if (Model.LevelId > 0)
+                    {
+                        <option value="@Model.SectionId"></option>
+                    }
+                </select>
+                @Html.ValidationMessageFor(model => model.SectionId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                <select id="Status" name="Status" data-url="/DropDownMenu/Status" class="form-control">
+                    @if (Model.StatusId > 0)
+                    {
+                        <option value="@Model.StatusId"></option>
+                    }
+                </select>
+                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -124,3 +150,10 @@
     </div>
 }
 
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+        });
+    </script>    
+}

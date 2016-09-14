@@ -9,6 +9,7 @@ namespace DL.Entities
     {
         [Key]
         public int Id { get; set; }
+        [Required]
         public DayOfWeek Day { get; set; }
         [Required]
         public DateTime TimeStart { get; set; }

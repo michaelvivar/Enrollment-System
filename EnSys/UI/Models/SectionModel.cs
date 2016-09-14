@@ -9,7 +9,7 @@ using Util.Enums;
 
 namespace UI.Models
 {
-    public class CourseModel :  ICourse
+    public class SectionModel :  ISection
     {
         public int Id { get; set; }
         [Required]
@@ -18,10 +18,12 @@ namespace UI.Models
         [Required]
         public Status Status { get; set; }
         public int StatusId { get { return Convert.ToInt32(Status); } }
-        public IEnumerable<ISubject> Subjects { get; set; }
+        [Required]
+        public YearLevel Level { get; set; }
+        public int LevelId { get { return Convert.ToInt32(Level); } }
     }
 
-    public class ValidateCourseModel : CourseModel, IValidatableObject
+    public class ValidateSectionModel : SectionModel, IValidatableObject
     {
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

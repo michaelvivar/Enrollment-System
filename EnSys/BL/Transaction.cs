@@ -33,8 +33,7 @@ namespace BL
         {
             Context context = (Context)Activator.CreateInstance(typeof(Context), BindingFlags.NonPublic | BindingFlags.Instance, null, null, null, null);
             var o = Service(context, action);
-            if (context.ChangeTracker.HasChanges())
-                context.SaveChanges();
+            if (context.ChangeTracker.HasChanges()) { context.SaveChanges(); }
             context.Dispose();
             return o;
         }

@@ -37,21 +37,12 @@ namespace BL.Services
 
         public void AddCourse(ICourse dto)
         {
-            Repository<Course>(repo =>
-            {
-                Course course = MapDtoToEntity(dto);
-                course.Status = Status.Active;
-                repo.Add(course);
-            });
+            Repository<Course>(repo => repo.Add(MapDtoToEntity(dto)));
         }
 
         public void UpdateCourse(ICourse dto)
         {
-            Repository<Course>(repo =>
-            {
-                Course course = MapDtoToEntity(dto);
-                repo.Update(course, "Status");
-            });
+            Repository<Course>(repo => repo.Update(MapDtoToEntity(dto)));
         }
 
         public void InsertOrDeleteMapping(int courseId, IEnumerable<ISubject> list)
@@ -112,39 +103,41 @@ namespace BL.Services
 
         public ICourse GetCourseById(int id)
         {
-            return Query(context =>
-            {
-                var course = (from a in context.Courses
-                              where a.Status == Status.Active && a.Id == id
-                              orderby a.Code
-                              select new CourseDto
-                              {
-                                  Id = a.Id,
-                                  Code = a.Code,
-                                  Remarks = a.Remarks,
-                                  Status = a.Status
-                              }).FirstOrDefault();
+            return Courses().SingleOrDefault(o => o.Id == id);
 
-                course.Subjects = (from a in context.CourseSubjectMapping
-                                   join b in context.Subjects
-                                   on a.SubjectId equals b.Id
-                                   where a.CourseId == id && b.Status == Status.Active && a.Course.Status == Status.Active
-                                   select new SubjectDto
-                                   {
-                                       Id = b.Id,
-                                       Code = b.Code,
-                                       Level = b.Level,
-                                       Remarks = b.Remarks,
-                                       Units = b.Units,
-                                       Status = b.Status
-                                   }).ToList();
-                return course;
-            });
+            //return Query(context =>
+            //{
+            //    var course = (from a in context.Courses
+            //                  where a.Status == Status.Active && a.Id == id
+            //                  orderby a.Code
+            //                  select new CourseDto
+            //                  {
+            //                      Id = a.Id,
+            //                      Code = a.Code,
+            //                      Remarks = a.Remarks,
+            //                      Status = a.Status
+            //                  }).FirstOrDefault();
+
+            //    course.Subjects = (from a in context.CourseSubjectMapping
+            //                       join b in context.Subjects
+            //                       on a.SubjectId equals b.Id
+            //                       where a.CourseId == id && b.Status == Status.Active && a.Course.Status == Status.Active
+            //                       select new SubjectDto
+            //                       {
+            //                           Id = b.Id,
+            //                           Code = b.Code,
+            //                           Level = b.Level,
+            //                           Remarks = b.Remarks,
+            //                           Units = b.Units,
+            //                           Status = b.Status
+            //                       }).ToList();
+            //    return course;
+            //});
         }
 
-        public IEnumerable<ICourse> GetAllActiveCourses()
+        public IEnumerable<ICourse> GetAllCourses()
         {
-            return Courses().Where(o => o.Status == Status.Active).OrderBy(o => o.Code).ToList();
+            return Courses().OrderBy(o => o.Status).ThenBy(o => o.Code).ToList();
         }
 
         public IEnumerable<IOption> GetRecordsBindToDropDown()

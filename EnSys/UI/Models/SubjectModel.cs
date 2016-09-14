@@ -1,5 +1,4 @@
-﻿using BL.Dto;
-using BL.Interfaces;
+﻿using BL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,19 +8,24 @@ using Util.Enums;
 
 namespace UI.Models
 {
-    public class CourseModel :  ICourse
+    public class SubjectModel : ISubject
     {
         public int Id { get; set; }
         [Required]
         public string Code { get; set; }
+        [Required]
+        public Unit Units { get; set; }
+        public int UnitId { get { return Convert.ToInt32(Units); } }
         public string Remarks { get; set; }
         [Required]
         public Status Status { get; set; }
         public int StatusId { get { return Convert.ToInt32(Status); } }
-        public IEnumerable<ISubject> Subjects { get; set; }
+        [Required]
+        public YearLevel Level { get; set; }
+        public int LevelId { get { return Convert.ToInt32(Level); } }
     }
 
-    public class ValidateCourseModel : CourseModel, IValidatableObject
+    public class ValidateSubjectModel : SubjectModel, IValidatableObject
     {
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

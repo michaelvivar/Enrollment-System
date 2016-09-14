@@ -20,10 +20,12 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Students", "Index", "Student")</li>
                     <li>@Html.ActionLink("Courses", "Index", "Course")</li>
                     <li>@Html.ActionLink("Subjects", "Index", "Subject")</li>
+                    <li>@Html.ActionLink("Students", "Index", "Student")</li>
                     <li>@Html.ActionLink("Instructors", "Index", "Instructor")</li>
+                    <li>@Html.ActionLink("Classes", "Index", "ClassSchedule")</li>
+                    <li>@Html.ActionLink("Sections", "Index", "Section")</li>
                     <li>@Html.ActionLink("Rooms", "Index", "Room")</li>
                 </ul>
             </div>
@@ -87,11 +89,30 @@
                         else {
                             ele.val('').trigger('change');
                         }
-                            
+                        cascade($this);
                     }
                 });
             });
         });
+
+        function cascade($parent) {
+            if ($('select[data-cascadefrom="' + $parent.attr('name') + '"]').length > 0) {
+                var $cascade = $('select[data-cascadefrom="' + $parent.attr('name') + '"]');
+                $parent.on('change', function () {
+                    $.ajax({
+                        url: $cascade.data('url') + '/' + $parent.val(),
+                        async: true,
+                        success: function (result) {
+                            $cascade.find('option').remove();
+                            $cascade.html('<option></option>');
+                            $.each(result, function (i, d) {
+                                $cascade.append('<option value="'+d.Value+'">'+d.Text+'</option>')
+                            });
+                        }
+                    });
+                });
+            }
+        }
     </script>
 </body>
 </html>

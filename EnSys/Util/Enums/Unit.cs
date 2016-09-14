@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Util.Enums
 {
-    public enum OptionType
+    public enum Unit
     {
-        Status, Gender, YearLevel, Unit, DayOfWeek
+        [Description("1")]
+        One = 1,
+        Two,
+        Three
     }
 }

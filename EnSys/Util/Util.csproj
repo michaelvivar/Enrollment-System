@@ -43,6 +43,7 @@
     <Compile Include="Enums\OptionType.cs" />
     <Compile Include="Enums\Gender.cs" />
     <Compile Include="Enums\Status.cs" />
+    <Compile Include="Enums\Unit.cs" />
     <Compile Include="Enums\YearLevel.cs" />
     <Compile Include="Helpers\DateTimeExtensionHelper.cs" />
     <Compile Include="Helpers\SafeNavigationEntensionHelper.cs" />

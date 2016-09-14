@@ -17,12 +17,15 @@ namespace BL.Services
 
         private Subject MapDtoToEntity(ISubject dto)
         {
-            return new Subject();
-        }
-
-        private ISubject MapEntityToDto(Subject entity)
-        {
-            return new SubjectDto();
+            return new Subject
+            {
+                Id = dto.Id,
+                Code = dto.Code,
+                Level = dto.Level,
+                Units = dto.Units,
+                Remarks = dto.Remarks,
+                Status = dto.Status
+            };
         }
 
         public void AddSubject(ISubject dto)
@@ -77,9 +80,19 @@ namespace BL.Services
                         join b in Subjects()
                         on a.SubjectId equals b.Id
                         where a.CourseId == id && b.Status == Status.Active
-                        orderby a.Level
+                        orderby b.Code
                         select b).ToList();
             });
+        }
+
+        public IEnumerable<ISubject> GetAllActiveSubjects()
+        {
+            return Subjects().Where(o => o.Status == Status.Active).OrderBy(o => o.Level).ThenBy(o => o.Code).ToList();
+        }
+
+        public IEnumerable<ISubject> GetAllSubjects()
+        {
+            return Subjects().OrderBy(o => o.Level).ThenBy(o => o.Code).ToList();
         }
 
         public IEnumerable<IOption> GetRecordsBindToDropDown()

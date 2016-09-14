@@ -60,7 +60,9 @@ namespace BL.Services
                         Course = a.Course.Code,
                         Level = a.Level,
                         CreatedDate = a.CreatedDate,
-                        Status = a.Status
+                        Status = a.Status,
+                        SectionId = a.SectionId,
+                        SectionCode = a.Section.Code
                     });
         }
         protected IQueryable<IInstructor> Instructors()
@@ -126,6 +128,18 @@ namespace BL.Services
                         Remarks = a.Remarks,
                         SubjectId = a.SubjectId,
                         Subject = a.Subject.Code
+                    });
+        }
+        protected IQueryable<ISection> Sections()
+        {
+            return (from a in _context.Sections
+                    select new SectionDto
+                    {
+                        Id = a.Id,
+                        Code = a.Code,
+                        Level = a.Level,
+                        Remarks = a.Remarks,
+                        Status = a.Status
                     });
         }
         protected IQueryable<IRoom> Rooms()

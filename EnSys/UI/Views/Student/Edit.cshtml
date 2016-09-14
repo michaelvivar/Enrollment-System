@@ -50,6 +50,32 @@
             </div>
         </div>
 
+        <div class="form-group">
+            @Html.LabelFor(model => model.SectionId, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                <select id="SectionId" name="Level" data-url="/DropDownMenu/Sections" class="form-control">
+                    @if (Model.LevelId > 0)
+                    {
+                        <option value="@Model.SectionId"></option>
+                    }
+                </select>
+                @Html.ValidationMessageFor(model => model.SectionId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                <select id="Status" name="Status" data-url="/DropDownMenu/Status" class="form-control">
+                    @if (Model.StatusId > 0)
+                    {
+                        <option value="@Model.StatusId"></option>
+                    }
+                </select>
+                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
         <hr />
         <h3>Personal Information</h3>
 

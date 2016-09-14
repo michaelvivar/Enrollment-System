@@ -26,6 +26,8 @@ namespace BL.Services
                 CourseId = dto.CourseId,
                 Level = dto.Level,
                 PersonId = dto.PersonId,
+                Status = dto.Status,
+                SectionId = dto.SectionId
             };
         }
 
@@ -35,7 +37,6 @@ namespace BL.Services
             {
                 Student student = MapDtoToEntity(dto);
                 student.CreatedDate = DateTime.Now;
-                student.Status = Status.Active;
                 student.Person = MapDtoToPersonEntity(dto);
                 student.Person.ContactInfo = MapDtoToContactInfoEntity(dto);
                 repo.Add(student);
@@ -47,7 +48,7 @@ namespace BL.Services
             Repository<Student>(repo =>
             {
                 Student student = MapDtoToEntity(dto);
-                repo.Update(student, "Status", "CreatedDate");
+                repo.Update(student, "CreatedDate");
                 UpdatePersonalInfo(dto);
                 UpdateContactInfo(dto);
             });
@@ -58,10 +59,9 @@ namespace BL.Services
             return Query(context => Students().SingleOrDefault(o => o.Id == id));
         }
 
-        public IEnumerable<IStudent> GetAllActiveStudents()
+        public IEnumerable<IStudent> GetAlltudents()
         {
-            return Students().Where(o => o.Status == Status.Active)
-                .OrderBy(o => o.FirstName).ThenBy(o => o.LastName).ToList();
+            return Students().OrderBy(o => o.Status).ThenBy(o => o.FirstName).ThenBy(o => o.LastName).ToList();
         }
 
         public IEnumerable<IStudent> GetStudentsByCourseId(int id)

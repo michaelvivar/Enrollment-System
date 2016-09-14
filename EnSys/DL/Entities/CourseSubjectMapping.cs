@@ -14,7 +14,6 @@ namespace DL.Entities
     {
         [Key]
         public int Id { get; set; }
-        public YearLevel Level { get; set; }
 
         public int CourseId { get; set; }
         [ForeignKey("CourseId")]

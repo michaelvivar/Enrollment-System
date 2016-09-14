@@ -7,15 +7,12 @@ using Util.Enums;
 
 namespace BL.Interfaces
 {
-    public interface IStudent : IPersonalInfo
+    public interface ISection
     {
         int Id { get; set; }
+        string Code { get; set; }
+        string Remarks { get; set; }
         YearLevel Level { get; set; }
         Status Status { get; set; }
-        DateTime CreatedDate { get; set; }
-        int CourseId { get; set; }
-        string Course { get; set; }
-        int SectionId { get; set; }
-        string SectionCode { get; set; }
     }
 }

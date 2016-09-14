@@ -19,9 +19,13 @@ namespace UI.Models
         public YearLevel Level { get; set; }
         public int LevelId { get { return Convert.ToInt32(Level); } }
         public Status Status { get; set; }
+        public int StatusId { get { return Convert.ToInt32(Status); } }
         [Display(Name = "Course")] [Required]
         public int CourseId { get; set; }
         public string Course { get; set; }
+        [Display(Name = "Section")] [Required]
+        public int SectionId { get; set; }
+        public string SectionCode { get; set; }
         [DataType(DataType.Date)] [Display(Name = "Date Enrolled")]
         public DateTime CreatedDate { get; set; }
     }

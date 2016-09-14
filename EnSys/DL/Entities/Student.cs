@@ -23,7 +23,11 @@ namespace DL.Entities
 
         public int CourseId { get; set; }
         [ForeignKey("CourseId")]
-        public Course Course { get; set; }
+        public virtual Course Course { get; set; }
+
+        public int SectionId { get; set; }
+        [ForeignKey("SectionId")]
+        public virtual Section Section { get; set; }
 
         //public int CreatedBy { get; set; }
         //[ForeignKey("CreatedBy")]

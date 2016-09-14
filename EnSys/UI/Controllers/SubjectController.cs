@@ -8,39 +8,40 @@ using UI.Models;
 
 namespace UI.Controllers
 {
-    public class CourseController : BaseController
+    public class SubjectController : BaseController
     {
-        private CourseModel MapDtoToModel(ICourse dto)
+        private SubjectModel MapDtoToModel(ISubject dto)
         {
-            //return TinyMapper.Map<CourseModel>(dto);
-            return new CourseModel
+            return new SubjectModel
             {
                 Id = dto.Id,
                 Code = dto.Code,
                 Remarks = dto.Remarks,
-                Status = dto.Status
+                Status = dto.Status,
+                Level = dto.Level,
+                Units = dto.Units
             };
         }
 
         [Route("")]
         public ActionResult Index()
         {
-            IEnumerable<CourseModel> students = Service<CourseService, IEnumerable<CourseModel>>(service => service.GetAllCourses().Select(o => MapDtoToModel(o)));
+            IEnumerable<SubjectModel> students = Service<SubjectService, IEnumerable<SubjectModel>>(service => service.GetAllSubjects().Select(o => MapDtoToModel(o)));
             return View(students);
         }
 
         [HttpGet]
         public ActionResult Create()
         {
-            return View(new CourseModel());
+            return View(new SubjectModel());
         }
 
         [HttpPost]
-        public ActionResult Create(ValidateCourseModel model)
+        public ActionResult Create(ValidateSubjectModel model)
         {
             if (ModelState.IsValid)
             {
-                Service<CourseService>(service => service.AddCourse(model));
+                Service<SubjectService>(service => service.AddSubject(model));
                 return RedirectToAction("Index");
             }
             return View(model);
@@ -49,16 +50,16 @@ namespace UI.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            CourseModel model = Service<CourseService, CourseModel>(service => MapDtoToModel(service.GetCourseById(id)));
+            SubjectModel model = Service<SubjectService, SubjectModel>(service => MapDtoToModel(service.GetSubjectById(id)));
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult Edit(ValidateCourseModel model)
+        public ActionResult Edit(ValidateSubjectModel model)
         {
             if (ModelState.IsValid)
             {
-                Service<CourseService>(service => service.UpdateCourse(model));
+                Service<SubjectService>(service => service.UpdateSubject(model));
                 return RedirectToAction("Index");
             }
             return View(model);

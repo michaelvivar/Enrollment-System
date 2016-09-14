@@ -31,6 +31,12 @@ namespace UI.Controllers
             return Json(records, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult Sections(int? id)
+        {
+            var records = Service<SectionService, object>(service => service.GetRecordsBindToDropDown(id));
+            return Json(records, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult Rooms()
         {
             var records = Service<RoomService, object>(service => service.GetRecordsBindToDropDown());
@@ -46,6 +52,18 @@ namespace UI.Controllers
         public JsonResult YearLevels()
         {
             var records = Service<OptionService, object>(service => service.GetRecordsBindToDropDown(OptionType.YearLevel));
+            return Json(records, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult Units()
+        {
+            var records = Service<OptionService, object>(service => service.GetRecordsBindToDropDown(OptionType.Unit));
+            return Json(records, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult Status()
+        {
+            var records = Service<OptionService, object>(service => service.GetRecordsBindToDropDown(OptionType.Status));
             return Json(records, JsonRequestBehavior.AllowGet);
         }
     }

@@ -8,39 +8,39 @@ using UI.Models;
 
 namespace UI.Controllers
 {
-    public class CourseController : BaseController
+    public class SectionController : BaseController
     {
-        private CourseModel MapDtoToModel(ICourse dto)
+        private SectionModel MapDtoToModel(ISection dto)
         {
-            //return TinyMapper.Map<CourseModel>(dto);
-            return new CourseModel
+            return new SectionModel
             {
                 Id = dto.Id,
                 Code = dto.Code,
                 Remarks = dto.Remarks,
-                Status = dto.Status
+                Status = dto.Status,
+                Level = dto.Level
             };
         }
 
         [Route("")]
         public ActionResult Index()
         {
-            IEnumerable<CourseModel> students = Service<CourseService, IEnumerable<CourseModel>>(service => service.GetAllCourses().Select(o => MapDtoToModel(o)));
+            IEnumerable<SectionModel> students = Service<SectionService, IEnumerable<SectionModel>>(service => service.GetAllSections().Select(o => MapDtoToModel(o)));
             return View(students);
         }
 
         [HttpGet]
         public ActionResult Create()
         {
-            return View(new CourseModel());
+            return View(new SectionModel());
         }
 
         [HttpPost]
-        public ActionResult Create(ValidateCourseModel model)
+        public ActionResult Create(ValidateSectionModel model)
         {
             if (ModelState.IsValid)
             {
-                Service<CourseService>(service => service.AddCourse(model));
+                Service<SectionService>(service => service.AddSection(model));
                 return RedirectToAction("Index");
             }
             return View(model);
@@ -49,16 +49,16 @@ namespace UI.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            CourseModel model = Service<CourseService, CourseModel>(service => MapDtoToModel(service.GetCourseById(id)));
+            SectionModel model = Service<SectionService, SectionModel>(service => MapDtoToModel(service.GetSectionById(id)));
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult Edit(ValidateCourseModel model)
+        public ActionResult Edit(ValidateSectionModel model)
         {
             if (ModelState.IsValid)
             {
-                Service<CourseService>(service => service.UpdateCourse(model));
+                Service<SectionService>(service => service.UpdateSection(model));
                 return RedirectToAction("Index");
             }
             return View(model);
