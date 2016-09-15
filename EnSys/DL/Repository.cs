@@ -63,6 +63,11 @@ namespace DL
         {
             return Context.Set<TEntity>().SingleOrDefault(predicate);
         }
+
+        public void Save()
+        {
+            Context.SaveChanges();
+        }
     }
 
     public interface IRepository<TEntity>
@@ -76,5 +81,6 @@ namespace DL
         TEntity Get(int id);
         IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate);
         TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate);
+        void Save();
     }
 }

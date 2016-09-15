@@ -17,7 +17,14 @@ namespace BL.Services
 
         private Room MapDtoToEntity(IRoom dto)
         {
-            return new Room();
+            return new Room
+            {
+                Id = dto.Id,
+                Number = dto.Number,
+                Capacity = dto.Capacity,
+                Remarks = dto.Remarks,
+                Status = dto.Status
+            };
         }
 
         public void AddRoom(IRoom dto)

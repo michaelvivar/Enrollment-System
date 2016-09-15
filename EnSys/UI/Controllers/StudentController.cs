@@ -37,7 +37,11 @@ namespace UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                Service<StudentService>(service => service.AddStudent(model));
+                Service<StudentService>(service =>
+                {
+                    Service<NotificationService>(notif => service.Add_Student += notif.OnStudentAdded);
+                    service.AddStudent(model);
+                });
                 return RedirectToAction("Index");
             }
             return View(model);

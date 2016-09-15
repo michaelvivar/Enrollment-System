@@ -1,4 +1,5 @@
-﻿using DL;
+﻿using BL.Interfaces;
+using DL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,7 @@ namespace BL.Services
     {
         internal NotificationService() { }
 
-        public void SendEmail(string title, string content, params string[] recipients)
-        {
-            Transaction.Service<EmailService>(service => service.Send(title, content, recipients));
-        }
-
-        public void SendSMS(string content, params string[] recipients)
+        public void OnStudentAdded(object sender, IStudent student)
         {
 
         }

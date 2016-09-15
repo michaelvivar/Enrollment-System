@@ -70,6 +70,14 @@
                 }
                 else {
                     $this.prepend('<option></option>');
+                    if ($this.data('cascadefrom')) {
+                        var ele = $this.select2({
+                            placeholder: 'Select a Record',
+                            minimumResultsForSearch: Infinity
+                        });
+                        ele.val(value).trigger('change');
+                        return;
+                    }
                 }
                 var url = $this.data('url');
                 $.ajax({

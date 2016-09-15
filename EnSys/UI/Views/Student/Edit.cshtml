@@ -53,7 +53,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.SectionId, htmlAttributes: new { @class = "control-label col-md-4" })
             <div class="col-md-8">
-                <select id="SectionId" name="Level" data-url="/DropDownMenu/Sections" class="form-control">
+                <select id="SectionId" name="SectionId" data-url="/DropDownMenu/Sections" class="form-control">
                     @if (Model.LevelId > 0)
                     {
                         <option value="@Model.SectionId"></option>
@@ -145,7 +145,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-4 col-md-8">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </div>
     </div>

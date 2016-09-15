@@ -10,7 +10,7 @@ namespace DL
         internal Context() : base("name=EnSysContext")
         {
             Configuration.LazyLoadingEnabled = false;
-            Database.SetInitializer(new Initializer());
+            //Database.SetInitializer(new Initializer());
         }
 
         public DbSet<ClassSchedule> Classes { get; set; }

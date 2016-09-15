@@ -18,6 +18,14 @@ namespace BL.Services
     {
         internal StudentService(Context context) : base(context) { }
 
+        public event EventHandler<IStudent> Add_Student;
+
+        private void OnStudentAdded(IStudent student)
+        {
+            if (Add_Student != null)
+                Add_Student.Invoke(this, student);
+        }
+
         private Student MapDtoToEntity(IStudent dto)
         {
             return new Student
@@ -40,6 +48,9 @@ namespace BL.Services
                 student.Person = MapDtoToPersonEntity(dto);
                 student.Person.ContactInfo = MapDtoToContactInfoEntity(dto);
                 repo.Add(student);
+                repo.Save();
+                dto.Id = student.Id;
+                OnStudentAdded(dto);
             });
         }
 

@@ -11,10 +11,15 @@ namespace Util.Helpers
         public static double Age(this DateTime birthdate)
         {
             var today = DateTime.Today;
-            var a = (today.Year * 100 + today.Month) * 100 + today.Day;
-            var b = (birthdate.Year * 100 + birthdate.Month) * 100 + birthdate.Day;
+            int age = today.Year - birthdate.Year;
 
-            return (a - b) / 10000;
+            double x = (today.Month * 30.5) + today.Day;
+            double y = (birthdate.Month * 30.5) + birthdate.Day;
+
+            return Math.Round(y > x ?
+                ((1.0 / 365.0) * (365.0 - (y - x))) + (age - 1.0) :
+                ((1.0 / 365.0) * (x - y)) + age, 2);
+
         }
 
         public static double Age(this DateTime? birthdate)

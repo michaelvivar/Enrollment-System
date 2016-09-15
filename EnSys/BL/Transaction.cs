@@ -1,11 +1,9 @@
 ﻿using BL.Services;
 using DL;
 using System;
-using System.Globalization;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
-using Util.Helpers;
 
 namespace BL
 {
@@ -33,7 +31,10 @@ namespace BL
         {
             Context context = (Context)Activator.CreateInstance(typeof(Context), BindingFlags.NonPublic | BindingFlags.Instance, null, null, null, null);
             var o = Service(context, action);
-            if (context.ChangeTracker.HasChanges()) { context.SaveChanges(); }
+            if (context.ChangeTracker.HasChanges())
+            {
+                context.SaveChanges();
+            }
             context.Dispose();
             return o;
         }
@@ -66,34 +67,3 @@ namespace BL
         }
     }
 }
-
-//public static TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService
-//{
-//    //TService service = (TService)FormatterServices.GetUninitializedObject(typeof(TService));
-//    //TService service = (TService)Activator.CreateInstance(typeof(TService), System.Reflection.BindingFlags.NonPublic, null, context, null); 
-
-//    try
-//    {
-//        Type type = typeof(TService);
-//        if (type.GetConstructors().All(c => c.GetParameters().Length == 0))
-//        {
-//            TService service = (TService)Activator.CreateInstance(type);
-//            var o = action.Invoke(service);
-//            service.Dispose();
-//            return o;
-//        }
-//        else
-//        {
-//            Context context = new Context();
-//            TService service = (TService)Activator.CreateInstance(type, context);
-//            var o = action.Invoke(service);
-//            if (context.ChangeTracker.HasChanges()) { context.SaveChanges(); }
-//            context.Dispose();
-//            return o;
-//        }
-//    }
-//    catch (Exception e)
-//    {
-//        throw e;
-//    }
-//}
