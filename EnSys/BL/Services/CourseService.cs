@@ -14,7 +14,7 @@ namespace BL.Services
     {
         internal CourseService(Context context) : base(context) { }
 
-        private Course MapDtoToEntity(ICourse dto)
+        internal Course MapDtoToEntity(ICourse dto)
         {
             return new Course
             {
@@ -25,16 +25,6 @@ namespace BL.Services
             };
         }
 
-        private ICourse MapEntityToDto(Course entity)
-        {
-            return new CourseDto
-            {
-                Id = entity.Id,
-                Code = entity.Code,
-                Remarks = entity.Remarks,
-                Status = entity.Status
-            };
-        }
 
         public void AddCourse(ICourse dto)
         {
@@ -46,59 +36,24 @@ namespace BL.Services
             Repository<Course>(repo => repo.Update(MapDtoToEntity(dto)).Save());
         }
 
-        public void InsertOrDeleteMapping(int courseId, IEnumerable<ISubject> list)
-        {
-            if (list != null && list.Count() > 0)
-            {
-                Repository<CourseSubjectMapping>(repo =>
-                {
-                    var mapping = repo.Get(o => o.CourseId == courseId).ToList();
-                    var delete = mapping.Where(o => !list.Select(s => s.Id).Contains(o.SubjectId));
-                    if (delete != null && delete.Count() > 0)
-                        repo.RemoveRange(delete);
-
-                    var insert = list.Where(o => !mapping.Select(s => s.SubjectId).Contains(o.Id)).Select(o => new CourseSubjectMapping
-                    {
-                        CourseId = courseId,
-                        SubjectId = o.Id
-                    });
-                    if (insert != null && insert.Count() > 0)
-                        repo.AddRange(insert);
-                });
-            }
-            else
-            {
-                Repository<CourseSubjectMapping>(repo =>
-                {
-                    var mapping = repo.Get(o => o.CourseId == courseId);
-                    if (mapping != null && mapping.Count() > 0)
-                        repo.RemoveRange(mapping);
-                });
-            }
-        }
-
         public void DeleteCourse(int id)
         {
             Repository<Course>(repo => repo.Remove(repo.SingleOrDefault(o => o.Id == id)).Save());
         }
 
-        public void ActivateCourse(int id)
-        {
-            Repository<Course>(repo =>
-            {
-                Course course = repo.Get(id);
-                course.Status = Status.Active;
-                repo.Update(course).Save();
-            });
-        }
 
-        public void InactivateCourse(int id)
+        internal IQueryable<ICourse> Courses()
         {
-            Repository<Course>(repo =>
+            return Query(context =>
             {
-                Course course = repo.Get(id);
-                course.Status = Status.Inactive;
-                repo.Update(course).Save();
+                return (from a in context.Courses
+                        select new CourseDto
+                        {
+                            Id = a.Id,
+                            Code = a.Code,
+                            Remarks = a.Remarks,
+                            Status = a.Status
+                        });
             });
         }
 
@@ -136,7 +91,7 @@ namespace BL.Services
             //});
         }
 
-        public IEnumerable<ICourse> GetAllCourses()
+        public IEnumerable<ICourse> GetCourses()
         {
             return Courses().OrderBy(o => o.Status).ThenBy(o => o.Code).ToList();
         }

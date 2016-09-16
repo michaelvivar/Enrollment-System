@@ -12,15 +12,11 @@ namespace BL.Services
     {
         internal ClassScheduleService(Context context) : base(context) { }
 
-        private IClassSchedule MapEntityToDto(ClassSchedule entity)
-        {
-            return new ClassScheduleDto();
-        }
-
-        private ClassSchedule MapDtoToEntity(IClassSchedule dto)
+        internal ClassSchedule MapDtoToEntity(IClassSchedule dto)
         {
             return new ClassSchedule();
         }
+
 
         public void AddClassSchedule(IClassSchedule dto)
         {
@@ -46,6 +42,31 @@ namespace BL.Services
             {
                 ClassSchedule entity = repo.Get(id);
                 repo.Remove(entity);
+            });
+        }
+
+
+        internal IQueryable<IClassSchedule> Classes()
+        {
+            return Query(context =>
+            {
+                return (from a in context.Classes
+                        select new ClassScheduleDto
+                        {
+                            Id = a.Id,
+                            RoomId = a.RoomId,
+                            Room = a.Room.Number,
+                            TimeStart = a.TimeStart,
+                            TimeEnd = a.TimeEnd,
+                            Capacity = a.Capacity,
+                            Day = a.Day,
+                            InstructorId = a.InstructorId,
+                            InstructorFirstName = a.Instructor.Person.FirstName,
+                            InstructorLastName = a.Instructor.Person.LastName,
+                            Remarks = a.Remarks,
+                            SubjectId = a.SubjectId,
+                            Subject = a.Subject.Code
+                        });
             });
         }
 

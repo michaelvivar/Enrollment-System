@@ -19,7 +19,7 @@ namespace BL.Services
     {
         internal StudentService(Context context) : base(context) { }
 
-        private Student MapDtoToEntity(IStudent dto)
+        internal Student MapDtoToEntity(IStudent dto)
         {
             return new Student
             {
@@ -52,6 +52,39 @@ namespace BL.Services
                 service.UpdateContactInfo(dto);
             });
             Repository<Student>(repo => repo.Update(MapDtoToEntity(dto), x => x.CreatedDate).Save());
+        }
+
+
+        internal IQueryable<IStudent> Students()
+        {
+            return Query(context =>
+            {
+                return (from a in context.Students
+                        join b in context.Persons
+                        on a.PersonId equals b.Id
+                        join c in context.ContactInfo
+                        on b.ContactInfoId equals c.Id
+                        select new StudentDto
+                        {
+                            PersonId = b.Id,
+                            FirstName = b.FirstName,
+                            LastName = b.LastName,
+                            BirthDate = b.BirthDate,
+                            Gender = b.Gender,
+                            ContactInfoId = c.Id,
+                            Email = c.Email,
+                            Telephone = c.Telephone,
+                            Mobile = c.Mobile,
+                            Id = a.Id,
+                            CourseId = a.CourseId,
+                            Course = a.Course.Code,
+                            Level = a.Level,
+                            CreatedDate = a.CreatedDate,
+                            Status = a.Status,
+                            SectionId = a.SectionId,
+                            SectionCode = a.Section.Code
+                        });
+            });
         }
 
         public IStudent GetStudentById(int id)

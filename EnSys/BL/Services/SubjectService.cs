@@ -15,7 +15,7 @@ namespace BL.Services
     {
         internal SubjectService(Context context) : base(context) { }
 
-        private Subject MapDtoToEntity(ISubject dto)
+        internal Subject MapDtoToEntity(ISubject dto)
         {
             return new Subject
             {
@@ -27,6 +27,7 @@ namespace BL.Services
                 Status = dto.Status
             };
         }
+
 
         public void AddSubject(ISubject dto)
         {
@@ -47,23 +48,21 @@ namespace BL.Services
             });
         }
 
-        public void ActivateSubject(int id)
-        {
-            Repository<Subject>(repo =>
-            {
-                Subject entity = repo.Get(id);
-                entity.Status = Status.Active;
-                repo.Update(entity);
-            });
-        }
 
-        public void InactivateSubject(int id)
+        internal IQueryable<ISubject> Subjects()
         {
-            Repository<Subject>(repo =>
+            return Query(context =>
             {
-                Subject entity = repo.Get(id);
-                entity.Status = Status.Inactive;
-                repo.Update(entity);
+                return (from a in context.Subjects
+                        select new SubjectDto
+                        {
+                            Id = a.Id,
+                            Code = a.Code,
+                            Level = a.Level,
+                            Remarks = a.Remarks,
+                            Status = a.Status,
+                            Units = a.Units
+                        });
             });
         }
 
@@ -85,12 +84,12 @@ namespace BL.Services
             });
         }
 
-        public IEnumerable<ISubject> GetAllActiveSubjects()
+        public IEnumerable<ISubject> GetActiveSubjects()
         {
             return Subjects().Where(o => o.Status == Status.Active).OrderBy(o => o.Level).ThenBy(o => o.Code).ToList();
         }
 
-        public IEnumerable<ISubject> GetAllSubjects()
+        public IEnumerable<ISubject> GetSubjects()
         {
             return Subjects().OrderBy(o => o.Level).ThenBy(o => o.Code).ToList();
         }

@@ -15,7 +15,7 @@ namespace BL.Services
     {
         internal SectionService(Context context) : base(context) { }
 
-        private Section MapDtoToEntity(ISection dto)
+        internal Section MapDtoToEntity(ISection dto)
         {
             return new Section
             {
@@ -26,6 +26,7 @@ namespace BL.Services
                 Status = dto.Status
             };
         }
+
 
         public void AddSection(ISection dto)
         {
@@ -46,23 +47,20 @@ namespace BL.Services
             });
         }
 
-        public void ActivateSection(int id)
-        {
-            Repository<Section>(repo =>
-            {
-                Section entity = repo.Get(id);
-                entity.Status = Status.Active;
-                repo.Update(entity);
-            });
-        }
 
-        public void InactivateSection(int id)
+        internal IQueryable<ISection> Sections()
         {
-            Repository<Section>(repo =>
+            return Query(context =>
             {
-                Section entity = repo.Get(id);
-                entity.Status = Status.Inactive;
-                repo.Update(entity);
+                return (from a in context.Sections
+                        select new SectionDto
+                        {
+                            Id = a.Id,
+                            Code = a.Code,
+                            Level = a.Level,
+                            Remarks = a.Remarks,
+                            Status = a.Status
+                        });
             });
         }
 
@@ -71,12 +69,12 @@ namespace BL.Services
             return Sections().Where(o => o.Id == id).FirstOrDefault();
         }
 
-        public IEnumerable<ISection> GetAllActiveSections()
+        public IEnumerable<ISection> GetActiveSections()
         {
             return Sections().Where(o => o.Status == Status.Active).OrderBy(o => o.Level).ThenBy(o => o.Code).ToList();
         }
 
-        public IEnumerable<ISection> GetAllSections()
+        public IEnumerable<ISection> GetSections()
         {
             return Sections().OrderBy(o => o.Level).ThenBy(o => o.Code).ToList();
         }

@@ -25,7 +25,7 @@ namespace UI.Controllers
         [Route("")]
         public ActionResult Index()
         {
-            IEnumerable<SectionModel> students = Service<SectionService, IEnumerable<SectionModel>>(service => service.GetAllSections().Select(o => MapDtoToModel(o)));
+            IEnumerable<SectionModel> students = Service<SectionService, IEnumerable<SectionModel>>(service => service.GetSections().Select(o => MapDtoToModel(o)));
             return View(students);
         }
 

@@ -15,7 +15,7 @@ namespace BL.Services
     {
         internal RoomService(Context context) : base(context) { }
 
-        private Room MapDtoToEntity(IRoom dto)
+        internal Room MapDtoToEntity(IRoom dto)
         {
             return new Room
             {
@@ -26,6 +26,7 @@ namespace BL.Services
                 Status = dto.Status
             };
         }
+
 
         public void AddRoom(IRoom dto)
         {
@@ -45,12 +46,29 @@ namespace BL.Services
             });
         }
 
+
+        internal IQueryable<IRoom> Rooms()
+        {
+            return Query(context =>
+            {
+                return (from a in context.Rooms
+                        select new RoomDto
+                        {
+                            Id = a.Id,
+                            Number = a.Number,
+                            Capacity = a.Capacity,
+                            Remarks = a.Remarks,
+                            Status = a.Status
+                        });
+            });
+        }
+
         public IRoom GetRoomById(int id)
         {
             return Rooms().Where(o => o.Id == id).FirstOrDefault();
         }
 
-        public IEnumerable<IRoom> GetAllRooms()
+        public IEnumerable<IRoom> GetRooms()
         {
             return Rooms().Where(o => o.Status == Status.Active).OrderBy(o => o.Number).ToList();
         }
