@@ -1,9 +1,10 @@
 # Enrollment-System
 
-ASP.NET MVC 5
-C#
-Entity Framework
-LINQ
+Technologies
+  - ASP.NET MVC 5
+  - C#
+  - Entity Framework
+  - LINQ
 
 Architectures:
   - Data Transfer Object
@@ -13,4 +14,5 @@ Design Patterns
   - Repository Pattern
   - Factory Pattern
 
-Goal: Make a Single(almost) line of code framework
+Goal:
+  - To develop a Single(almost) line of code framework
