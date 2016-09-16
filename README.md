@@ -5,6 +5,7 @@ Technologies
   - C#
   - Entity Framework
   - LINQ
+  - Lambda Expressions
 
 Architectures:
   - Data Transfer Object
