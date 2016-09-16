@@ -13,12 +13,19 @@ namespace Util.Helpers
             var today = DateTime.Today;
             int age = today.Year - birthdate.Year;
 
-            double x = (today.Month * 30.5) + today.Day;
-            double y = (birthdate.Month * 30.5) + birthdate.Day;
+            double x = (today.Month * 30.4) + today.Day;
+            double y = (birthdate.Month * 30.4) + birthdate.Day;
+
+            if ((y - x) == 1)
+                return (age - 1) + 0.99;
+            else if ((x - y) == 1)
+                return age + 0.01;
+            else if ((y - x) == 0)
+                return age;
 
             return Math.Round(y > x ?
-                ((1.0 / 365.0) * (365.0 - (y - x))) + (age - 1.0) :
-                ((1.0 / 365.0) * (x - y)) + age, 2);
+                ((1.0 / 365) * (365 - (y - x))) + (age - 1) :
+                ((1.0 / 365) * (x - y)) + age, 2);
 
         }
 

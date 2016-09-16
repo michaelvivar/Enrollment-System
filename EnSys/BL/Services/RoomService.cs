@@ -29,12 +29,12 @@ namespace BL.Services
 
         public void AddRoom(IRoom dto)
         {
-            Repository<Room>(repo => repo.Add(MapDtoToEntity(dto)));
+            Repository<Room>(repo => repo.Add(MapDtoToEntity(dto)).Save());
         }
 
         public void UpdateRoom(IRoom dto)
         {
-            Repository<Room>(repo => repo.Update(MapDtoToEntity(dto)));
+            Repository<Room>(repo => repo.Update(MapDtoToEntity(dto)).Save());
         }
 
         public void DeleteRoom(int id)

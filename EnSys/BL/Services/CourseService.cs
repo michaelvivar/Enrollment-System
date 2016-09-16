@@ -5,6 +5,7 @@ using DL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Util.Enums;
 
 namespace BL.Services
@@ -37,12 +38,12 @@ namespace BL.Services
 
         public void AddCourse(ICourse dto)
         {
-            Repository<Course>(repo => repo.Add(MapDtoToEntity(dto)));
+            Repository<Course>(repo => repo.Add(MapDtoToEntity(dto)).Save());
         }
 
         public void UpdateCourse(ICourse dto)
         {
-            Repository<Course>(repo => repo.Update(MapDtoToEntity(dto)));
+            Repository<Course>(repo => repo.Update(MapDtoToEntity(dto)).Save());
         }
 
         public void InsertOrDeleteMapping(int courseId, IEnumerable<ISubject> list)
@@ -78,7 +79,7 @@ namespace BL.Services
 
         public void DeleteCourse(int id)
         {
-            Repository<Course>(repo => repo.Remove(repo.SingleOrDefault(o => o.Id == id)));
+            Repository<Course>(repo => repo.Remove(repo.SingleOrDefault(o => o.Id == id)).Save());
         }
 
         public void ActivateCourse(int id)
@@ -87,7 +88,7 @@ namespace BL.Services
             {
                 Course course = repo.Get(id);
                 course.Status = Status.Active;
-                repo.Update(course);
+                repo.Update(course).Save();
             });
         }
 
@@ -97,7 +98,7 @@ namespace BL.Services
             {
                 Course course = repo.Get(id);
                 course.Status = Status.Inactive;
-                repo.Update(course);
+                repo.Update(course).Save();
             });
         }
 

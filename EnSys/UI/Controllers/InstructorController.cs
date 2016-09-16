@@ -12,35 +12,32 @@ using Util.Enums;
 
 namespace UI.Controllers
 {
-    public class StudentController : BaseController
+    public class InstructorController : BaseController
     {
-        private StudentModel MapDtoToModel(IStudent dto)
+        private InstructorModel MapDtoToModel(IInstructor dto)
         {
-            return TinyMapper.Map<StudentModel>(dto);
+            return TinyMapper.Map<InstructorModel>(dto);
         }
 
         [Route("")]
         public ActionResult Index()
         {
-            IEnumerable<StudentModel> students = Service<StudentService, IEnumerable<StudentModel>>(service => service.GetAlltudents().Select(o => MapDtoToModel(o)));
-            return View(students);
+            IEnumerable<InstructorModel> Instructors = Service<InstructorService, IEnumerable<InstructorModel>>(service => service.GetAllInstructors().Select(o => MapDtoToModel(o)));
+            return View(Instructors);
         }
 
         [HttpGet]
         public ActionResult Create()
         {
-            return View(new StudentModel());
+            return View(new InstructorModel());
         }
 
         [HttpPost]
-        public ActionResult Create(ValidateStudentModel model)
+        public ActionResult Create(ValidateInstructorModel model)
         {
             if (ModelState.IsValid)
             {
-                Service<StudentService>(service =>
-                {
-                    service.AddStudent(model);
-                });
+                Service<InstructorService>(service => service.AddInstructor(model));
                 return RedirectToAction("Index");
             }
             return View(model);
@@ -48,16 +45,16 @@ namespace UI.Controllers
 
         public ActionResult Edit(int id)
         {
-            StudentModel model = Service<StudentService, StudentModel>(service => MapDtoToModel(service.GetStudentById(id)));
+            InstructorModel model = Service<InstructorService, InstructorModel>(service => MapDtoToModel(service.GetInstructorById(id)));
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult Edit(ValidateStudentModel model)
+        public ActionResult Edit(ValidateInstructorModel model)
         {
             if (ModelState.IsValid)
             {
-                Service<StudentService>(service => service.UpdateStudent(model));
+                Service<InstructorService>(service => service.UpdateInstructor(model));
                 return RedirectToAction("Index");
             }
             return View(model);

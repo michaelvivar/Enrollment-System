@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace BL.Services
 {
-    public abstract class PersonService : BaseService
+    public class PersonService : BaseService, IService
     {
         internal PersonService(Context context) : base(context) { }
 
-        protected Person MapDtoToPersonEntity(IPersonalInfo dto)
+        internal Person MapDtoToPersonEntity(IPersonalInfo dto)
         {
             return new Person
             {
@@ -27,12 +27,7 @@ namespace BL.Services
             };
         }
 
-        protected IPersonalInfo MapEntityToPersonInfo(Person entity)
-        {
-            return new PersonDto();
-        }
-
-        protected ContactInfo MapDtoToContactInfoEntity(IContactInfo dto)
+        internal ContactInfo MapDtoToContactInfoEntity(IContactInfo dto)
         {
             return new ContactInfo
             {
@@ -43,17 +38,12 @@ namespace BL.Services
             };
         }
 
-        protected IContactInfo MapEntityToContactInfo(ContactInfo entity)
-        {
-            return new ContactInfoDto();
-        }
-
-        protected void UpdatePersonalInfo(IPersonalInfo dto)
+        internal void UpdatePersonalInfo(IPersonalInfo dto)
         {
             Repository<Person>(repo => repo.Update(MapDtoToPersonEntity(dto)));
         }
 
-        protected void UpdateContactInfo(IContactInfo dto)
+        internal void UpdateContactInfo(IContactInfo dto)
         {
             Repository<ContactInfo>(repo => repo.Update(MapDtoToContactInfoEntity(dto)));
         }

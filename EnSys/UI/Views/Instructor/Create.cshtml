@@ -1,10 +1,10 @@
-﻿@model UI.Models.StudentModel
+﻿@model UI.Models.InstructorModel
 
 @{
     ViewBag.Title = "Create";
 }
 
-<h2>Add Student</h2>
+<h2>Add Instructor</h2>
 
 <div>
     @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
@@ -22,45 +22,6 @@
 
         @Html.HiddenFor(model => model.ContactInfoId)
         @Html.HiddenFor(model => model.PersonId)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CourseId, htmlAttributes: new { @class = "control-label col-md-4" })
-            <div class="col-md-8">
-                <select id="CourseId" name="CourseId" data-url="/DropDownMenu/Courses" class="form-control">
-                    @if (Model.CourseId > 0)
-                    {
-                        <option value="@Model.CourseId"></option>
-                    }
-                </select>
-                @Html.ValidationMessageFor(model => model.CourseId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Level, htmlAttributes: new { @class = "control-label col-md-4" })
-            <div class="col-md-8">
-                <select id="Level" name="Level" data-url="/DropDownMenu/YearLevels" class="form-control">
-                    @if (Model.LevelId > 0)
-                    {
-                        <option value="@Model.LevelId"></option>
-                    }
-                </select>
-                @Html.ValidationMessageFor(model => model.Level, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.SectionId, htmlAttributes: new { @class = "control-label col-md-4" })
-            <div class="col-md-8">
-                <select id="SectionId" name="SectionId" data-url="/DropDownMenu/Sections"  data-cascadefrom="Level" class="form-control">
-                    @if (Model.LevelId > 0)
-                    {
-                        <option value="@Model.SectionId"></option>
-                    }
-                </select>
-                @Html.ValidationMessageFor(model => model.SectionId, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-4" })

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DL
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity> : IRepository<TEntity>, IRepository_Save<TEntity> where TEntity : class
     {
         private DbContext Context { get; set; }
         public Repository(DbContext context)
@@ -16,37 +16,43 @@ namespace DL
             Context = context;
         }
 
-        public void Add(TEntity entity)
+        public IRepository_Save<TEntity> Add(TEntity entity)
         {
             Context.Set<TEntity>().Add(entity);
+            return this;
         }
 
-        public void AddRange(IEnumerable<TEntity> entities)
+        public IRepository_Save<TEntity> AddRange(IEnumerable<TEntity> entities)
         {
             Context.Set<TEntity>().AddRange(entities);
+            return this;
         }
 
-        public void Update(TEntity entity)
+        public IRepository_Save<TEntity> Update(TEntity entity)
         {
             Context.Entry(entity).State = EntityState.Modified;
+            return this;
         }
 
-        public void Update(TEntity entity, params string[] exclude)
+        public IRepository_Save<TEntity> Update<T>(TEntity entity, Expression<Func<TEntity, T>> exclude)
         {
             var entry = Context.Entry(entity);
             entry.State = EntityState.Modified;
-            foreach (string name in exclude)
-                entry.Property(name).IsModified = false;
+            var body = (MemberExpression)exclude.Body;
+            entry.Property(body.Member.Name).IsModified = false;
+            return this;
         }
 
-        public void Remove(TEntity entity)
+        public IRepository_Save<TEntity> Remove(TEntity entity)
         {
             Context.Set<TEntity>().Remove(entity);
+            return this;
         }
 
-        public void RemoveRange(IEnumerable<TEntity> entities)
+        public IRepository_Save<TEntity> RemoveRange(IEnumerable<TEntity> entities)
         {
             Context.Set<TEntity>().RemoveRange(entities);
+            return this;
         }
 
         public TEntity Get(int id)
@@ -72,15 +78,19 @@ namespace DL
 
     public interface IRepository<TEntity>
     {
-        void Add(TEntity entity);
-        void AddRange(IEnumerable<TEntity> entities);
-        void Update(TEntity entity);
-        void Update(TEntity entity, params string[] exclude);
-        void Remove(TEntity entity);
-        void RemoveRange(IEnumerable<TEntity> entities);
+        IRepository_Save<TEntity> Add(TEntity entity);
+        IRepository_Save<TEntity> AddRange(IEnumerable<TEntity> entities);
+        IRepository_Save<TEntity> Update(TEntity entity);
+        IRepository_Save<TEntity> Update<T>(TEntity entity, Expression<Func<TEntity, T>> exclude);
+        IRepository_Save<TEntity> Remove(TEntity entity);
+        IRepository_Save<TEntity> RemoveRange(IEnumerable<TEntity> entities);
         TEntity Get(int id);
         IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate);
         TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate);
+    }
+
+    public interface IRepository_Save<TEntity>
+    {
         void Save();
     }
 }

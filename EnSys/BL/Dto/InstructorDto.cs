@@ -12,5 +12,6 @@ namespace BL.Dto
     {
         public int Id { get; set; }
         public Status Status { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

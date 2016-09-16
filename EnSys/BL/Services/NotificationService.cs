@@ -10,12 +10,7 @@ namespace BL.Services
 {
     public class NotificationService : IService
     {
-        internal NotificationService() { }
-
-        public void OnStudentAdded(object sender, IStudent student)
-        {
-
-        }
+        internal NotificationService(Context context) { }
 
         public void Dispose()
         {

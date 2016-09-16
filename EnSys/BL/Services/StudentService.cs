@@ -11,20 +11,13 @@ using System.Linq.Expressions;
 
 using System.Data.Entity;
 using Util.Enums;
+using BL;
 
 namespace BL.Services
 {
-    public class StudentService : PersonService, IService
+    public class StudentService : BaseService, IService
     {
         internal StudentService(Context context) : base(context) { }
-
-        public event EventHandler<IStudent> Add_Student;
-
-        private void OnStudentAdded(IStudent student)
-        {
-            if (Add_Student != null)
-                Add_Student.Invoke(this, student);
-        }
 
         private Student MapDtoToEntity(IStudent dto)
         {
@@ -41,28 +34,24 @@ namespace BL.Services
 
         public void AddStudent(IStudent dto)
         {
-            Repository<Student>(repo =>
+            Student student = MapDtoToEntity(dto);
+            student.CreatedDate = DateTime.Now;
+            Service<PersonService>(service =>
             {
-                Student student = MapDtoToEntity(dto);
-                student.CreatedDate = DateTime.Now;
-                student.Person = MapDtoToPersonEntity(dto);
-                student.Person.ContactInfo = MapDtoToContactInfoEntity(dto);
-                repo.Add(student);
-                repo.Save();
-                dto.Id = student.Id;
-                OnStudentAdded(dto);
+                student.Person = service.MapDtoToPersonEntity(dto);
+                student.Person.ContactInfo = service.MapDtoToContactInfoEntity(dto);
             });
+            Repository<Student>(repo => repo.Add(student).Save());
         }
 
         public void UpdateStudent(IStudent dto)
         {
-            Repository<Student>(repo =>
+            Service<PersonService>(service =>
             {
-                Student student = MapDtoToEntity(dto);
-                repo.Update(student, "CreatedDate");
-                UpdatePersonalInfo(dto);
-                UpdateContactInfo(dto);
+                service.UpdatePersonalInfo(dto);
+                service.UpdateContactInfo(dto);
             });
+            Repository<Student>(repo => repo.Update(MapDtoToEntity(dto), x => x.CreatedDate).Save());
         }
 
         public IStudent GetStudentById(int id)

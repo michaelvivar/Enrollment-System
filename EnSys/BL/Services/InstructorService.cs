@@ -2,19 +2,25 @@
 using BL.Interfaces;
 using DL;
 using DL.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Util.Enums;
 
 namespace BL.Services
 {
-    public class InstructorService : PersonService, IService
+    public class InstructorService : BaseService, IService
     {
         internal InstructorService(Context context) : base(context) { }
 
         private Instructor MapDtoToEntity(IInstructor dto)
         {
-            return new Instructor();
+            return new Instructor
+            {
+                Id = dto.Id,
+                Status = dto.Status,
+                PersonId = dto.PersonId,
+            };
         }
 
         private IInstructor MapEntityToDto(Instructor entity)
@@ -24,18 +30,24 @@ namespace BL.Services
 
         public void AddInstructor(IInstructor dto)
         {
-            Repository<Instructor>(repo =>
+            Instructor teacher = MapDtoToEntity(dto);
+            teacher.CreatedDate = DateTime.Now;
+            Service<PersonService>(service =>
             {
-                Instructor teacher = MapDtoToEntity(dto);
-                teacher.Person = MapDtoToPersonEntity(dto);
-                teacher.Person.ContactInfo = MapDtoToContactInfoEntity(dto);
-                repo.Add(teacher);
+                teacher.Person = service.MapDtoToPersonEntity(dto);
+                teacher.Person.ContactInfo = service.MapDtoToContactInfoEntity(dto);
             });
+            Repository<Instructor>(repo => repo.Add(teacher).Save());
         }
 
         public void UpdateInstructor(IInstructor dto)
         {
-            Repository<Instructor>(repo => repo.Update(MapDtoToEntity(dto)));
+            Service<PersonService>(service =>
+            {
+                service.UpdatePersonalInfo(dto);
+                service.UpdateContactInfo(dto);
+            });
+            Repository<Instructor>(repo => repo.Update(MapDtoToEntity(dto), x => x.CreatedDate).Save());
         }
 
         public void ActivateInstructor(int id)
@@ -63,10 +75,9 @@ namespace BL.Services
             return Instructors().Where(o => o.Id == id).FirstOrDefault();
         }
 
-        public IEnumerable<IInstructor> GetAllActiveInstructors()
+        public IEnumerable<IInstructor> GetAllInstructors()
         {
-            return Instructors().Where(o => o.Status == Status.Active)
-                    .OrderBy(o => o.FirstName).ThenBy(o => o.LastName).ToList();
+            return Instructors().OrderBy(o => o.FirstName).ThenBy(o => o.LastName).ToList();
         }
 
         public IEnumerable<IOption> GetRecordsBindToDropDown()

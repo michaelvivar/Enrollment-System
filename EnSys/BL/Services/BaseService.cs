@@ -9,17 +9,15 @@ namespace BL.Services
 {
     public abstract class BaseService : IDisposable
     {
-        //private Context Context { get { if (_context == null) { _context = new Context(); } return _context; } }
-        //private Context Context { get { return _contexts; } }
         private Context _context { get; set; }
         internal BaseService(Context context) { _context = context; }
 
 
-        protected void Service<TService>(Action<TService> action) where TService : IService
+        public void Service<TService>(Action<TService> action) where TService : IService
         {
             Transaction.Service(_context, action);
         }
-        protected TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService
+        public TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService
         {
             return Transaction.Service(_context, action);
         }
@@ -83,7 +81,9 @@ namespace BL.Services
                         ContactInfoId = c.Id,
                         Email = c.Email,
                         Telephone = c.Telephone,
-                        Mobile = c.Mobile
+                        Mobile = c.Mobile,
+                        Status = a.Status,
+                        CreatedDate = a.CreatedDate
                     });
         }
         protected IQueryable<ICourse> Courses()
