@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace BL.Services
 {
-    public abstract class BaseService : IDisposable
+    public abstract class BaseService : IDisposable, ITransaction
     {
         private Context _context { get; set; }
         internal BaseService(Context context) { _context = context; }

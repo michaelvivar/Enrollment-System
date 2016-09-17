@@ -9,6 +9,11 @@ namespace BL
 {
     public static class Transaction
     {
+        private static Context Context()
+        {
+            return (Context)Activator.CreateInstance(typeof(Context), BindingFlags.NonPublic | BindingFlags.Instance, null, null, null, null);
+        }
+
         public static void Service<TService>(Action<TService> action) where TService : IService
         {
             Service<TService, string>(service =>
@@ -29,7 +34,7 @@ namespace BL
 
         public static TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService
         {
-            Context context = (Context)Activator.CreateInstance(typeof(Context), BindingFlags.NonPublic | BindingFlags.Instance, null, null, null, null);
+            Context context = Context();
             var o = Service(context, action);
             if (context.ChangeTracker.HasChanges())
             {
@@ -65,5 +70,12 @@ namespace BL
                 throw e;
             }
         }
+    }
+
+    public interface ITransaction
+    {
+        void Service<TService>(Action<TService> action) where TService : IService;
+
+        TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService;
     }
 }

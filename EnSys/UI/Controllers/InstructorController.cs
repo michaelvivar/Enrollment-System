@@ -22,7 +22,7 @@ namespace UI.Controllers
         [Route("")]
         public ActionResult Index()
         {
-            IEnumerable<InstructorModel> Instructors = Service<InstructorService, IEnumerable<InstructorModel>>(service => service.GetAllInstructors().Select(o => MapDtoToModel(o)));
+            IEnumerable<InstructorModel> Instructors = Service<InstructorService, IEnumerable<InstructorModel>>(service => service.GetInstructors().Select(o => MapDtoToModel(o)));
             return View(Instructors);
         }
 

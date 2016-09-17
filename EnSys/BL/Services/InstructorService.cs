@@ -79,7 +79,7 @@ namespace BL.Services
             return Instructors().Where(o => o.Id == id).FirstOrDefault();
         }
 
-        public IEnumerable<IInstructor> GetAllInstructors()
+        public IEnumerable<IInstructor> GetInstructors()
         {
             return Instructors().OrderBy(o => o.FirstName).ThenBy(o => o.LastName).ToList();
         }

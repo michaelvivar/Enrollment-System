@@ -48,20 +48,20 @@ namespace UI.Models
                 yield return new ValidationResult(string.Format("Invalid date of birth!"));
             }
 
+            if (string.IsNullOrWhiteSpace(Email))
+            {
+                hasError = true;
+                yield return new ValidationResult(string.Format("Invalid email address!"));
+            }
+
             if (!hasError)
             {
-                bool[] result = Transaction.Service<ValidatorService, bool[]>(service =>
-                {
-                    bool[] validation = new bool[2];
-                    validation[0] = service.CheckPersonExists(PersonId, FirstName, LastName, BirthDate);
-                    validation[1] = (string.IsNullOrWhiteSpace(Email) ? false : service.CheckEmailExists(ContactInfoId, Email));
-                    return validation;
-                });
+                var validator = Transaction.Service<ValidatorService, ValidatorService>(service => service);
 
-                if (result[0])
+                if (validator.CheckPersonExists(PersonId, FirstName, LastName, BirthDate))
                     yield return new ValidationResult(string.Format("Person with name \"{0} {1}\" and birth date \"{2}\" is already exists!", FirstName, LastName, BirthDate.ToShortDateString()));
 
-                if (result[1])
+                if (validator.CheckEmailExists(ContactInfoId, Email))
                     yield return new ValidationResult(string.Format("Email address \"{0}\" is already exists!", Email));
             }
 
