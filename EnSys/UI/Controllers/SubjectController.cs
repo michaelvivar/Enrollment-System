@@ -50,7 +50,7 @@ namespace UI.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            SubjectModel model = Service<SubjectService, SubjectModel>(service => MapDtoToModel(service.GetSubjectById(id)));
+            SubjectModel model = Service<SubjectService, SubjectModel>(service => MapDtoToModel(service.GetSubject(id)));
             return View(model);
         }
 

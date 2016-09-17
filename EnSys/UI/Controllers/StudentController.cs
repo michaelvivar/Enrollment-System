@@ -48,7 +48,7 @@ namespace UI.Controllers
 
         public ActionResult Edit(int id)
         {
-            StudentModel model = Service<StudentService, StudentModel>(service => MapDtoToModel(service.GetStudentById(id)));
+            StudentModel model = Service<StudentService, StudentModel>(service => MapDtoToModel(service.GetStudent(id)));
             return View(model);
         }
 

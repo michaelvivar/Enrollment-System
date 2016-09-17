@@ -66,7 +66,7 @@ namespace BL.Services
             });
         }
 
-        public ISubject GetSubjectById(int id)
+        public ISubject GetSubject(int id)
         {
             return Subjects().Where(o => o.Id == id).FirstOrDefault();
         }

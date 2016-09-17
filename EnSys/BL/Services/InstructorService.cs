@@ -74,7 +74,7 @@ namespace BL.Services
             });
         }
 
-        public IInstructor GetInstructorById(int id)
+        public IInstructor GetInstructor(int id)
         {
             return Instructors().Where(o => o.Id == id).FirstOrDefault();
         }

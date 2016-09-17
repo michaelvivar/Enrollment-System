@@ -70,6 +70,14 @@ namespace BL.Services
             });
         }
 
+        public IClassSchedule GetClass(int id)
+        {
+            return Query(context =>
+            {
+                return Classes().SingleOrDefault(o => o.Id == id);
+            });
+        }
+
         public IEnumerable<IClassSchedule> GetClassesByStudentId(int id)
         {
             return Query(context =>

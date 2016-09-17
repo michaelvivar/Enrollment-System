@@ -49,7 +49,7 @@ namespace UI.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            RoomModel model = Service<RoomService, RoomModel>(service => MapDtoToModel(service.GetRoomById(id)));
+            RoomModel model = Service<RoomService, RoomModel>(service => MapDtoToModel(service.GetRoom(id)));
             return View(model);
         }
 

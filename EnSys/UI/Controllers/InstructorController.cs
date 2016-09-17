@@ -45,7 +45,7 @@ namespace UI.Controllers
 
         public ActionResult Edit(int id)
         {
-            return Service<InstructorService, ActionResult>(service => View(MapDtoToModel(service.GetInstructorById(id))));
+            return Service<InstructorService, ActionResult>(service => View(MapDtoToModel(service.GetInstructor(id))));
         }
 
         [HttpPost]

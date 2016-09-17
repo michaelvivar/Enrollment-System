@@ -63,7 +63,7 @@ namespace BL.Services
             });
         }
 
-        public IRoom GetRoomById(int id)
+        public IRoom GetRoom(int id)
         {
             return Rooms().Where(o => o.Id == id).FirstOrDefault();
         }

@@ -64,7 +64,7 @@ namespace BL.Services
             });
         }
 
-        public ISection GetSectionById(int id)
+        public ISection GetSection(int id)
         {
             return Sections().Where(o => o.Id == id).FirstOrDefault();
         }

@@ -87,7 +87,7 @@ namespace BL.Services
             });
         }
 
-        public IStudent GetStudentById(int id)
+        public IStudent GetStudent(int id)
         {
             return Query(context => Students().SingleOrDefault(o => o.Id == id));
         }

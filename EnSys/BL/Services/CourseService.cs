@@ -57,38 +57,9 @@ namespace BL.Services
             });
         }
 
-        public ICourse GetCourseById(int id)
+        public ICourse GetCourse(int id)
         {
             return Courses().SingleOrDefault(o => o.Id == id);
-
-            //return Query(context =>
-            //{
-            //    var course = (from a in context.Courses
-            //                  where a.Status == Status.Active && a.Id == id
-            //                  orderby a.Code
-            //                  select new CourseDto
-            //                  {
-            //                      Id = a.Id,
-            //                      Code = a.Code,
-            //                      Remarks = a.Remarks,
-            //                      Status = a.Status
-            //                  }).FirstOrDefault();
-
-            //    course.Subjects = (from a in context.CourseSubjectMapping
-            //                       join b in context.Subjects
-            //                       on a.SubjectId equals b.Id
-            //                       where a.CourseId == id && b.Status == Status.Active && a.Course.Status == Status.Active
-            //                       select new SubjectDto
-            //                       {
-            //                           Id = b.Id,
-            //                           Code = b.Code,
-            //                           Level = b.Level,
-            //                           Remarks = b.Remarks,
-            //                           Units = b.Units,
-            //                           Status = b.Status
-            //                       }).ToList();
-            //    return course;
-            //});
         }
 
         public IEnumerable<ICourse> GetCourses()
