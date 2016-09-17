@@ -16,4 +16,4 @@ Design Patterns
   - Factory Pattern
 
 Goal:
-  - To develop a Single(almost) line of code framework
+  - Single line of code. Almost!
