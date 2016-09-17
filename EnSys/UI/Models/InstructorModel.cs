@@ -42,12 +42,18 @@ namespace UI.Models
 
             if (!hasError)
             {
-                bool[] result = Transaction.Service<ValidatorService, bool[]>(service =>
+                bool[] result = new bool[2];
+                Transaction.Scope(scope =>
                 {
-                    bool[] validation = new bool[2];
-                    validation[0] = service.CheckPersonExists(PersonId, FirstName, LastName, BirthDate);
-                    validation[1] = (string.IsNullOrWhiteSpace(Email) ? false : service.CheckEmailExists(ContactInfoId, Email));
-                    return validation;
+                    scope.Service<ValidatorService>(service =>
+                    {
+                        result[0] = service.CheckPersonExists(PersonId, FirstName, LastName, BirthDate);
+                        result[1] = service.CheckEmailExists(ContactInfoId, Email);
+                    });
+                    scope.Service<StudentService>(service =>
+                    {
+
+                    });
                 });
 
                 if (result[0])

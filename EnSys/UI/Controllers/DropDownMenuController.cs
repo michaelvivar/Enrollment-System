@@ -1,4 +1,5 @@
-﻿using BL.Dto;
+﻿using BL;
+using BL.Dto;
 using BL.Interfaces;
 using BL.Services;
 using System;
@@ -15,55 +16,55 @@ namespace UI.Controllers
     {
         public JsonResult Instructors()
         {
-            var records = Service<InstructorService, object>(service => service.GetRecordsBindToDropDown());
+            var records = Transaction.Scope(scope => scope.Service<InstructorService, IEnumerable<IOption>>(service => service.GetRecordsBindToDropDown()));
             return Json(records, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Courses()
         {
-            var records = Service<CourseService, IEnumerable<IOption>>(service => service.GetRecordsBindToDropDown());
+            var records = Transaction.Scope(scope => scope.Service<CourseService, IEnumerable<IOption>>(service => service.GetRecordsBindToDropDown()));
             return Json(records, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Subjects()
         {
-            var records = Service<SubjectService, object>(service => service.GetRecordsBindToDropDown());
+            var records = Transaction.Scope(scope => scope.Service<SubjectService, IEnumerable<IOption>>(service => service.GetRecordsBindToDropDown()));
             return Json(records, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Sections(int? id)
         {
-            var records = Service<SectionService, object>(service => service.GetRecordsBindToDropDown(id));
+            var records = Transaction.Scope(scope => scope.Service<SectionService, IEnumerable<IOption>>(service => service.GetRecordsBindToDropDown(id)));
             return Json(records, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Rooms()
         {
-            var records = Service<RoomService, object>(service => service.GetRecordsBindToDropDown());
+            var records = Transaction.Scope(scope => scope.Service<RoomService, IEnumerable < IOption >> (service => service.GetRecordsBindToDropDown()));
             return Json(records, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Gender()
         {
-            var records = Service<OptionService, object>(service => service.GetRecordsBindToDropDown(OptionType.Gender));
+            var records = Transaction.Scope(scope => scope.Service<OptionService, IEnumerable<IOption>>(service => service.GetRecordsBindToDropDown(OptionType.Gender)));
             return Json(records, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult YearLevels()
         {
-            var records = Service<OptionService, object>(service => service.GetRecordsBindToDropDown(OptionType.YearLevel));
+            var records = Transaction.Scope(scope => scope.Service<OptionService, IEnumerable<IOption>>(service => service.GetRecordsBindToDropDown(OptionType.YearLevel)));
             return Json(records, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Units()
         {
-            var records = Service<OptionService, object>(service => service.GetRecordsBindToDropDown(OptionType.Unit));
+            var records = Transaction.Scope(scope => scope.Service<OptionService, IEnumerable<IOption>>(service => service.GetRecordsBindToDropDown(OptionType.Unit)));
             return Json(records, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Status()
         {
-            var records = Service<OptionService, object>(service => service.GetRecordsBindToDropDown(OptionType.Status));
+            var records = Transaction.Scope(scope => scope.Service<OptionService, IEnumerable<IOption>>(service => service.GetRecordsBindToDropDown(OptionType.Status)));
             return Json(records, JsonRequestBehavior.AllowGet);
         }
     }

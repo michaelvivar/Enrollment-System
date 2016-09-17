@@ -92,7 +92,7 @@ namespace BL.Services
             return Query(context => Students().SingleOrDefault(o => o.Id == id));
         }
 
-        public IEnumerable<IStudent> GetAlltudents()
+        public IEnumerable<IStudent> GetStudents()
         {
             return Students().OrderBy(o => o.Status).ThenBy(o => o.FirstName).ThenBy(o => o.LastName).ToList();
         }

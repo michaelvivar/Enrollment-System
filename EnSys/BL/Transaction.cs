@@ -7,41 +7,56 @@ using System.Reflection;
 
 namespace BL
 {
-    public static class Transaction
+    public class Transaction : ITransaction, IDisposable
     {
+        private readonly Context _context;
+        public Transaction(Context context) { _context = context; }
         private static Context Context()
         {
             return (Context)Activator.CreateInstance(typeof(Context), BindingFlags.NonPublic | BindingFlags.Instance, null, null, null, null);
         }
 
-        public static void Service<TService>(Action<TService> action) where TService : IService
+        public void Service<TService>(Action<TService> action) where TService : IService
         {
-            Service<TService, string>(service =>
+            Service<TService, TService>(service =>
             {
                 action.Invoke(service);
-                return string.Empty;
+                return service;
             });
+        }
+
+        public TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService
+        {
+            var o = Service(_context, action);
+            if (_context.ChangeTracker.HasChanges())
+            {
+                _context.SaveChanges();
+            }
+            return o;
+        }
+
+        public static void Scope(Action<ITransaction> action)
+        {
+            Transaction transaction = new Transaction(Context());
+            action.Invoke(transaction);
+            transaction.Dispose();
+        }
+
+        public static TOut Scope<TOut>(Func<ITransaction, TOut> action)
+        {
+            Transaction transaction = new Transaction(Context());
+            var o = action.Invoke(transaction);
+            transaction.Dispose();
+            return o;
         }
 
         internal static void Service<TService>(Context context, Action<TService> action) where TService : IService
         {
-            Service<TService, string>(context, service =>
+            Service<TService, TService>(context, service =>
             {
                 action.Invoke(service);
-                return string.Empty;
+                return service;
             });
-        }
-
-        public static TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService
-        {
-            Context context = Context();
-            var o = Service(context, action);
-            if (context.ChangeTracker.HasChanges())
-            {
-                context.SaveChanges();
-            }
-            context.Dispose();
-            return o;
         }
 
         internal static TOut Service<TService, TOut>(Context context, Func<TService, TOut> action) where TService : IService
@@ -69,6 +84,13 @@ namespace BL
             {
                 throw e;
             }
+        }
+
+        public void Dispose()
+        {
+            if (_context.ChangeTracker.HasChanges())
+                _context.SaveChanges();
+            _context.Dispose();
         }
     }
 

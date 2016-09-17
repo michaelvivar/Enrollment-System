@@ -1,4 +1,5 @@
-﻿using BL.Interfaces;
+﻿using BL;
+using BL.Interfaces;
 using BL.Services;
 using Nelibur.ObjectMapper;
 using System.Collections.Generic;
@@ -25,8 +26,7 @@ namespace UI.Controllers
         [Route("")]
         public ActionResult Index()
         {
-            IEnumerable<SectionModel> students = Service<SectionService, IEnumerable<SectionModel>>(service => service.GetSections().Select(o => MapDtoToModel(o)));
-            return View(students);
+            return Transaction.Scope(scope => scope.Service<SectionService, ActionResult>(service => View(service.GetSections().Select(o => MapDtoToModel(o)))));
         }
 
         [HttpGet]
@@ -40,7 +40,7 @@ namespace UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                Service<SectionService>(service => service.AddSection(model));
+                Transaction.Scope(scope => scope.Service<SectionService>(service => service.AddSection(model)));
                 return RedirectToAction("Index");
             }
             return View(model);
@@ -49,8 +49,7 @@ namespace UI.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            SectionModel model = Service<SectionService, SectionModel>(service => MapDtoToModel(service.GetSection(id)));
-            return View(model);
+            return Transaction.Scope(scope => scope.Service<SectionService, ActionResult>(service => View(MapDtoToModel(service.GetSection(id)))));
         }
 
         [HttpPost]
@@ -58,7 +57,7 @@ namespace UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                Service<SectionService>(service => service.UpdateSection(model));
+                Transaction.Scope(scope => scope.Service<SectionService>(service => service.UpdateSection(model)));
                 return RedirectToAction("Index");
             }
             return View(model);

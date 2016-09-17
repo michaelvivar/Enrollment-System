@@ -1,4 +1,5 @@
-﻿using BL.Interfaces;
+﻿using BL;
+using BL.Interfaces;
 using BL.Services;
 using Nelibur.ObjectMapper;
 using System.Collections.Generic;
@@ -12,7 +13,6 @@ namespace UI.Controllers
     {
         private CourseModel MapDtoToModel(ICourse dto)
         {
-            //return TinyMapper.Map<CourseModel>(dto);
             return new CourseModel
             {
                 Id = dto.Id,
@@ -25,8 +25,7 @@ namespace UI.Controllers
         [Route("")]
         public ActionResult Index()
         {
-            IEnumerable<CourseModel> students = Service<CourseService, IEnumerable<CourseModel>>(service => service.GetCourses().Select(o => MapDtoToModel(o)));
-            return View(students);
+            return Transaction.Scope(scope => scope.Service<CourseService, ActionResult>(service => View(service.GetCourses().Select(o => MapDtoToModel(o)))));
         }
 
         [HttpGet]
@@ -40,7 +39,7 @@ namespace UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                Service<CourseService>(service => service.AddCourse(model));
+                Transaction.Scope(scope => scope.Service<CourseService>(service => service.AddCourse(model)));
                 return RedirectToAction("Index");
             }
             return View(model);
@@ -49,8 +48,7 @@ namespace UI.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            CourseModel model = Service<CourseService, CourseModel>(service => MapDtoToModel(service.GetCourse(id)));
-            return View(model);
+            return Transaction.Scope(scope => scope.Service<CourseService, ActionResult>(service => View(MapDtoToModel(service.GetCourse(id)))));
         }
 
         [HttpPost]
@@ -58,7 +56,7 @@ namespace UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                Service<CourseService>(service => service.UpdateCourse(model));
+                Transaction.Scope(scope => scope.Service<CourseService>(service => service.UpdateCourse(model)));
                 return RedirectToAction("Index");
             }
             return View(model);

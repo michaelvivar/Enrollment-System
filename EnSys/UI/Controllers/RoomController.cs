@@ -1,4 +1,5 @@
-﻿using BL.Interfaces;
+﻿using BL;
+using BL.Interfaces;
 using BL.Services;
 using Nelibur.ObjectMapper;
 using System.Collections.Generic;
@@ -25,8 +26,7 @@ namespace UI.Controllers
         [Route("")]
         public ActionResult Index()
         {
-            IEnumerable<RoomModel> students = Service<RoomService, IEnumerable<RoomModel>>(service => service.GetRooms().Select(o => MapDtoToModel(o)));
-            return View(students);
+            return Transaction.Scope(scope => scope.Service<RoomService, ActionResult>(service => View(service.GetRooms().Select(o => MapDtoToModel(o)))));
         }
 
         [HttpGet]
@@ -40,7 +40,7 @@ namespace UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                Service<RoomService>(service => service.AddRoom(model));
+                Transaction.Scope(scope => scope.Service<RoomService>(service => service.AddRoom(model)));
                 return RedirectToAction("Index");
             }
             return View(model);
@@ -49,8 +49,7 @@ namespace UI.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            RoomModel model = Service<RoomService, RoomModel>(service => MapDtoToModel(service.GetRoom(id)));
-            return View(model);
+            return Transaction.Scope(scope => scope.Service<RoomService, ActionResult>(service => View(MapDtoToModel(service.GetRoom(id)))));
         }
 
         [HttpPost]
@@ -58,7 +57,7 @@ namespace UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                Service<RoomService>(service => service.UpdateRoom(model));
+                Transaction.Scope(scope => scope.Service<RoomService>(service => service.UpdateRoom(model)));
                 return RedirectToAction("Index");
             }
             return View(model);

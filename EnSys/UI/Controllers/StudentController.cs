@@ -1,4 +1,5 @@
-﻿using BL.Dto;
+﻿using BL;
+using BL.Dto;
 using BL.Interfaces;
 using BL.Services;
 using Nelibur.ObjectMapper;
@@ -22,8 +23,7 @@ namespace UI.Controllers
         [Route("")]
         public ActionResult Index()
         {
-            IEnumerable<StudentModel> students = Service<StudentService, IEnumerable<StudentModel>>(service => service.GetAlltudents().Select(o => MapDtoToModel(o)));
-            return View(students);
+            return Transaction.Scope(scope => scope.Service<StudentService, ActionResult>(service => View(service.GetStudents().Select(o => MapDtoToModel(o)))));
         }
 
         [HttpGet]
@@ -37,10 +37,7 @@ namespace UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                Service<StudentService>(service =>
-                {
-                    service.AddStudent(model);
-                });
+                Transaction.Scope(scope => scope.Service<StudentService>(service => service.AddStudent(model)));
                 return RedirectToAction("Index");
             }
             return View(model);
@@ -48,8 +45,7 @@ namespace UI.Controllers
 
         public ActionResult Edit(int id)
         {
-            StudentModel model = Service<StudentService, StudentModel>(service => MapDtoToModel(service.GetStudent(id)));
-            return View(model);
+            return Transaction.Scope(scope => scope.Service<StudentService, ActionResult>(service => View(MapDtoToModel(service.GetStudent(id)))));
         }
 
         [HttpPost]
@@ -57,7 +53,7 @@ namespace UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                Service<StudentService>(service => service.UpdateStudent(model));
+                Transaction.Scope(scope => scope.Service<StudentService>(service => service.UpdateStudent(model)));
                 return RedirectToAction("Index");
             }
             return View(model);

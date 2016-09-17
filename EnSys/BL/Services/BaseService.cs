@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace BL.Services
 {
-    public abstract class BaseService : IDisposable, ITransaction
+    public abstract class BaseService
     {
         private Context _context { get; set; }
         internal BaseService(Context context) { _context = context; }
@@ -17,11 +17,11 @@ namespace BL.Services
         }
 
 
-        public void Service<TService>(Action<TService> action) where TService : IService
+        protected void Service<TService>(Action<TService> action) where TService : IService
         {
             Transaction.Service(_context, action);
         }
-        public TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService
+        protected TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService
         {
             return Transaction.Service(_context, action);
         }

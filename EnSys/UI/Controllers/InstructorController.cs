@@ -1,4 +1,5 @@
-﻿using BL.Dto;
+﻿using BL;
+using BL.Dto;
 using BL.Interfaces;
 using BL.Services;
 using Nelibur.ObjectMapper;
@@ -22,8 +23,7 @@ namespace UI.Controllers
         [Route("")]
         public ActionResult Index()
         {
-            IEnumerable<InstructorModel> Instructors = Service<InstructorService, IEnumerable<InstructorModel>>(service => service.GetInstructors().Select(o => MapDtoToModel(o)));
-            return View(Instructors);
+            return Transaction.Scope(scope => scope.Service<InstructorService, ActionResult>(service => View(service.GetInstructors().Select(o => MapDtoToModel(o)))));
         }
 
         [HttpGet]
@@ -37,7 +37,7 @@ namespace UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                Service<InstructorService>(service => service.AddInstructor(model));
+                Transaction.Scope(scope => scope.Service<InstructorService>(service => service.AddInstructor(model)));
                 return RedirectToAction("Index");
             }
             return View(model);
@@ -45,7 +45,7 @@ namespace UI.Controllers
 
         public ActionResult Edit(int id)
         {
-            return Service<InstructorService, ActionResult>(service => View(MapDtoToModel(service.GetInstructor(id))));
+            return Transaction.Scope(scope => scope.Service<InstructorService, ActionResult>(service => View(MapDtoToModel(service.GetInstructor(id)))));
         }
 
         [HttpPost]
@@ -53,7 +53,7 @@ namespace UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                Service<InstructorService>(service => service.UpdateInstructor(model));
+                Transaction.Scope(scope => scope.Service<InstructorService>(service => service.UpdateInstructor(model)));
                 return RedirectToAction("Index");
             }
             return View(model);
