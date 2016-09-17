@@ -50,10 +50,6 @@ namespace UI.Models
                         result[0] = service.CheckPersonExists(PersonId, FirstName, LastName, BirthDate);
                         result[1] = service.CheckEmailExists(ContactInfoId, Email);
                     });
-                    scope.Service<StudentService>(service =>
-                    {
-
-                    });
                 });
 
                 if (result[0])
