@@ -34,12 +34,25 @@ namespace DL
             return this;
         }
 
-        public IRepository_Save<TEntity> Update<T>(TEntity entity, Expression<Func<TEntity, T>> exclude)
+        public IRepository_Save<TEntity> Update(TEntity entity, params Expression<Func<TEntity, object>>[] properties)
         {
             var entry = Context.Entry(entity);
             entry.State = EntityState.Modified;
-            var body = (MemberExpression)exclude.Body;
-            entry.Property(body.Member.Name).IsModified = false;
+
+            foreach (var property in properties)
+                entry.Property(property).IsModified = false;
+
+            return this;
+        }
+
+        public IRepository_Save<TEntity> Set(TEntity entity, params Expression<Func<TEntity, object>>[] properties)
+        {
+            var entry = Context.Entry(entity);
+            Context.Set<TEntity>().Attach(entity);
+
+            foreach(var property in properties)
+                entry.Property(property).IsModified = true;
+
             return this;
         }
 
@@ -81,7 +94,8 @@ namespace DL
         IRepository_Save<TEntity> Add(TEntity entity);
         IRepository_Save<TEntity> AddRange(IEnumerable<TEntity> entities);
         IRepository_Save<TEntity> Update(TEntity entity);
-        IRepository_Save<TEntity> Update<T>(TEntity entity, Expression<Func<TEntity, T>> exclude);
+        IRepository_Save<TEntity> Update(TEntity entity, params Expression<Func<TEntity, object>>[] properties);
+        IRepository_Save<TEntity> Set(TEntity entity, params Expression<Func<TEntity, object>>[] properties);
         IRepository_Save<TEntity> Remove(TEntity entity);
         IRepository_Save<TEntity> RemoveRange(IEnumerable<TEntity> entities);
         TEntity Get(int id);
