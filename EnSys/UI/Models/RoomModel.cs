@@ -30,13 +30,13 @@ namespace UI.Models
                 yield return new ValidationResult("Number field is required", new[] { nameof(Number) });
             }
 
-            if (Capacity == null || Capacity <= 0)
+            if ((!Capacity.HasValue) || Capacity <= 0)
             {
                 hasError = true;
                 yield return new ValidationResult("Capacity must be greater than to 0(zero)", new[] { nameof(Capacity) });
             }
 
-            if (Status == null || Status <= 0)
+            if ((!Status.HasValue) || Status <= 0)
             {
                 hasError = true;
                 yield return new ValidationResult("Status field is required", new[] { nameof(Status) });
