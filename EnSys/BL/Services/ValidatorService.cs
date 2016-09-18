@@ -21,6 +21,8 @@ namespace BL.Services
 
                 if (records.Any(o => o == id))
                     return false;
+
+                return true;
             }
             return false;
         }
@@ -35,6 +37,8 @@ namespace BL.Services
 
                 if (records.Any(o => o == id))
                     return false;
+
+                return true;
             }
             return false;
         }

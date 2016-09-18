@@ -56,13 +56,21 @@ namespace UI.Models
 
             if (!hasError)
             {
-                //var validator = Transaction.Scope(scope => scope.Service<ValidatorService, ValidatorService>(service => service));
+                List<ValidationResult> result = new List<ValidationResult>();
+                Transaction.Scope(scope =>
+                {
+                    scope.Service<ValidatorService>(service =>
+                    {
+                        if (service.CheckPersonExists(PersonId, FirstName, LastName, BirthDate))
+                            result.Add(new ValidationResult(string.Format("Person with name \"{0} {1}\" and birth date \"{2}\" is already exists!", FirstName, LastName, BirthDate.ToShortDateString())));
 
-                //if (validator.CheckPersonExists(PersonId, FirstName, LastName, BirthDate))
-                //    yield return new ValidationResult(string.Format("Person with name \"{0} {1}\" and birth date \"{2}\" is already exists!", FirstName, LastName, BirthDate.ToShortDateString()));
+                        if (service.CheckEmailExists(ContactInfoId, Email))
+                            result.Add(new ValidationResult(string.Format("Email address \"{0}\" is already exists!", Email)));
+                    });
+                });
 
-                //if (validator.CheckEmailExists(ContactInfoId, Email))
-                //    yield return new ValidationResult(string.Format("Email address \"{0}\" is already exists!", Email));
+                foreach (var i in result)
+                    yield return i;
             }
 
             //yield return new ValidationResult(string.Format("Name \"{0}\" is already exists!", FirstName), new[] { nameof(FirstName), nameof(LastName) });

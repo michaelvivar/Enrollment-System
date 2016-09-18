@@ -1,7 +1,6 @@
 ﻿using BL.Services;
 using DL;
 using System;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Reflection;
 
@@ -10,44 +9,46 @@ namespace BL
     public class Transaction : ITransaction, IDisposable
     {
         private readonly Context _context;
-        public Transaction(Context context) { _context = context; }
+        private Transaction(Context context) { _context = context; }
+
+        public void Service<TService>(Action<TService> action) where TService : IService
+        {
+            Service(_context, action);
+        }
+
+        public TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService
+        {
+            return Service(_context, action);
+        }
+
+        public void Dispose()
+        {
+            if (_context.ChangeTracker.HasChanges())
+                _context.SaveChanges();
+            _context.Dispose();
+        }
+
+
+        #region Static Members
         private static Context Context()
         {
             return (Context)Activator.CreateInstance(typeof(Context), BindingFlags.NonPublic | BindingFlags.Instance, null, null, null, null);
         }
 
-        public void Service<TService>(Action<TService> action) where TService : IService
-        {
-            Service<TService, TService>(service =>
-            {
-                action.Invoke(service);
-                return service;
-            });
-        }
-
-        public TOut Service<TService, TOut>(Func<TService, TOut> action) where TService : IService
-        {
-            var o = Service(_context, action);
-            if (_context.ChangeTracker.HasChanges())
-            {
-                _context.SaveChanges();
-            }
-            return o;
-        }
-
         public static void Scope(Action<ITransaction> action)
         {
-            Transaction transaction = new Transaction(Context());
-            action.Invoke(transaction);
-            transaction.Dispose();
+            using (Transaction transaction = new Transaction(Context()))
+            {
+                action.Invoke(transaction);
+            }
         }
 
         public static TOut Scope<TOut>(Func<ITransaction, TOut> action)
         {
-            Transaction transaction = new Transaction(Context());
-            var o = action.Invoke(transaction);
-            transaction.Dispose();
-            return o;
+            using (Transaction transaction = new Transaction(Context()))
+            {
+                return action.Invoke(transaction);
+            }
         }
 
         internal static void Service<TService>(Context context, Action<TService> action) where TService : IService
@@ -84,14 +85,8 @@ namespace BL
             {
                 throw e;
             }
-        }
-
-        public void Dispose()
-        {
-            if (_context.ChangeTracker.HasChanges())
-                _context.SaveChanges();
-            _context.Dispose();
-        }
+        } 
+        #endregion
     }
 
     public interface ITransaction

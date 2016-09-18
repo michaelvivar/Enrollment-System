@@ -42,21 +42,21 @@ namespace UI.Models
 
             if (!hasError)
             {
-                bool[] result = new bool[2];
+                List<ValidationResult> result = new List<ValidationResult>();
                 Transaction.Scope(scope =>
                 {
                     scope.Service<ValidatorService>(service =>
                     {
-                        result[0] = service.CheckPersonExists(PersonId, FirstName, LastName, BirthDate);
-                        result[1] = service.CheckEmailExists(ContactInfoId, Email);
+                        if (service.CheckPersonExists(PersonId, FirstName, LastName, BirthDate))
+                            result.Add(new ValidationResult(string.Format("Person with name \"{0} {1}\" and birth date \"{2}\" is already exists!", FirstName, LastName, BirthDate.ToShortDateString())));
+
+                        if (service.CheckEmailExists(ContactInfoId, Email))
+                            result.Add(new ValidationResult(string.Format("Email address \"{0}\" is already exists!", Email)));
                     });
                 });
 
-                if (result[0])
-                    yield return new ValidationResult(string.Format("Person with name \"{0} {1}\" and birth date \"{2}\" is already exists!", FirstName, LastName, BirthDate.ToShortDateString()));
-
-                if (result[1])
-                    yield return new ValidationResult(string.Format("Email address \"{0}\" is already exists!", Email));
+                foreach (var i in result)
+                    yield return i;
             }
         }
     }
