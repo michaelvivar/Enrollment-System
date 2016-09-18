@@ -23,6 +23,7 @@ namespace UI
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/select2.js",
                       "~/Scripts/bootstrap-datepicker.js",
+                      "~/Scripts/bootstrap-timepicker.js",
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(

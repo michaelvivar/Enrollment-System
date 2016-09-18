@@ -176,6 +176,7 @@
     <Compile Include="Models\StudentModel.cs" />
     <Compile Include="Models\SubjectModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Scripts\bootstrap-timepicker.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-datepicker3.css" />

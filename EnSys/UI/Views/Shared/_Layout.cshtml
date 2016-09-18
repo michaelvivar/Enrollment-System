@@ -79,6 +79,11 @@
                     $(this).val($(this).val().split(' ')[0]);
                 }
             });
+            $('input[type="time"]').timepicker({
+                template: false,
+                showInputs: false,
+                minuteStep: 5
+            });
             $('select[data-url]').each(function () {
                 var $this = $(this);
                 var value;
