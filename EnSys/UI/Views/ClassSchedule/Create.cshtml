@@ -95,7 +95,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.SubjectId, htmlAttributes: new { @class = "control-label col-md-4" })
             <div class="col-md-8">
-                <select id="SubjectId" name="SubjectId" data-url="/DropDownMenu/Subjects" class="form-control">
+                <select id="SubjectId" name="SubjectId" data-url="/DropDownMenu/Subjects" class="form-control" data-value="@Model.SubjectId">
                     @if (Model.SubjectId > 0)
                     {
                         <option value="@Model.SubjectId"></option>
@@ -130,11 +130,14 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#RoomId').on('change', function () {
-                $.getJSON('/Room/GetCapacityByRoomId/' + $(this).val(), function (result) {
-                    if (result.Status == 1) {
-                        $('#Capacity').val(result.Data.Capacity);
-                    }
-                });
+                var value = $(this).val();
+                if (value) {
+                    $.getJSON('/Room/GetCapacityByRoomId/' + value, function (result) {
+                        if (result.Status == 1) {
+                            $('#Capacity').val(result.Data.Capacity);
+                        }
+                    });
+                }
             });
         });
     </script>    

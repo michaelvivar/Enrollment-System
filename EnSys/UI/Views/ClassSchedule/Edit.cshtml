@@ -95,7 +95,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.SubjectId, htmlAttributes: new { @class = "control-label col-md-4" })
             <div class="col-md-8">
-                <select id="SubjectId" name="SubjectId" data-url="/DropDownMenu/Subjects" class="form-control">
+                <select id="SubjectId" name="SubjectId" data-url="/DropDownMenu/Subjects" class="form-control" data-value="@Model.SubjectId">
                     @if (Model.SubjectId > 0)
                     {
                         <option value="@Model.SubjectId"></option>
