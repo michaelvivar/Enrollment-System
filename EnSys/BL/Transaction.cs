@@ -30,14 +30,28 @@ namespace BL
 
 
         #region Static Members
-        private static Context Context()
+        private static Context getContext()
         {
             return (Context)Activator.CreateInstance(typeof(Context), BindingFlags.NonPublic | BindingFlags.Instance, null, null, null, null);
         }
 
+        private static TService getService<TService>(Context context)
+        {
+            BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+            Type type = typeof(TService);
+            if (type.GetConstructors(flags).All(c => c.GetParameters().Length == 0))
+            {
+                return (TService)Activator.CreateInstance(type, flags, null, null, null, null);
+            }
+            else
+            {
+                return (TService)Activator.CreateInstance(type, flags, null, new object[] { context }, null, null);
+            }
+        }
+
         public static void Scope(Action<ITransaction> action)
         {
-            using (Transaction transaction = new Transaction(Context()))
+            using (Transaction transaction = new Transaction(getContext()))
             {
                 action.Invoke(transaction);
             }
@@ -45,7 +59,7 @@ namespace BL
 
         public static TOut Scope<TOut>(Func<ITransaction, TOut> action)
         {
-            using (Transaction transaction = new Transaction(Context()))
+            using (Transaction transaction = new Transaction(getContext()))
             {
                 return action.Invoke(transaction);
             }
@@ -62,24 +76,12 @@ namespace BL
 
         internal static TOut Service<TService, TOut>(Context context, Func<TService, TOut> action) where TService : IService
         {
-            BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-            Type type = typeof(TService);
             try
             {
-                if (type.GetConstructors(flags).All(c => c.GetParameters().Length == 0))
-                {
-                    TService service = (TService)Activator.CreateInstance(type, flags, null, null, null, null);
-                    var o = action.Invoke(service);
-                    service.Dispose();
-                    return o;
-                }
-                else
-                {
-                    TService service = (TService)Activator.CreateInstance(type, flags, null, new object[] { context }, null, null);
-                    var o = action.Invoke(service);
-                    service.Dispose();
-                    return o;
-                }
+                TService service = getService<TService>(context);
+                var o = action.Invoke(service);
+                service.Dispose();
+                return o;
             }
             catch (Exception e)
             {
