@@ -21,9 +21,9 @@ namespace BL.Services
             {
                 Id = dto.Id,
                 Code = dto.Code,
-                Level = dto.Level,
+                Level = (YearLevel)dto.Level,
                 Remarks = dto.Remarks,
-                Status = dto.Status
+                Status = (Status)dto.Status
             };
         }
 
@@ -110,6 +110,27 @@ namespace BL.Services
                             Value = a.Id
                         }).ToList();
             });
+        }
+    }
+
+    public class SectionValidatorService : BaseService, IService
+    {
+        internal SectionValidatorService(Context context) : base(context) { }
+
+        public bool CheckSecionCodeExists(int id, string code)
+        {
+            var record = Query(context => context.Sections.Where(o => o.Code == code).Select(o => o.Id)).FirstOrDefault();
+            if (record != 0)
+            {
+                if (id == 0)
+                    return true;
+
+                if (record == id)
+                    return false;
+
+                return true;
+            }
+            return false;
         }
     }
 }

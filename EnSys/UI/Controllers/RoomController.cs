@@ -65,7 +65,7 @@ namespace UI.Controllers
 
         public JsonResult GetCapacityByRoomId(int id)
         {
-            var capacity = Transaction.Scope(scope => scope.Service<RoomService, int>(service => service.GetRoom(id).Capacity));
+            var capacity = Transaction.Scope(scope => scope.Service<RoomService, int?>(service => service.GetRoom(id).Capacity));
             return JsonResultSuccess(new { Capacity = capacity }, string.Empty);
         }
     }

@@ -13,8 +13,8 @@ namespace BL.Dto
         public int Id { get; set; }
         public string Code { get; set; }
         public string Remarks { get; set; }
-        public YearLevel Level { get; set; }
-        public Status Status { get; set; }
+        public YearLevel? Level { get; set; }
+        public Status? Status { get; set; }
         public int Students { get; set; }
     }
 }

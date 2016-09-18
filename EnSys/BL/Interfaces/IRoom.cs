@@ -12,7 +12,7 @@ namespace BL.Interfaces
         int Id { get; set; }
         string Number { get; set; }
         string Remarks { get; set; }
-        int Capacity { get; set; }
-        Status Status { get; set; }
+        int? Capacity { get; set; }
+        Status? Status { get; set; }
     }
 }

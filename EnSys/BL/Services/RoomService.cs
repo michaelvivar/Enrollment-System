@@ -21,9 +21,9 @@ namespace BL.Services
             {
                 Id = dto.Id,
                 Number = dto.Number,
-                Capacity = dto.Capacity,
+                Capacity = (int)dto.Capacity,
                 Remarks = dto.Remarks,
-                Status = dto.Status
+                Status = (Status)dto.Status
             };
         }
 
@@ -70,7 +70,7 @@ namespace BL.Services
 
         public IEnumerable<IRoom> GetRooms()
         {
-            return Rooms().Where(o => o.Status == Status.Active).OrderBy(o => o.Number).ToList();
+            return Rooms().OrderBy(o => o.Number).ToList();
         }
 
         public IEnumerable<IOption> GetRecordsBindToDropDown()
@@ -86,7 +86,7 @@ namespace BL.Services
 
         public bool CheckRoomNumberExists(int id, string room)
         {
-            var record = Query(context => context.Rooms.Where(o => o.Number == room).Select(o => o.Id)).First();
+            var record = Query(context => context.Rooms.Where(o => o.Number == room).Select(o => o.Id)).FirstOrDefault();
             if (record != 0)
             {
                 if (id == 0)

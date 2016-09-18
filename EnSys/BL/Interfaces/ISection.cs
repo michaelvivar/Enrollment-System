@@ -12,8 +12,8 @@ namespace BL.Interfaces
         int Id { get; set; }
         string Code { get; set; }
         string Remarks { get; set; }
-        YearLevel Level { get; set; }
-        Status Status { get; set; }
+        YearLevel? Level { get; set; }
+        Status? Status { get; set; }
         int Students { get; set; }
     }
 }
