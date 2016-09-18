@@ -11,7 +11,7 @@ namespace UI.Models
         public int Id { get; set; }
         [Display(Name = "Day of the Week")]
         public DayOfWeek? Day { get; set; }
-        public int DayId { get { return (int)Day; } }
+        public int DayId { get { return (Day.HasValue ? (int)Day : 0); } }
         [Display(Name = "Day(s) of the Week")]
         public int?[] Days { get; set; }
         [Display(Name = "Time Start")] [DataType(DataType.Time)]
@@ -40,6 +40,59 @@ namespace UI.Models
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             bool hasError = false;
+
+            if (!TimeStart.HasValue)
+            {
+                hasError = true;
+                yield return new ValidationResult("Time Start field is required", new[] { nameof(TimeStart) });
+            }
+
+            if (!TimeEnd.HasValue)
+            {
+                hasError = true;
+                yield return new ValidationResult("Time End field is required", new[] { nameof(TimeEnd) });
+            }
+
+            if (TimeStart.HasValue && TimeEnd.HasValue && TimeStart >= TimeEnd)
+            {
+                hasError = true;
+                yield return new ValidationResult("Time End field must be greater than Time Start", new[] { nameof(TimeEnd) });
+            }
+
+            if (Days == null || Days.Length <= 0 || (Days.Length == 1 && Days[0] == null))
+            {
+                hasError = true;
+                yield return new ValidationResult("Day(s) of the Week field is required", new[] { nameof(DayId) });
+            }
+
+            if ((!RoomId.HasValue) || RoomId <= 0)
+            {
+                hasError = true;
+                yield return new ValidationResult("Room field is required", new[] { nameof(RoomId) });
+            }
+
+            if ((!SectionId.HasValue) || RoomId <= 0)
+            {
+                hasError = true;
+                yield return new ValidationResult("Section field is required", new[] { nameof(SectionId) });
+            }
+                        if ((!SubjectId.HasValue) || RoomId <= 0)
+            {
+                hasError = true;
+                yield return new ValidationResult("Subject field is required", new[] { nameof(SubjectId) });
+            }
+
+            if ((!InstructorId.HasValue) || RoomId <= 0)
+            {
+                hasError = true;
+                yield return new ValidationResult("Instructor field is required", new[] { nameof(InstructorId) });
+            }
+
+            if ((!Capacity.HasValue) || Capacity <= 0)
+            {
+                hasError = true;
+                yield return new ValidationResult("Capacity field is required and must be greater than to 0(zero)", new[] { nameof(Capacity) });
+            }
 
             if (!hasError)
             {
