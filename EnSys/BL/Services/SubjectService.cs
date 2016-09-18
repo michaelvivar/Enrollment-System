@@ -1,12 +1,8 @@
 ﻿using BL.Dto;
-using BL.Interfaces;
 using DL;
 using DL.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Util.Enums;
 
 namespace BL.Services
@@ -21,10 +17,10 @@ namespace BL.Services
             {
                 Id = dto.Id,
                 Code = dto.Code,
-                Level = dto.Level,
-                Units = dto.Units,
+                Level = (YearLevel)dto.Level,
+                Units = (Unit)dto.Units,
                 Remarks = dto.Remarks,
-                Status = dto.Status
+                Status = (Status)dto.Status
             };
         }
 

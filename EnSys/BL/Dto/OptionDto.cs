@@ -1,19 +1,18 @@
-﻿using BL.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Util.Enums;
+﻿using Util.Enums;
 
 namespace BL.Dto
 {
     public class OptionDto : IOption
     {
-        //public int Id { get; set; }
-        //public object Group { get; set; }
         public OptionType Type { get; set; }
         public string Text { get; set; }
         public int Value { get; set; }
+    }
+
+    public interface IOption
+    {
+        OptionType Type { get; set; }
+        string Text { get; set; }
+        int Value { get; set; }
     }
 }

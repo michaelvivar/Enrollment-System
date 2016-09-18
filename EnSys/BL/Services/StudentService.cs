@@ -1,17 +1,10 @@
 ﻿using BL.Dto;
-using BL.Interfaces;
 using DL;
 using DL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Linq.Expressions;
-
-using System.Data.Entity;
 using Util.Enums;
-using BL;
 
 namespace BL.Services
 {
@@ -24,11 +17,11 @@ namespace BL.Services
             return new Student
             {
                 Id = dto.Id,
-                CourseId = dto.CourseId,
-                Level = dto.Level,
-                PersonId = dto.PersonId,
-                Status = dto.Status,
-                SectionId = dto.SectionId
+                CourseId = (int)dto.CourseId,
+                Level = (YearLevel)dto.Level,
+                PersonId = (int)dto.PersonId,
+                Status = (Status)dto.Status,
+                SectionId = (int)dto.SectionId
             };
         }
 

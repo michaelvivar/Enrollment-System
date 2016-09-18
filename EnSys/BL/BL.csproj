@@ -59,16 +59,6 @@
     <Compile Include="Dto\PersonDto.cs" />
     <Compile Include="Dto\SubjectDto.cs" />
     <Compile Include="Dto\InstructorDto.cs" />
-    <Compile Include="Interfaces\IClassSchedule.cs" />
-    <Compile Include="Interfaces\IContactInfo.cs" />
-    <Compile Include="Interfaces\ICourse.cs" />
-    <Compile Include="Interfaces\IOption.cs" />
-    <Compile Include="Interfaces\IPersonalInfo.cs" />
-    <Compile Include="Interfaces\IInstructor.cs" />
-    <Compile Include="Interfaces\IRoom.cs" />
-    <Compile Include="Interfaces\ISection.cs" />
-    <Compile Include="Interfaces\IStudent.cs" />
-    <Compile Include="Interfaces\ISubject.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CourseService.cs" />
     <Compile Include="Services\EmailService.cs" />

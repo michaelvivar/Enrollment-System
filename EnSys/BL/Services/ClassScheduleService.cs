@@ -1,5 +1,4 @@
 ﻿using BL.Dto;
-using BL.Interfaces;
 using DL;
 using DL.Entities;
 using System;
@@ -17,15 +16,15 @@ namespace BL.Services
             return new ClassSchedule
             {
                 Id = dto.Id,
-                Capacity = dto.Capacity,
-                Day = dto.Day,
-                TimeStart = dto.TimeStart,
-                TimeEnd = dto.TimeEnd,
+                Capacity = (int)dto.Capacity,
+                Day = (DayOfWeek)dto.Day,
+                TimeStart = (DateTime)dto.TimeStart,
+                TimeEnd = (DateTime)dto.TimeEnd,
                 Remarks = dto.Remarks,
-                InstructorId = dto.InstructorId,
-                SubjectId = dto.SubjectId,
-                SectionId = dto.SectionId,
-                RoomId = dto.RoomId
+                InstructorId = (int)dto.InstructorId,
+                SubjectId = (int)dto.SubjectId,
+                SectionId = (int)dto.SectionId,
+                RoomId = (int)dto.RoomId
             };
         }
 

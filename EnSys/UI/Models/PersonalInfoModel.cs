@@ -1,10 +1,6 @@
 ﻿using BL.Dto;
-using BL.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 using Util.Enums;
 using Util.Helpers;
 
@@ -12,13 +8,13 @@ namespace UI.Models
 {
     public class PersonalInfoModel : ContactInfoModel, IPersonalInfo
     {
-        public int PersonId { get; set; }
-        [Display(Name = "First Name")] [Required]
+        public int? PersonId { get; set; }
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
-        [Display(Name = "Last Name")] [Required]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
-        [Display(Name = "Birth Date")] [Required]
-        public DateTime BirthDate { get; set; }
+        [Display(Name = "Birth Date")]
+        public DateTime? BirthDate { get; set; }
         public double Age
         {
             get
@@ -27,7 +23,7 @@ namespace UI.Models
             }
         }
         [Required]
-        public Gender Gender { get; set; }
+        public Gender? Gender { get; set; }
         public int GenderId
         {
             get

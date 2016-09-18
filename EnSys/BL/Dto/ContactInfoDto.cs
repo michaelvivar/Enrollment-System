@@ -1,17 +1,18 @@
-﻿using BL.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BL.Dto
+﻿namespace BL.Dto
 {
     public class ContactInfoDto : IContactInfo
     {
-        public int ContactInfoId { get; set; }
+        public int? ContactInfoId { get; set; }
         public string Email { get; set; }
         public string Telephone { get; set; }
         public string Mobile { get; set; }
+    }
+
+    public interface IContactInfo
+    {
+        int? ContactInfoId { get; set; }
+        string Email { get; set; }
+        string Telephone { get; set; }
+        string Mobile { get; set; }
     }
 }

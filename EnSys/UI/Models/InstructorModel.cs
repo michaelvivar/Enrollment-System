@@ -1,13 +1,10 @@
 ﻿using BL;
 using BL.Dto;
-using BL.Interfaces;
 using BL.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.SqlTypes;
-using System.Linq;
-using System.Web;
 using Util.Enums;
 
 namespace UI.Models
@@ -16,10 +13,10 @@ namespace UI.Models
     {
         public int Id { get; set; }
         [Required]
-        public Status Status { get; set; }
+        public Status? Status { get; set; }
         public int StatusId { get { return Convert.ToInt32(Status); } }
         [DataType(DataType.Date)] [Display(Name = "Date Enrolled")]
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
     }
 
     public class ValidateInstructorModel : InstructorModel, IValidatableObject
@@ -48,7 +45,7 @@ namespace UI.Models
                     scope.Service<ValidatorService>(service =>
                     {
                         if (service.CheckPersonExists(PersonId, FirstName, LastName, BirthDate))
-                            result.Add(new ValidationResult(string.Format("Person with name \"{0} {1}\" and birth date \"{2}\" is already exists!", FirstName, LastName, BirthDate.ToShortDateString())));
+                            result.Add(new ValidationResult(string.Format("Person with name \"{0} {1}\" and birth date \"{2}\" is already exists!", FirstName, LastName, ((DateTime)BirthDate).ToShortDateString())));
 
                         if (service.CheckEmailExists(ContactInfoId, Email))
                             result.Add(new ValidationResult(string.Format("Email address \"{0}\" is already exists!", Email)));

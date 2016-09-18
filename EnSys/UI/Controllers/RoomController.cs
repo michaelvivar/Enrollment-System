@@ -1,8 +1,6 @@
 ﻿using BL;
-using BL.Interfaces;
+using BL.Dto;
 using BL.Services;
-using Nelibur.ObjectMapper;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using UI.Models;

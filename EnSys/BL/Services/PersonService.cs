@@ -1,12 +1,8 @@
 ﻿using BL.Dto;
-using BL.Interfaces;
 using DL;
 using DL.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Util.Enums;
 
 namespace BL.Services
 {
@@ -18,12 +14,12 @@ namespace BL.Services
         {
             return new Person
             {
-                Id = dto.PersonId,
+                Id = (int)dto.PersonId,
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
-                BirthDate = dto.BirthDate,
-                Gender = dto.Gender,
-                ContactInfoId = dto.ContactInfoId
+                BirthDate = (DateTime)dto.BirthDate,
+                Gender = (Gender)dto.Gender,
+                ContactInfoId = (int)dto.ContactInfoId
             };
         }
 
@@ -31,7 +27,7 @@ namespace BL.Services
         {
             return new ContactInfo
             {
-                Id = dto.ContactInfoId,
+                Id = (int)dto.ContactInfoId,
                 Email = dto.Email,
                 Telephone = dto.Telephone,
                 Mobile = dto.Mobile,

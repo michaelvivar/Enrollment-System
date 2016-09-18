@@ -1,9 +1,5 @@
-﻿using BL.Interfaces;
-using DL;
+﻿using DL;
 using System;
-using System.Collections.Generic;
-using BL.Dto;
-using System.Linq;
 
 namespace BL.Services
 {

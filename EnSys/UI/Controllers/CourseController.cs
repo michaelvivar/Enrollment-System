@@ -1,11 +1,10 @@
 ﻿using BL;
-using BL.Interfaces;
+using BL.Dto;
 using BL.Services;
-using Nelibur.ObjectMapper;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using UI.Models;
+using Util.Enums;
 
 namespace UI.Controllers
 {
@@ -18,8 +17,8 @@ namespace UI.Controllers
                 Id = dto.Id,
                 Code = dto.Code,
                 Remarks = dto.Remarks,
-                Status = dto.Status,
-                Students = dto.Students
+                Status = (Status)dto.Status,
+                Students = (int)dto.Students
             };
         }
 

@@ -1,10 +1,4 @@
-﻿using BL.Interfaces;
-using DL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DL;
 
 namespace BL.Services
 {

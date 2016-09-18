@@ -1,5 +1,4 @@
 ﻿using BL.Dto;
-using BL.Interfaces;
 using DL;
 using DL.Entities;
 using System;
@@ -18,8 +17,8 @@ namespace BL.Services
             return new Instructor
             {
                 Id = dto.Id,
-                Status = dto.Status,
-                PersonId = dto.PersonId,
+                Status = (Status)dto.Status,
+                PersonId = (int)dto.PersonId,
             };
         }
 

@@ -1,10 +1,4 @@
-﻿using BL.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Util.Enums;
+﻿using Util.Enums;
 
 namespace BL.Dto
 {
@@ -15,6 +9,16 @@ namespace BL.Dto
         public string Remarks { get; set; }
         public YearLevel? Level { get; set; }
         public Status? Status { get; set; }
-        public int Students { get; set; }
+        public int? Students { get; set; }
+    }
+
+    public interface ISection
+    {
+        int Id { get; set; }
+        string Code { get; set; }
+        string Remarks { get; set; }
+        YearLevel? Level { get; set; }
+        Status? Status { get; set; }
+        int? Students { get; set; }
     }
 }

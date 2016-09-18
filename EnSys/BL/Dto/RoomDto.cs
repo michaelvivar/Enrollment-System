@@ -1,10 +1,4 @@
-﻿using BL.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Util.Enums;
+﻿using Util.Enums;
 
 namespace BL.Dto
 {
@@ -15,5 +9,14 @@ namespace BL.Dto
         public int? Capacity { get; set; }
         public string Remarks { get; set; }
         public Status? Status { get; set; }
+    }
+
+    public interface IRoom
+    {
+        int Id { get; set; }
+        string Number { get; set; }
+        string Remarks { get; set; }
+        int? Capacity { get; set; }
+        Status? Status { get; set; }
     }
 }

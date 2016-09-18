@@ -1,11 +1,8 @@
 ﻿using BL.Dto;
-using BL.Interfaces;
 using DL;
 using DL.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using Util.Enums;
 
 namespace BL.Services
@@ -21,7 +18,7 @@ namespace BL.Services
                 Id = dto.Id,
                 Code = dto.Code,
                 Remarks = dto.Remarks,
-                Status = dto.Status
+                Status = (Status)dto.Status
             };
         }
 

@@ -1,9 +1,4 @@
-﻿using BL.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using Util.Enums;
 
 namespace BL.Dto
@@ -11,7 +6,14 @@ namespace BL.Dto
     public class InstructorDto : PersonDto, IInstructor
     {
         public int Id { get; set; }
-        public Status Status { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public Status? Status { get; set; }
+        public DateTime? CreatedDate { get; set; }
+    }
+
+    public interface IInstructor : IPersonalInfo
+    {
+        int Id { get; set; }
+        Status? Status { get; set; }
+        DateTime? CreatedDate { get; set; }
     }
 }
