@@ -9,10 +9,10 @@ namespace BL.Interfaces
 {
     public interface IOption
     {
-        int Id { get; set; }
+        //int Id { get; set; }
+        //object Group { get; set; }
         OptionType Type { get; set; }
         string Text { get; set; }
         int Value { get; set; }
-        object Group { get; set; }
     }
 }

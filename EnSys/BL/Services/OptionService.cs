@@ -23,7 +23,6 @@ namespace BL.Services
                         {
                             Value = a.Value,
                             Text = a.Text,
-                            Group = a.Group,
                             Type = a.Type
                         });
             });
