@@ -11,7 +11,7 @@ namespace BL.Dto
     {
         public int Id { get; set; }
         public DayOfWeek Day { get; set; }
-        public IList<DayOfWeek> Days { get; set; }
+        public int[] Days { get; set; }
         public DateTime TimeStart { get; set; }
         public DateTime TimeEnd { get; set; }
         public int Capacity { get; set; }
@@ -23,6 +23,9 @@ namespace BL.Dto
 
         public int SubjectId { get; set; }
         public string Subject { get; set; }
+
+        public int SectionId { get; set; }
+        public string Section { get; set; }
 
         public int RoomId { get; set; }
         public string Room { get; set; }

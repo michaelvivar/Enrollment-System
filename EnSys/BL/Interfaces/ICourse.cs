@@ -9,6 +9,7 @@ namespace BL.Interfaces
         string Code { get; set; }
         string Remarks { get; set; }
         Status Status { get; set; }
+        int Students { get; set; }
         IEnumerable<ISubject> Subjects { get; set; }
     }
 }

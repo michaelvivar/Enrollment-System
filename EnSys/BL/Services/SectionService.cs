@@ -53,13 +53,15 @@ namespace BL.Services
             return Query(context =>
             {
                 return (from a in context.Sections
+                        let count = context.Students.Where(o => o.SectionId == a.Id).Count()
                         select new SectionDto
                         {
                             Id = a.Id,
                             Code = a.Code,
                             Level = a.Level,
                             Remarks = a.Remarks,
-                            Status = a.Status
+                            Status = a.Status,
+                            Students = count
                         });
             });
         }
@@ -92,6 +94,22 @@ namespace BL.Services
             return Sections().Where(o => o.Status == Status.Active)
                 .OrderBy(o => o.Level).ThenBy(o => o.Code)
                 .Select(o => new OptionDto { Text = o.Code, Value = o.Id }).ToList();
+        }
+
+        public IEnumerable<IOption> GetRecordsBindToDropDownBySubjectId(int id)
+        {
+            return Query(context =>
+            {
+                return (from a in Sections()
+                        let subject = context.Subjects.FirstOrDefault(o => o.Id == id)
+                        orderby a.Code
+                        where a.Level == subject.Level
+                        select new OptionDto
+                        {
+                            Text = a.Code,
+                            Value = a.Id
+                        }).ToList();
+            });
         }
     }
 }

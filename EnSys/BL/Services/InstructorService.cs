@@ -87,7 +87,7 @@ namespace BL.Services
         public IEnumerable<IOption> GetRecordsBindToDropDown()
         {
             return Instructors().OrderBy(o => o.FirstName).ThenBy(o => o.LastName)
-                    .Select(o => new OptionDto { Text = o.FirstName + " " + o.LastName, Id = o.Id }).ToList();
+                    .Select(o => new OptionDto { Text = o.FirstName + " " + o.LastName, Value = o.Id }).ToList();
         }
     }
 }

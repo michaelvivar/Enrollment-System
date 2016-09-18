@@ -1,5 +1,7 @@
-﻿using BL.Dto;
+﻿using BL;
+using BL.Dto;
 using BL.Interfaces;
+using BL.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,12 +14,9 @@ namespace UI.Models
     public class RoomModel :  IRoom
     {
         public int Id { get; set; }
-        [Required]
         public string Number { get; set; }
-        [Required]
         public int Capacity { get; set; }
         public string Remarks { get; set; }
-        [Required]
         public Status Status { get; set; }
         public int StatusId { get { return Convert.ToInt32(Status); } }
     }
@@ -26,11 +25,43 @@ namespace UI.Models
     {
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            bool[] result = new bool[1];
-            result[0] = false;
+            bool hasError = false;
 
-            if (result[0])
-                yield return new ValidationResult("");
+            if (string.IsNullOrWhiteSpace(Number) || string.IsNullOrEmpty(Number))
+            {
+                hasError = true;
+                yield return new ValidationResult("Number field is required", new[] { nameof(Number) });
+            }
+
+            if (Capacity <= 0)
+            {
+                hasError = true;
+                yield return new ValidationResult("Capacity must be greater than to 0(zero)", new[] { nameof(Capacity) });
+            }
+
+            if (Status <= 0)
+            {
+                hasError = true;
+                yield return new ValidationResult("Status field is required", new[] { nameof(Status) });
+            }
+
+            if (!hasError)
+            {
+                List<ValidationResult> result = new List<ValidationResult>();
+                Transaction.Scope(scope =>
+                {
+                    scope.Service<RoomValidatorService>(service =>
+                    {
+                        if (service.CheckRoomNumberExists(Id, Number))
+                            result.Add(new ValidationResult(string.Format("Room number/name \"{0}\" is already exists!", Number), new[] { nameof(Number) }));
+                    });
+                });
+
+                if (result.Count > 0)
+                    foreach (var i in result)
+                        yield return i;
+            }
+                
         }
     }
 }

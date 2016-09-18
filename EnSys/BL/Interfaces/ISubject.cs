@@ -13,7 +13,7 @@ namespace BL.Interfaces
         string Code { get; set; }
         Unit Units { get; set; }
         string Remarks { get; set; }
-        Status Status { get; set; }
         YearLevel Level { get; set; }
+        Status Status { get; set; }
     }
 }

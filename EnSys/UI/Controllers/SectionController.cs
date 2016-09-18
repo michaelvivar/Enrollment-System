@@ -19,7 +19,8 @@ namespace UI.Controllers
                 Code = dto.Code,
                 Remarks = dto.Remarks,
                 Status = dto.Status,
-                Level = dto.Level
+                Level = dto.Level,
+                Students = dto.Students
             };
         }
 
@@ -41,9 +42,9 @@ namespace UI.Controllers
             if (ModelState.IsValid)
             {
                 Transaction.Scope(scope => scope.Service<SectionService>(service => service.AddSection(model)));
-                return RedirectToAction("Index");
+                return JsonUrlSuccess(Url.Action("Index"));
             }
-            return View(model);
+            return JsonFormError(ModelState);
         }
 
         [HttpGet]
@@ -58,9 +59,9 @@ namespace UI.Controllers
             if (ModelState.IsValid)
             {
                 Transaction.Scope(scope => scope.Service<SectionService>(service => service.UpdateSection(model)));
-                return RedirectToAction("Index");
+                return JsonUrlSuccess(Url.Action("Index"));
             }
-            return View(model);
+            return JsonFormError(ModelState);
         }
     }
 }

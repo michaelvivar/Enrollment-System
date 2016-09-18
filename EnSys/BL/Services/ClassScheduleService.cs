@@ -14,7 +14,19 @@ namespace BL.Services
 
         internal ClassSchedule MapDtoToEntity(IClassSchedule dto)
         {
-            return new ClassSchedule();
+            return new ClassSchedule
+            {
+                Id = dto.Id,
+                Capacity = dto.Capacity,
+                Day = dto.Day,
+                TimeStart = dto.TimeStart,
+                TimeEnd = dto.TimeEnd,
+                Remarks = dto.Remarks,
+                InstructorId = dto.InstructorId,
+                SubjectId = dto.SubjectId,
+                SectionId = dto.SectionId,
+                RoomId = dto.RoomId
+            };
         }
 
 
@@ -23,9 +35,11 @@ namespace BL.Services
             Repository<ClassSchedule>(repo =>
             {
                 IList<ClassSchedule> classes = new List<ClassSchedule>();
-                foreach(DayOfWeek day in dto.Days)
+                foreach(DayOfWeek day in dto.Days.Where(o => o != 0))
                 {
-                    classes.Add(MapDtoToEntity(dto));
+                    var entity = MapDtoToEntity(dto);
+                    entity.Day = day;
+                    classes.Add(entity);
                 }
                 repo.AddRange(classes);
             });
@@ -58,14 +72,16 @@ namespace BL.Services
                             Room = a.Room.Number,
                             TimeStart = a.TimeStart,
                             TimeEnd = a.TimeEnd,
-                            Capacity = a.Capacity,
+                            Capacity = (a.Capacity <= 0) ? a.Room.Capacity : a.Capacity ,
                             Day = a.Day,
                             InstructorId = a.InstructorId,
                             InstructorFirstName = a.Instructor.Person.FirstName,
                             InstructorLastName = a.Instructor.Person.LastName,
                             Remarks = a.Remarks,
                             SubjectId = a.SubjectId,
-                            Subject = a.Subject.Code
+                            Subject = a.Subject.Code,
+                            SectionId = a.SectionId,
+                            Section = a.Section.Code
                         });
             });
         }
@@ -76,6 +92,11 @@ namespace BL.Services
             {
                 return Classes().SingleOrDefault(o => o.Id == id);
             });
+        }
+
+        public IEnumerable<IClassSchedule> GetClasses()
+        {
+            return Classes().OrderBy(o => o.Day).ThenBy(o => o.TimeStart).ToList();
         }
 
         public IEnumerable<IClassSchedule> GetClassesByStudentId(int id)

@@ -1,0 +1,141 @@
+﻿@model UI.Models.ClassScheduleModel
+
+@{
+    ViewBag.Title = "Create Schedule";
+}
+
+<h2>Create Schedule</h2>
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Days, new { value = "1" })
+    
+    <div class="form-horizontal">
+        <hr />
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Day, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                <select id="Day" name="Day" data-url="/DropDownMenu/Days" class="form-control">
+                    @if (Model.Day > 0)
+                    {
+                        <option value="@Model.DayId"></option>
+                    }
+                </select>
+                @Html.ValidationMessageFor(model => model.DayId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.TimeStart, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.TimeStart, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TimeStart, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TimeEnd, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.TimeEnd, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TimeEnd, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RoomId, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                <select id="RoomId" name="RoomId" data-url="/DropDownMenu/Rooms" class="form-control">
+                    @if (Model.RoomId > 0)
+                    {
+                        <option value="@Model.RoomId"></option>
+                    }
+                </select>
+                @Html.ValidationMessageFor(model => model.RoomId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Capacity, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.Capacity, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Capacity, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Remarks, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.TextAreaFor(model => model.Remarks, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.InstructorId, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                <select id="InstructorId" name="InstructorId" data-url="/DropDownMenu/Instructors" class="form-control">
+                    @if (Model.InstructorId > 0)
+                    {
+                        <option value="@Model.InstructorId"></option>
+                    }
+                </select>
+                @Html.ValidationMessageFor(model => model.InstructorId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SubjectId, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                <select id="SubjectId" name="SubjectId" data-url="/DropDownMenu/Subjects" class="form-control">
+                    @if (Model.SubjectId > 0)
+                    {
+                        <option value="@Model.SubjectId"></option>
+                    }
+                </select>
+                @Html.ValidationMessageFor(model => model.SubjectId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SectionId, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                <select id="SectionId" name="SectionId" data-url="/DropDownMenu/SectionsBySubjectId" data-cascadefrom="SubjectId" class="form-control">
+                    @if (Model.SectionId > 0)
+                    {
+                        <option value="@Model.SectionId"></option>
+                    }
+                </select>
+                @Html.ValidationMessageFor(model => model.SectionId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#RoomId').on('change', function () {
+                $.getJSON('/Room/GetCapacityByRoomId/' + $(this).val(), function (result) {
+                    if (result.Status == 1) {
+                        $('#Capacity').val(result.Data.Capacity);
+                    }
+                });
+            });
+        });
+    </script>    
+}

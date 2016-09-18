@@ -156,6 +156,7 @@
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\SectionController.cs" />
     <Compile Include="Controllers\InstructorController.cs" />
+    <Compile Include="Controllers\ClassScheduleController.cs" />
     <Compile Include="Controllers\SubjectController.cs" />
     <Compile Include="Controllers\DropDownMenuController.cs" />
     <Compile Include="Controllers\CourseController.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Models\PersonalInfoModel.cs" />
     <Compile Include="Models\CourseModel.cs" />
     <Compile Include="Models\InstructorModel.cs" />
+    <Compile Include="Models\ClassScheduleModel.cs" />
     <Compile Include="Models\StudentModel.cs" />
     <Compile Include="Models\SubjectModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -295,6 +297,9 @@
     <Content Include="Views\Instructor\Create.cshtml" />
     <Content Include="Views\Instructor\Edit.cshtml" />
     <Content Include="Views\Instructor\Index.cshtml" />
+    <Content Include="Views\ClassSchedule\Index.cshtml" />
+    <Content Include="Views\ClassSchedule\Create.cshtml" />
+    <Content Include="Views\ClassSchedule\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

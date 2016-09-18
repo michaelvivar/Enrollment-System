@@ -40,19 +40,37 @@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     <script type="text/javascript">
         $(document).ready(function () {
-            $('form').validate({
-                ignore: []
+            //$('form').validate({
+            //    ignore: []
+            //});
+            $('form').submit(function (e) {
+                $.post($(this).attr('action'), $(this).serializeArray(), function (result) {
+                    if (result.Status == 3) {
+                        $.each(result.Data, function (i, obj) {
+                            if (obj.Errors.length > 0) {
+                                $('span[data-valmsg-for="' + obj.Field + '"]').text(obj.Errors[0]);
+                            }
+                            else {
+                                $('span[data-valmsg-for="' + obj.Field + '"]').text('');
+                            }
+                        });
+                    }
+                    else if (result.Status == 1) {
+                        window.location = result.Url;
+                    }
+                });
+                return false;
             });
-            $('.date-picker').each(function () {
+            $('input[type="datetime"]').each(function () {
                 var startView = ($(this).data('startView') >= 0) ? $(this).data('startView') : 2;
                 $(this).datepicker({
                     autoclose: true,
-                    startView: startView
+                    startView: startView,
+                    format: 'mm/dd/yyyy'
                 });
                 if ($(this).val() == '1/1/0001 12:00:00 AM') {
                     $(this).val('');
@@ -65,7 +83,16 @@
                 var $this = $(this);
                 var value;
                 if ($this.find('option').length > 0) {
-                    value = $this.find('option').first().attr('value');
+                    if ($this.find('option').length > 1) {
+                        value = $this.find('option').map(function (i, e) {
+                            return $(e).attr('value');
+                        });
+                    }
+                    else {
+                        value = $this.find('option').first().attr('value');
+                    }
+                    
+                    $this.data('value', value);
                     $this.find('option').remove();
                 }
                 else {
@@ -80,18 +107,25 @@
                     }
                 }
                 var url = $this.data('url');
+                if ($this.data('cascadefrom')) {
+                    url = url + '/' + $('[name="' + $this.data('cascadefrom') + '"]').data('value');
+                }
                 $.ajax({
                     url: url,
                     async: true,
                     success: function (result) {
-                        var ele = $this.select2({
-                            data: $.map(result, function (e, i) {
+                        var data = [];
+                        if (result.Status == 1) {
+                            data = $.map(result.Data, function (e, i) {
                                 return { id: e.Value, text: e.Text };
-                            }),
+                            });
+                        }
+                        var ele = $this.select2({
+                            data: data,
                             placeholder: 'Select a Record',
                             minimumResultsForSearch: Infinity
                         });
-                        if (typeof value != 'undefined' && value > 0) {
+                        if (typeof value != 'undefined') {
                             ele.val(value).trigger('change');
                         }
                         else {

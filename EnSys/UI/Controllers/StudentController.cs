@@ -38,9 +38,9 @@ namespace UI.Controllers
             if (ModelState.IsValid)
             {
                 Transaction.Scope(scope => scope.Service<StudentService>(service => service.AddStudent(model)));
-                return RedirectToAction("Index");
+                return JsonUrlSuccess(Url.Action("Index"));
             }
-            return View(model);
+            return JsonFormError(ModelState);
         }
 
         public ActionResult Edit(int id)
@@ -54,9 +54,9 @@ namespace UI.Controllers
             if (ModelState.IsValid)
             {
                 Transaction.Scope(scope => scope.Service<StudentService>(service => service.UpdateStudent(model)));
-                return RedirectToAction("Index");
+                return JsonUrlSuccess(Url.Action("Index"));
             }
-            return View(model);
+            return JsonFormError(ModelState);
         }
     }
 }

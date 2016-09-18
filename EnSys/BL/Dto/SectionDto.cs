@@ -15,5 +15,6 @@ namespace BL.Dto
         public string Remarks { get; set; }
         public YearLevel Level { get; set; }
         public Status Status { get; set; }
+        public int Students { get; set; }
     }
 }

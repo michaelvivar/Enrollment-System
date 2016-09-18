@@ -21,6 +21,7 @@ namespace UI.Models
         [Required]
         public YearLevel Level { get; set; }
         public int LevelId { get { return Convert.ToInt32(Level); } }
+        public int Students { get; set; }
     }
 
     public class ValidateSectionModel : SectionModel, IValidatableObject

@@ -79,4 +79,25 @@ namespace BL.Services
                     .Select(o => new OptionDto { Text = o.Number, Value = o.Id }).ToList();
         }
     }
+
+    public class RoomValidatorService : BaseService, IService
+    {
+        internal RoomValidatorService(Context context) : base(context) { }
+
+        public bool CheckRoomNumberExists(int id, string room)
+        {
+            var record = Query(context => context.Rooms.Where(o => o.Number == room).Select(o => o.Id)).First();
+            if (record != 0)
+            {
+                if (id == 0)
+                    return true;
+
+                if (record == id)
+                    return false;
+
+                return true;
+            }
+            return false;
+        }
+    }
 }

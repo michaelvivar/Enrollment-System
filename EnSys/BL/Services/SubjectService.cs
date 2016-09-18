@@ -54,6 +54,8 @@ namespace BL.Services
             return Query(context =>
             {
                 return (from a in context.Subjects
+                        let level = context.Options.Where(o => o.Value == (int)a.Level).FirstOrDefault()
+                        let status = context.Options.Where(o => o.Value == (int)a.Status).FirstOrDefault()
                         select new SubjectDto
                         {
                             Id = a.Id,
@@ -98,7 +100,7 @@ namespace BL.Services
         {
             return Subjects().Where(o => o.Status == Status.Active)
                 .OrderBy(o => o.Level).ThenBy(o => o.Code)
-                .Select(o => new OptionDto { Group = o.Level, Text = o.Code, Value = o.Id }).ToList();
+                .Select(o => new OptionDto { Text = o.Code, Value = o.Id }).ToList();
         }
     }
 }

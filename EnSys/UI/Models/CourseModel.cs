@@ -18,6 +18,7 @@ namespace UI.Models
         [Required]
         public Status Status { get; set; }
         public int StatusId { get { return Convert.ToInt32(Status); } }
+        public int Students { get; set; }
         public IEnumerable<ISubject> Subjects { get; set; }
     }
 

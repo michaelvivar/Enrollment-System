@@ -41,9 +41,9 @@ namespace UI.Controllers
             if (ModelState.IsValid)
             {
                 Transaction.Scope(scope => scope.Service<RoomService>(service => service.AddRoom(model)));
-                return RedirectToAction("Index");
+                return JsonUrlSuccess(Url.Action("Index"));
             }
-            return View(model);
+            return JsonFormError(ModelState);
         }
          
         [HttpGet]
@@ -58,9 +58,15 @@ namespace UI.Controllers
             if (ModelState.IsValid)
             {
                 Transaction.Scope(scope => scope.Service<RoomService>(service => service.UpdateRoom(model)));
-                return RedirectToAction("Index");
+                return JsonUrlSuccess(Url.Action("Index"));
             }
-            return View(model);
+            return JsonFormError(ModelState);
+        }
+
+        public JsonResult GetCapacityByRoomId(int id)
+        {
+            var capacity = Transaction.Scope(scope => scope.Service<RoomService, int>(service => service.GetRoom(id).Capacity));
+            return JsonResultSuccess(new { Capacity = capacity }, string.Empty);
         }
     }
 }

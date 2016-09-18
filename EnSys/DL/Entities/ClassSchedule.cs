@@ -26,6 +26,10 @@ namespace DL.Entities
         [ForeignKey("SubjectId")]
         public virtual Subject Subject { get; set; }
 
+        public int SectionId { get; set; }
+        [ForeignKey("SectionId")]
+        public virtual Section Section { get; set; }
+
         public int RoomId { get; set; }
         [ForeignKey("RoomId")]
         public virtual Room Room { get; set; }

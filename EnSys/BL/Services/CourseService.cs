@@ -47,12 +47,14 @@ namespace BL.Services
             return Query(context =>
             {
                 return (from a in context.Courses
+                        let count = context.Students.Where(o => o.CourseId == a.Id).Count()
                         select new CourseDto
                         {
                             Id = a.Id,
                             Code = a.Code,
                             Remarks = a.Remarks,
-                            Status = a.Status
+                            Status = a.Status,
+                            Students = count
                         });
             });
         }

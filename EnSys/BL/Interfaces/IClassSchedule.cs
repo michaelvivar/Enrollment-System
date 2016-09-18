@@ -10,7 +10,7 @@ namespace BL.Interfaces
     {
         int Id { get; set; }
         DayOfWeek Day { get; set; }
-        IList<DayOfWeek> Days { get; set; }
+        int[] Days { get; set; }
         DateTime TimeStart { get; set; }
         DateTime TimeEnd { get; set; }
         int Capacity { get; set; }
@@ -22,6 +22,9 @@ namespace BL.Interfaces
 
         int SubjectId { get; set; }
         string Subject { get; set; }
+
+        int SectionId { get; set; }
+        string Section { get; set; }
 
         int RoomId { get; set; }
         string Room { get; set; }
