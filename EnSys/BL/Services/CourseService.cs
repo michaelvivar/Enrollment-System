@@ -75,4 +75,14 @@ namespace BL.Services
             });
         }
     }
+
+    public class CourseValidatorService : ValidatorService, IService
+    {
+        internal CourseValidatorService(Context context) : base(context) { }
+
+        public bool CheckCourseCodeExists(int id, string code)
+        {
+            return Query(context => context.Courses.Where(o => o.Code == code && ((id == 0) ? true : o.Id != id)).Any());
+        }
+    }
 }

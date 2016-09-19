@@ -10,34 +10,14 @@ namespace BL.Services
 
         public bool CheckPersonExists(int? id, string firstName, string lastName, DateTime? birthdate)
         {
-            var records = Query(context => context.Persons.Where(o => o.FirstName == firstName && o.LastName == lastName && o.BirthDate == birthdate).Select(o => o.Id));
-            if (records.Count() > 0)
-            {
-                if (id == 0)
-                    return true;
-
-                if (records.Any(o => o == id))
-                    return false;
-
-                return true;
-            }
-            return false;
+            return Query(context => context.Persons.Where(
+                o => o.FirstName == firstName && o.LastName == lastName && o.BirthDate == birthdate
+                && ((id == 0) ? true : o.Id != id)).Any());
         }
 
         public bool CheckEmailExists(int? id, string email)
         {
-            var records = Query(context => context.ContactInfo.Where(o => o.Email == email).Select(o => o.Id));
-            if (records.Count() > 0)
-            {
-                if (id == 0)
-                    return true;
-
-                if (records.Any(o => o == id))
-                    return false;
-
-                return true;
-            }
-            return false;
+            return Query(context => context.ContactInfo.Where(o => o.Email == email && ((id == 0) ? true : o.Id != id)).Any());
         }
     }
 }

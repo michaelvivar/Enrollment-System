@@ -83,18 +83,7 @@ namespace BL.Services
 
         public bool CheckRoomNumberExists(int id, string room)
         {
-            var record = Query(context => context.Rooms.Where(o => o.Number == room).Select(o => o.Id)).FirstOrDefault();
-            if (record != 0)
-            {
-                if (id == 0)
-                    return true;
-
-                if (record == id)
-                    return false;
-
-                return true;
-            }
-            return false;
+            return Query(context => context.Rooms.Where(o => o.Number == room && ((id == 0) ? true : o.Id != id)).Any());
         }
 
         public bool CheckRoomAvailavility(int classId, int? roomId, DateTime start, DateTime end, DayOfWeek day)
