@@ -90,7 +90,7 @@ namespace BL.Services
         }
     }
 
-    public class InstructorValidatorService : BaseService, IService
+    public class InstructorValidatorService : ValidatorService, IService
     {
         internal InstructorValidatorService(Context context) : base(context) { }
 

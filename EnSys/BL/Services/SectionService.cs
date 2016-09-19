@@ -110,7 +110,7 @@ namespace BL.Services
         }
     }
 
-    public class SectionValidatorService : BaseService, IService
+    public class SectionValidatorService : ValidatorService, IService
     {
         internal SectionValidatorService(Context context) : base(context) { }
 

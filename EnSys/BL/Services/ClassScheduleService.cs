@@ -122,7 +122,7 @@ namespace BL.Services
         }
     }
 
-    public class ClassScheduleValidatorService : BaseService, IService
+    public class ClassScheduleValidatorService : ValidatorService, IService
     {
         internal ClassScheduleValidatorService(Context context) : base(context) { }
 

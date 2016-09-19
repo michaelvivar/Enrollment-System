@@ -77,7 +77,7 @@ namespace BL.Services
         }
     }
 
-    public class RoomValidatorService : BaseService, IService
+    public class RoomValidatorService : ValidatorService, IService
     {
         internal RoomValidatorService(Context context) : base(context) { }
 
