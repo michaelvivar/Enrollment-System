@@ -116,18 +116,7 @@ namespace BL.Services
 
         public bool CheckSecionCodeExists(int id, string code)
         {
-            var record = Query(context => context.Sections.Where(o => o.Code == code).Select(o => o.Id)).FirstOrDefault();
-            if (record != 0)
-            {
-                if (id == 0)
-                    return true;
-
-                if (record == id)
-                    return false;
-
-                return true;
-            }
-            return false;
+            return Query(context => context.Sections.Where(o => o.Code == code && ((id == 0) ? true : o.Id != id)).Any());
         }
 
         public bool CheckSectionAvailability(int classId, int? sectionId, DateTime start, DateTime end, DayOfWeek day)

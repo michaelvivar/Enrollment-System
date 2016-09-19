@@ -22,7 +22,6 @@ namespace UI.Models
                 return BirthDate.Age();
             }
         }
-        [Required]
         public Gender? Gender { get; set; }
         public int GenderId
         {

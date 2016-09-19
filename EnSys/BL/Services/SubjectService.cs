@@ -99,4 +99,14 @@ namespace BL.Services
                 .Select(o => new OptionDto { Text = o.Code, Value = o.Id }).ToList();
         }
     }
+
+    public class SubjectValidatorService : ValidatorService, IService
+    {
+        internal SubjectValidatorService(Context context) : base(context) { }
+
+        public bool CheckSubjectCodeExists(int id, string code)
+        {
+            return Query(context => context.Subjects.Where(o => o.Code == code && ((id == 0) ? true : o.Id != id)).Any());
+        }
+    }
 }

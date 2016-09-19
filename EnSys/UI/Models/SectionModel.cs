@@ -53,7 +53,7 @@ namespace UI.Models
                     scope.Service<SectionValidatorService>(service =>
                     {
                         if (service.CheckSecionCodeExists(Id, Code))
-                            result.Add(new ValidationResult(string.Format("Room number/name \"{0}\" is already exists!", Code), new[] { nameof(Code) }));
+                            result.Add(new ValidationResult(string.Format("Section \"{0}\" is already exists!", Code), new[] { nameof(Code) }));
                     });
                 });
 

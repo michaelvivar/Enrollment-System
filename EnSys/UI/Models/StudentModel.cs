@@ -33,22 +33,59 @@ namespace UI.Models
         {
             bool hasError = false;
 
+            if (string.IsNullOrEmpty(FirstName) && string.IsNullOrWhiteSpace(FirstName))
+            {
+                hasError = true;
+                yield return new ValidationResult("First Name is required", new[] { nameof(FirstName) });
+            }
+
+            if (string.IsNullOrEmpty(LastName) && string.IsNullOrWhiteSpace(LastName))
+            {
+                hasError = true;
+                yield return new ValidationResult("Last Name is required", new[] { nameof(LastName) });
+            }
+
+            if ((!BirthDate.HasValue) || (BirthDate < (DateTime)SqlDateTime.MinValue && BirthDate > DateTime.Now))
+            {
+                hasError = true;
+                yield return new ValidationResult(string.Format("Invalid date of birth"), new[] { nameof(BirthDate) });
+            }
+
+
+            if ((!CourseId.HasValue) || CourseId <= 0)
+            {
+                hasError = true;
+                yield return new ValidationResult("Course field is required", new[] { nameof(CourseId) });
+            }
+
+            if ((!Level.HasValue) || Level <= 0)
+            {
+                hasError = true;
+                yield return new ValidationResult("Year Level field is required", new[] { nameof(Level) });
+            }
+
+            if ((!SectionId.HasValue) || SectionId <= 0)
+            {
+                hasError = true;
+                yield return new ValidationResult("Section field is required", new[] { nameof(SectionId) });
+            }
+
             if (string.IsNullOrEmpty(Email) && string.IsNullOrEmpty(Telephone) && string.IsNullOrEmpty(Mobile))
             {
                 hasError = true;
-                yield return new ValidationResult(string.Format("Please fill atleast one of the contact information"));
+                yield return new ValidationResult("Please fill atleast one of the contact information", new[] { "ContactInfo" });
             }
 
-            if (BirthDate < (DateTime)SqlDateTime.MinValue && BirthDate > DateTime.Now)
+            if ((!Gender.HasValue) || Gender <= 0)
             {
                 hasError = true;
-                yield return new ValidationResult(string.Format("Invalid date of birth!"));
+                yield return new ValidationResult("Gender field is required", new[] { nameof(Gender) });
             }
 
-            if (string.IsNullOrWhiteSpace(Email))
+            if ((!Status.HasValue) || Status <= 0)
             {
                 hasError = true;
-                yield return new ValidationResult(string.Format("Invalid email address!"));
+                yield return new ValidationResult("Status field is required", new[] { nameof(Status) });
             }
 
             if (!hasError)
@@ -69,8 +106,6 @@ namespace UI.Models
                 foreach (var i in result)
                     yield return i;
             }
-
-            //yield return new ValidationResult(string.Format("Name \"{0}\" is already exists!", FirstName), new[] { nameof(FirstName), nameof(LastName) });
         }
     }
 }
