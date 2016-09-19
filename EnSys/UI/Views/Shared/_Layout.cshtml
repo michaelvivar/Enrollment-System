@@ -84,6 +84,8 @@
                 showInputs: false,
                 minuteStep: 5
             });
+            $(".touch-spin").TouchSpin();
+            $('.touch-spin').parent('.bootstrap-touchspin').css({ 'width': '280px' });
             $('select[data-url]').each(function () {
                 var $this = $(this);
                 var value;
@@ -152,7 +154,7 @@
                         success: function (result) {
                             $cascade.find('option').remove();
                             $cascade.html('<option></option>');
-                            $.each(result, function (i, d) {
+                            $.each(result.Data, function (i, d) {
                                 $cascade.append('<option value="'+d.Value+'">'+d.Text+'</option>')
                             });
                         }
