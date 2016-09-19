@@ -89,4 +89,35 @@ namespace BL.Services
                     .Select(o => new OptionDto { Text = o.FirstName + " " + o.LastName, Value = o.Id }).ToList();
         }
     }
+
+    public class InstructorValidatorService : BaseService, IService
+    {
+        internal InstructorValidatorService(Context context) : base(context) { }
+
+        public bool CheckInstructorAvailability(int classId, int? instructorId, DateTime start, DateTime end, DayOfWeek day)
+        {
+            bool available = true;
+            int timeStart = start.Hour * 100 + start.Minute;
+            int timeEnd = end.Hour * 100 + end.Minute;
+            var records = Query(context =>
+            {
+                return (from a in context.Classes where a.InstructorId == instructorId && a.Day == day && a.Id != classId select new { a.TimeStart, a.TimeEnd }).ToList();
+            });
+            records.ForEach(o =>
+            {
+                int a = o.TimeStart.Hour * 100 + o.TimeStart.Minute;
+                int b = o.TimeEnd.Hour * 100 + o.TimeEnd.Minute;
+                if (timeStart > a && timeStart < b)
+                    available = false;
+
+                if (timeEnd > a && timeEnd < b)
+                    available = false;
+
+                if (timeStart == a && timeEnd == b)
+                    available = false;
+            });
+
+            return available;
+        }
+    }
 }

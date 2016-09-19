@@ -36,8 +36,8 @@ namespace BL.Services
                 IList<ClassSchedule> classes = new List<ClassSchedule>();
                 foreach(DayOfWeek day in dto.Days.Where(o => o != 0))
                 {
+                    dto.Day = day;
                     var entity = MapDtoToEntity(dto);
-                    entity.Day = day;
                     classes.Add(entity);
                 }
                 repo.AddRange(classes);
@@ -95,7 +95,7 @@ namespace BL.Services
 
         public IEnumerable<IClassSchedule> GetClasses()
         {
-            return Classes().OrderBy(o => o.Day).ThenBy(o => o.TimeStart).ToList();
+            return Classes().OrderBy(o => o.Day).ThenBy(o => o.Room).ThenBy(o => o.TimeStart).ToList();
         }
 
         public IEnumerable<IClassSchedule> GetClassesByStudentId(int id)
@@ -120,5 +120,11 @@ namespace BL.Services
         {
             return Classes().Where(o => o.RoomId == id).OrderBy(o => o.Day).ThenBy(o => o.TimeStart).ToList();
         }
+    }
+
+    public class ClassScheduleValidatorService : BaseService, IService
+    {
+        internal ClassScheduleValidatorService(Context context) : base(context) { }
+
     }
 }

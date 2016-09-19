@@ -1,5 +1,6 @@
 ﻿using BL;
 using BL.Dto;
+using BL.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -40,6 +41,9 @@ namespace UI.Models
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             bool hasError = false;
+
+            if (DayId != 0)
+                Days[0] = DayId;
 
             if (!TimeStart.HasValue)
             {
@@ -99,7 +103,24 @@ namespace UI.Models
                 List<ValidationResult> result = new List<ValidationResult>();
                 Transaction.Scope(scope =>
                 {
-
+                    foreach (DayOfWeek day in Days)
+                    {
+                        if ((!scope.Service<RoomValidatorService, bool>(service => service.CheckRoomAvailavility(Id, RoomId, (DateTime)TimeStart, (DateTime)TimeEnd, day))))
+                            result.Add(new ValidationResult(string.Format("Room is not available, between {0} to {1}",
+                                    ((DateTime)TimeStart).ToShortTimeString(),
+                                    ((DateTime)TimeEnd).ToShortTimeString()),
+                                    new[] { nameof(RoomId) }));
+                    }
+                    if ((!scope.Service<SectionValidatorService, bool>(service => service.CheckSectionAvailability(Id, SectionId, (DateTime)TimeStart, (DateTime)TimeEnd, (DayOfWeek)Day))))
+                        result.Add(new ValidationResult(string.Format("Section is not available, between {0} to {1}",
+                                    ((DateTime)TimeStart).ToShortTimeString(),
+                                    ((DateTime)TimeEnd).ToShortTimeString()),
+                                    new[] { nameof(SectionId) }));
+                    if ((!scope.Service<InstructorValidatorService, bool>(service => service.CheckInstructorAvailability(Id, InstructorId, (DateTime)TimeStart, (DateTime)TimeEnd, (DayOfWeek)Day))))
+                        result.Add(new ValidationResult(string.Format("Instructor is not available, between {0} to {1}",
+                                    ((DateTime)TimeStart).ToShortTimeString(),
+                                    ((DateTime)TimeEnd).ToShortTimeString()),
+                                    new[] { nameof(InstructorId) }));
                 });
 
                 foreach (var i in result)

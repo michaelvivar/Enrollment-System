@@ -1,6 +1,7 @@
 ﻿using BL.Dto;
 using DL;
 using DL.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Util.Enums;
@@ -94,6 +95,29 @@ namespace BL.Services
                 return true;
             }
             return false;
+        }
+
+        public bool CheckRoomAvailavility(int classId, int? roomId, DateTime start, DateTime end, DayOfWeek day)
+        {
+            bool available = true;
+            int timeStart = start.Hour * 100 + start.Minute;
+            int timeEnd = end.Hour * 100 + end.Minute;
+            var records = Query(context =>
+            {
+                return (from a in context.Classes where a.RoomId == roomId && a.Day == day && a.Id != classId select new { a.TimeStart, a.TimeEnd }).ToList();
+            });
+            
+            records.ForEach(o =>
+            {
+                int a = o.TimeStart.Hour * 100 + o.TimeStart.Minute;
+                int b = o.TimeEnd.Hour * 100 + o.TimeEnd.Minute;
+                if (timeStart > a && timeStart < b)
+                    available = false;
+
+                if (timeEnd > a && timeEnd < b)
+                    available = false;
+            });
+            return available;
         }
     }
 }
