@@ -31,7 +31,7 @@ namespace UI.Models
 
             helper.Validate(model => model.Status).Required(true).GreaterThan(0).ErrorMsg("Status field is required");
 
-            if (helper.Errors.Count == 0)
+            if (!helper.Failed)
             {
                 Transaction.Scope(scope => scope.Service<RoomValidatorService>(service =>
                 {
@@ -39,7 +39,7 @@ namespace UI.Models
                 }));
             }
 
-            if (helper.Errors.Count > 0)
+            if (helper.Failed)
             {
                 foreach (var error in helper.Errors)
                     yield return error;

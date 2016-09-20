@@ -43,7 +43,7 @@ namespace UI.Models
 
             helper.IF(string.IsNullOrEmpty(Email) && string.IsNullOrEmpty(Telephone) && string.IsNullOrEmpty(Mobile)).ErrorMsg("Please fill atleast one of the contact information");
 
-            if (helper.Errors.Count == 0)
+            if (!helper.Failed)
             {
                 Transaction.Scope(scope => scope.Service<ValidatorService>(service =>
                 {
@@ -55,7 +55,7 @@ namespace UI.Models
                 }));
             }
 
-            if (helper.Errors.Count > 0)
+            if (helper.Failed)
             {
                 foreach (var error in helper.Errors)
                     yield return error;

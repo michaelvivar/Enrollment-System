@@ -40,7 +40,8 @@ namespace UI.Models
 
             helper.Validate(model => model.SectionId).Required(true).GreaterThan(0).ErrorMsg("Section field is required");
 
-            helper.Validate(model => model.FirstName).Required(true).NotEmpty().ErrorMsg("First Name field is required");
+            helper.Validate(model => model.FirstName).Required(true).NotEmpty().ErrorMsg("First Name field is required")
+                .MaxLength(20).ErrorMsg("First Name is too long").MinLength(2).ErrorMsg("First Name is too short");
 
             helper.Validate(model => model.LastName).Required(true).NotEmpty().ErrorMsg("Last Name field is required");
 
@@ -54,7 +55,7 @@ namespace UI.Models
 
             helper.IF(string.IsNullOrEmpty(Email) && string.IsNullOrEmpty(Telephone) && string.IsNullOrEmpty(Mobile)).ErrorMsg("Please fill atleast one of the contact information");
 
-            if (helper.Failed)
+            if (!helper.Failed)
             {
                 Transaction.Scope(scope => scope.Service<ValidatorService>(service =>
                 {
@@ -66,7 +67,7 @@ namespace UI.Models
                 }));
             }
 
-            if (helper.Errors.Count > 0)
+            if (helper.Failed)
             {
                 foreach (var error in helper.Errors)
                     yield return error;

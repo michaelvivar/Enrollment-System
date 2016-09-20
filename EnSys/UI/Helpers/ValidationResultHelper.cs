@@ -27,6 +27,7 @@ namespace UI.Helpers
         public void AddError(string message, string property)
         {
             Errors.Add(new ValidationResult(message, new[] { property }));
+            Failed = true;
         }
     }
 
@@ -145,9 +146,7 @@ namespace UI.Helpers
         {
             if (!Failed)
                 if ((_property.Value == null) ? IsRequired :Convert.ToInt32(_property.Value) <= num)
-                {
-                    _helper.Failed = true; Failed = true;
-                }
+                    Failed = true;
 
             return Instance2;
         }
@@ -155,9 +154,7 @@ namespace UI.Helpers
         {
             if (!Failed)
                 if (IsRequired ? false : expression)
-                {
-                    _helper.Failed = true; Failed = true;
-                }
+                    Failed = true;
 
             return Instance2;
         }
@@ -171,17 +168,13 @@ namespace UI.Helpers
             Instance2 = this;
             _helper = helper;
             _property = property;
-            if (IsRequired && _property.Value == null)
-                Failed = true;
         }
 
         public IStringValidator2 EmailAddress()
         {
             if (!Failed)
                 if ((_property.Value == null) ? IsRequired : !(ValidateEmailAddress(_property.Value)))
-                {
-                    _helper.Failed = true; Failed = true;
-                }
+                    Failed = true;
 
             return Instance2;
         }
@@ -194,10 +187,26 @@ namespace UI.Helpers
         public IStringValidator2 NotEmpty()
         {
             if (!Failed)
-                if ((_property.Value == null) ? IsRequired : string.IsNullOrEmpty(_property.Value))
-                {
-                    _helper.Failed = true; Failed = true;
-                }
+                if ((_property.Value == null) ? IsRequired : (string.IsNullOrWhiteSpace(_property.Value) || string.IsNullOrEmpty(_property.Value)))
+                    Failed = true;
+
+            return Instance2;
+        }
+
+        public IStringValidator2 MinLength(int length)
+        {
+            if (!Failed)
+                if ((_property.Value == null) ? IsRequired : _property.Value.Length < length)
+                    Failed = true;
+
+            return Instance2;
+        }
+
+        public IStringValidator2 MaxLength(int length)
+        {
+            if (!Failed)
+                if ((_property.Value == null) ? IsRequired : _property.Value.Length > length)
+                    Failed = true;
 
             return Instance2;
         }
@@ -211,8 +220,6 @@ namespace UI.Helpers
             Instance2 = this;
             _helper = helper;
             _property = property;
-            if (IsRequired && _property.Value == null)
-                Failed = true;
         }
     }
 
@@ -224,7 +231,7 @@ namespace UI.Helpers
             Instance2 = this;
             _helper = helper;
             _property = property;
-            if (IsRequired && ((_property.Value == null) ? true : (_property.Value < (DateTime)SqlDateTime.MinValue)))
+            if (_property.Value < (DateTime)SqlDateTime.MinValue)
                 Failed = true;
         }
 
@@ -232,9 +239,7 @@ namespace UI.Helpers
         {
             if (!Failed)
                 if ((_property.Value == null) ? IsRequired : _property.Value <= date)
-                {
-                    _helper.Failed = true; Failed = true;
-                }
+                    Failed = true;
 
             return Instance2;
         }
@@ -243,9 +248,7 @@ namespace UI.Helpers
         {
             if (!Failed)
                 if ((_property.Value == null) ? IsRequired : _property.Value >= date)
-                {
-                    _helper.Failed = true; Failed = true;
-                }
+                    Failed = true;
 
             return Instance2;
         }
@@ -274,10 +277,7 @@ namespace UI.Helpers
         public IConditionValidator IF(bool expression)
         {
             if (expression)
-            {
                 Failed = true;
-                _helper.Failed = true;
-            }
 
             return this;
         }
@@ -285,9 +285,7 @@ namespace UI.Helpers
         public void ErrorMsg(string message)
         {
             if (Failed)
-            {
                 _helper.AddError(message, "validation-summary-top");
-            }
         }
     }
 
@@ -295,6 +293,8 @@ namespace UI.Helpers
     {
         IStringValidator2 NotEmpty();
         IStringValidator2 EmailAddress();
+        IStringValidator2 MinLength(int length);
+        IStringValidator2 MaxLength(int length);
         IStringValidator2 IF(bool expression);
     }
 
