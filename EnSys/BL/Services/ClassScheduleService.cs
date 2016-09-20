@@ -98,6 +98,17 @@ namespace BL.Services
             return Classes().OrderBy(o => o.Day).ThenBy(o => o.Room).ThenBy(o => o.TimeStart).ToList();
         }
 
+        public IEnumerable<IClassSchedule> GetClassesFiltered(int day, int instructor, int subject, int section, int room)
+        {
+            return Classes().OrderBy(o => o.Day)
+                .Where(o => (day == 0 ? true : o.Day == (DayOfWeek)day) &&
+                (instructor == 0 ? true : o.InstructorId == instructor) &&
+                (subject == 0 ? true : o.SubjectId == subject) &&
+                (section == 0 ? true : o.SectionId == section) &&
+                (room == 0 ? true : o.RoomId == room))
+                .OrderBy(o => o.Day).ThenBy(o => o.Room).ThenBy(o => o.TimeStart).ToList();
+        }
+
         public IEnumerable<IClassSchedule> GetClassesByStudentId(int id)
         {
             return Query(context =>

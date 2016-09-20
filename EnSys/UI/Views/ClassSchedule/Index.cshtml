@@ -8,6 +8,7 @@
 
 <p>
     @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })
+
 </p>
 <table class="table">
     <tr>
@@ -19,9 +20,6 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.TimeEnd)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Capacity)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.InstructorId)
@@ -37,39 +35,61 @@
         </th>
         <th></th>
     </tr>
-
-@foreach (var item in Model) {
     <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Day)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TimeStart)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TimeEnd)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Capacity)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.InstructorFirstName) @Html.DisplayFor(modelItem => item.InstructorLastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Subject)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Section)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Room)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
+        <th><select name="Day" data-url="/DropDownMenu/Days"></select></th>
+        <th></th>
+        <th></th>
+        <th><select name="Instructor" data-url="/DropDownMenu/Instructors" style="width:100px"></select></th>
+        <th><select name="Subject" data-url="/DropDownMenu/Subjects" style="width:100px"></select></th>
+        <th><select name="Section" data-url="/DropDownMenu/Sections" style="width:100px"></select></th>
+        <th><select name="Room" data-url="/DropDownMenu/Rooms" style="width:100px"></select></th>
+        <th><button class="btn btn-default btn-sm" id="Reset">Reset</button></th>
     </tr>
-}
+
+@{ Html.RenderPartial("Table", Model); }
 
 </table>
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('select').on('select2:select', function () {
+                var query = {
+                    room: $('select[name="Room"]').val(),
+                    section: $('select[name="Section"]').val(),
+                    subject: $('select[name="Subject"]').val(),
+                    instructor: $('select[name="Instructor"]').val(),
+                    day: $('select[name="Day"]').val(),
+                };
+                $.blockUI();
+                setTimeout(function () {
+                    $.get('/ClassSchedule/FilterData', query, function (result) {
+                        $.unblockUI();
+                        $('#data-table').replaceWith(result);
+                    });
+                }, 500);
+            });
+            $('button#Reset').on('click', function () {
+                var query = {
+                    room: '',
+                    section: '',
+                    subject: '',
+                    instructor: '',
+                    day: '',
+                };
+                $('select[name="Room"]').val('').trigger('change');
+                $('select[name="Section"]').val('').trigger('change');
+                $('select[name="Subject"]').val('').trigger('change');
+                $('select[name="Instructor"]').val('').trigger('change');
+                $('select[name="Day"]').val('').trigger('change');
+                $.blockUI();
+                setTimeout(function () {
+                    $.get('/ClassSchedule/FilterData', query, function (result) {
+                        $.unblockUI();
+                        $('#data-table').replaceWith(result);
+                    });
+                }, 500);
+            });
+        });
+    </script>    
+}
