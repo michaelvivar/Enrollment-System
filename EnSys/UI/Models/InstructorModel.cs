@@ -41,7 +41,7 @@ namespace UI.Models
 
             helper.Validate(model => model.Email).Required(false).EmailAddress().ErrorMsg("Invalid email address");
 
-            helper.Validate(model => model.ContactInfo).Required(false).IF(string.IsNullOrEmpty(Email) && string.IsNullOrEmpty(Telephone) && string.IsNullOrEmpty(Mobile)).ErrorMsg("Please fill atleast one of the contact information");
+            helper.IF(string.IsNullOrEmpty(Email) && string.IsNullOrEmpty(Telephone) && string.IsNullOrEmpty(Mobile)).ErrorMsg("Please fill atleast one of the contact information");
 
             if (helper.Errors.Count == 0)
             {

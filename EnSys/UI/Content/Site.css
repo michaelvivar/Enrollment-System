@@ -26,3 +26,8 @@ textarea {
 span.field-validation-valid {
     display: block;
 }
+
+.field-validation-valid ul {
+    padding: 0;
+    margin-bottom: 50px;
+}

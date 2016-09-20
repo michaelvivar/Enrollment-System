@@ -19,7 +19,9 @@
     
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
+        <div class="col-md-offset-4 col-md-8">
+            @Html.ValidationMessage("validation-summary-top", new { @class = "text-danger" })
+        </div>
         @Html.HiddenFor(model => model.ContactInfoId)
         @Html.HiddenFor(model => model.PersonId)
 
@@ -78,10 +80,7 @@
 
         <hr />
         <h3>Contact Information</h3>
-        <div class="col-md-offset-4 col-md-8">
-            @Html.ValidationMessage("ContactInfo", new { @class = "text-danger" })
-            <br />
-        </div>
+
         <div class="form-group">
             @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-4" })
             <div class="col-md-8">

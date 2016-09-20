@@ -13,16 +13,26 @@ namespace UI.Helpers
         IValidator_Required<IDateTimeValidator2> Validate(Expression<Func<TModel, DateTime?>> property);
         IValidator_Required<INumberValidator2> Validate(Expression<Func<TModel, int?>> property);
         IValidator_Required<ITypeValidator2> Validate<T>(Expression<Func<TModel, T>> property);
+        IConditionValidator IF(bool expression);
 
         List<ValidationResult> Errors { get; set; }
         bool Failed { get; set; }
     }
 
-    public class ValidationResultHelper<TModel> : IValidationResultHelper<TModel>
+    public class ValidationResultHelper
     {
-        private readonly TModel Model;
         public bool Failed { get; set; }
         public List<ValidationResult> Errors { get; set; }
+
+        public void AddError(string message, string property)
+        {
+            Errors.Add(new ValidationResult(message, new[] { property }));
+        }
+    }
+
+    public class ValidationResultHelper<TModel> : ValidationResultHelper, IValidationResultHelper<TModel>
+    {
+        private readonly TModel Model;
         public ValidationResultHelper(TModel model) { Model = model; Errors = new List<ValidationResult>(); }
 
         private string GetPropertyName<T>(Expression<Func<TModel, T>> expression)
@@ -63,9 +73,10 @@ namespace UI.Helpers
         {
             AddError(message, GetPropertyName(property));
         }
-        public void AddError(string message, string property)
+
+        public IConditionValidator IF(bool expression)
         {
-            Errors.Add(new ValidationResult(message, new[] { property }));
+            return new ConditionValidator(this).IF(expression);
         }
         public IValidator_Required<IStringValidator2> Validate(Expression<Func<TModel, string>> property)
         {
@@ -79,14 +90,12 @@ namespace UI.Helpers
             int? value = GetPropertyValue<int?>(name);
             return new NumberValidator<TModel>(this, new ModelProperty<int?> { Name = name, Value = value });
         }
-
         public IValidator_Required<IDateTimeValidator2> Validate(Expression<Func<TModel, DateTime?>> property)
         {
             string name = GetPropertyName(property);
             DateTime? value = GetPropertyValue<DateTime?>(name);
             return new DateTimeValidator<TModel>(this, new ModelProperty<DateTime?> { Name = name, Value = value });
         }
-
         public IValidator_Required<ITypeValidator2> Validate<T>(Expression<Func<TModel, T>> property)
         {
             string name = GetPropertyName(property);
@@ -145,7 +154,7 @@ namespace UI.Helpers
         public T2 IF(bool expression)
         {
             if (!Failed)
-                if ((_property.Value == null) ? false : expression)
+                if (IsRequired ? false : expression)
                 {
                     _helper.Failed = true; Failed = true;
                 }
@@ -253,6 +262,35 @@ namespace UI.Helpers
         }
     }
 
+    public class ConditionValidator : IConditionValidator
+    {
+        private ValidationResultHelper _helper { get; set; }
+        private bool Failed = false;
+        public ConditionValidator(ValidationResultHelper helper)
+        {
+            _helper = helper;
+        }
+
+        public IConditionValidator IF(bool expression)
+        {
+            if (expression)
+            {
+                Failed = true;
+                _helper.Failed = true;
+            }
+
+            return this;
+        }
+
+        public void ErrorMsg(string message)
+        {
+            if (Failed)
+            {
+                _helper.AddError(message, "validation-summary-top");
+            }
+        }
+    }
+
     public interface IStringValidator1
     {
         IStringValidator2 NotEmpty();
@@ -290,6 +328,11 @@ namespace UI.Helpers
     public interface ITypeValidator1
     {
         ITypeValidator2 GreaterThan(int num);
+    }
+
+    public interface IConditionValidator
+    {
+        void ErrorMsg(string message);
     }
 
     public interface ITypeValidator2 : ITypeValidator1

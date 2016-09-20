@@ -53,7 +53,15 @@
                     if (result.Status == 3) {
                         $.each(result.Data, function (i, obj) {
                             if (obj.Errors.length > 0) {
-                                $('span[data-valmsg-for="' + obj.Field + '"]').text(obj.Errors[0]);
+                                if (obj.Field == 'validation-summary-top') {
+                                    $('span[data-valmsg-for="' + obj.Field + '"]').empty().html('<ul></ul>');
+                                    $.each(obj.Errors, function (i, ele) {
+                                        $('span[data-valmsg-for="' + obj.Field + '"] ul').append('<li>' + obj.Errors[0] + '</li>');
+                                    });
+                                }
+                                else {
+                                    $('span[data-valmsg-for="' + obj.Field + '"]').text(obj.Errors[0]);
+                                }
                             }
                         });
                     }

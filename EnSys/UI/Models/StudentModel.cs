@@ -25,10 +25,7 @@ namespace UI.Models
         public string SectionCode { get; set; }
         [DataType(DataType.Date)] [Display(Name = "Date Enrolled")]
         public DateTime? CreatedDate { get; set; }
-        public string ContactInfo
-        {
-            get { return "Contact Information"; }
-        }
+        public string ContactInfo { get; set; }
     }
 
     public class ValidateStudentModel : StudentModel, IValidatableObject
@@ -55,9 +52,9 @@ namespace UI.Models
 
             helper.Validate(model => model.Email).Required(false).EmailAddress().ErrorMsg("Invalid email address");
 
-            helper.Validate(model => model.ContactInfo).Required(false).IF(string.IsNullOrEmpty(Email) && string.IsNullOrEmpty(Telephone) && string.IsNullOrEmpty(Mobile)).ErrorMsg("Please fill atleast one of the contact information");
+            helper.IF(string.IsNullOrEmpty(Email) && string.IsNullOrEmpty(Telephone) && string.IsNullOrEmpty(Mobile)).ErrorMsg("Please fill atleast one of the contact information");
 
-            if (helper.Errors.Count == 0)
+            if (helper.Failed)
             {
                 Transaction.Scope(scope => scope.Service<ValidatorService>(service =>
                 {
