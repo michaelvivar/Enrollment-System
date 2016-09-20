@@ -166,6 +166,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ValidationResultHelper.cs" />
+    <Compile Include="Helpers\Validators\DateTimeValidator.cs" />
+    <Compile Include="Helpers\Validators\NumberValidator.cs" />
+    <Compile Include="Helpers\Validators\StringValidator.cs" />
+    <Compile Include="Helpers\Validators\TypeValidator.cs" />
+    <Compile Include="Helpers\Validators\Validator.cs" />
     <Compile Include="Models\ContactInfoModel.cs" />
     <Compile Include="Models\RoomModel.cs" />
     <Compile Include="Models\SectionModel.cs" />
