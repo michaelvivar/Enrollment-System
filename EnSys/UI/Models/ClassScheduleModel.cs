@@ -98,34 +98,34 @@ namespace UI.Models
                 yield return new ValidationResult("Capacity field is required and must be greater than to 0(zero)", new[] { nameof(Capacity) });
             }
 
-            if (!hasError)
-            {
-                List<ValidationResult> result = new List<ValidationResult>();
-                Transaction.Scope(scope =>
-                {
-                    foreach (DayOfWeek day in Days)
-                    {
-                        if ((!scope.Service<RoomValidatorService, bool>(service => service.CheckRoomAvailavility(Id, RoomId, (DateTime)TimeStart, (DateTime)TimeEnd, day))))
-                            result.Add(new ValidationResult(string.Format("Room is not available, between {0} to {1}",
-                                    ((DateTime)TimeStart).ToShortTimeString(),
-                                    ((DateTime)TimeEnd).ToShortTimeString()),
-                                    new[] { nameof(RoomId) }));
-                    }
-                    if ((!scope.Service<SectionValidatorService, bool>(service => service.CheckSectionAvailability(Id, SectionId, (DateTime)TimeStart, (DateTime)TimeEnd, (DayOfWeek)Day))))
-                        result.Add(new ValidationResult(string.Format("Section is not available, between {0} to {1}",
-                                    ((DateTime)TimeStart).ToShortTimeString(),
-                                    ((DateTime)TimeEnd).ToShortTimeString()),
-                                    new[] { nameof(SectionId) }));
-                    if ((!scope.Service<InstructorValidatorService, bool>(service => service.CheckInstructorAvailability(Id, InstructorId, (DateTime)TimeStart, (DateTime)TimeEnd, (DayOfWeek)Day))))
-                        result.Add(new ValidationResult(string.Format("Instructor is not available, between {0} to {1}",
-                                    ((DateTime)TimeStart).ToShortTimeString(),
-                                    ((DateTime)TimeEnd).ToShortTimeString()),
-                                    new[] { nameof(InstructorId) }));
-                });
+            if (hasError)
+                yield break;
 
-                foreach (var i in result)
-                    yield return i;
-            }
+            List<ValidationResult> result = new List<ValidationResult>();
+            Transaction.Scope(scope =>
+            {
+                foreach (DayOfWeek day in Days)
+                {
+                    if ((!scope.Service<RoomValidatorService, bool>(service => service.CheckRoomAvailavility(Id, RoomId, (DateTime)TimeStart, (DateTime)TimeEnd, day))))
+                        result.Add(new ValidationResult(string.Format("Room is not available, between {0} to {1}",
+                                ((DateTime)TimeStart).ToShortTimeString(),
+                                ((DateTime)TimeEnd).ToShortTimeString()),
+                                new[] { nameof(RoomId) }));
+                }
+                if ((!scope.Service<SectionValidatorService, bool>(service => service.CheckSectionAvailability(Id, SectionId, (DateTime)TimeStart, (DateTime)TimeEnd, (DayOfWeek)Day))))
+                    result.Add(new ValidationResult(string.Format("Section is not available, between {0} to {1}",
+                                ((DateTime)TimeStart).ToShortTimeString(),
+                                ((DateTime)TimeEnd).ToShortTimeString()),
+                                new[] { nameof(SectionId) }));
+                if ((!scope.Service<InstructorValidatorService, bool>(service => service.CheckInstructorAvailability(Id, InstructorId, (DateTime)TimeStart, (DateTime)TimeEnd, (DayOfWeek)Day))))
+                    result.Add(new ValidationResult(string.Format("Instructor is not available, between {0} to {1}",
+                                ((DateTime)TimeStart).ToShortTimeString(),
+                                ((DateTime)TimeEnd).ToShortTimeString()),
+                                new[] { nameof(InstructorId) }));
+            });
+
+            foreach (var i in result)
+                yield return i;
         }
     }
 }

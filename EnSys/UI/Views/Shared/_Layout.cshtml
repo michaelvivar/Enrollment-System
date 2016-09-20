@@ -49,13 +49,11 @@
             //});
             $('form').submit(function (e) {
                 $.post($(this).attr('action'), $(this).serializeArray(), function (result) {
+                    $('span.field-validation-valid').text('');
                     if (result.Status == 3) {
                         $.each(result.Data, function (i, obj) {
                             if (obj.Errors.length > 0) {
                                 $('span[data-valmsg-for="' + obj.Field + '"]').text(obj.Errors[0]);
-                            }
-                            else {
-                                $('span[data-valmsg-for="' + obj.Field + '"]').text('');
                             }
                         });
                     }

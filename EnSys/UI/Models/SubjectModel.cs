@@ -4,6 +4,7 @@ using BL.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using UI.Helpers;
 using Util.Enums;
 
 namespace UI.Models
@@ -25,49 +26,29 @@ namespace UI.Models
     {
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            bool hasError = false;
+            IValidationResultHelper<SubjectModel> helper = new ValidationResultHelper<SubjectModel>(this);
 
-            if (string.IsNullOrWhiteSpace(Code) || string.IsNullOrEmpty(Code))
-            {
-                hasError = true;
-                yield return new ValidationResult("Code field is required", new[] { nameof(Code) });
-            }
+            helper.Validate(model => model.Code).Required(true).ErrorMsg("Code field is required");
 
-            if (Level == null || Level <= 0)
-            {
-                hasError = true;
-                yield return new ValidationResult("Year level field is required", new[] { nameof(Level) });
-            }
+            helper.Validate(model => model.Level).Required(true).GreaterThan(0).ErrorMsg("Year level field is required");
 
-            if (Units == null || Units <= 0)
-            {
-                hasError = true;
-                yield return new ValidationResult("Units field is required", new[] { nameof(Units) });
-            }
+            helper.Validate(model => model.Units).Required(true).GreaterThan(0).ErrorMsg("Units field is required");
 
-            if (Status == null || Status <= 0)
-            {
-                hasError = true;
-                yield return new ValidationResult("Status field is required", new[] { nameof(Status) });
-            }
+            helper.Validate(model => model.Status).Required(true).GreaterThan(0).ErrorMsg("Status field is required");
 
-            if (!hasError)
+            if (helper.Errors.Count == 0)
             {
-                List<ValidationResult> result = new List<ValidationResult>();
-                Transaction.Scope(scope =>
+                Transaction.Scope(scope => scope.Service<SubjectValidatorService>(service =>
                 {
-                    scope.Service<SubjectValidatorService>(service =>
-                    {
-                        if (service.CheckSubjectCodeExists(Id, Code))
-                            result.Add(new ValidationResult(string.Format("Subject \"{0}\" is already exists!", Code), new[] { nameof(Code) }));
-                    });
-                });
-
-                if (result.Count > 0)
-                    foreach (var i in result)
-                        yield return i;
+                    helper.Validate(model => model.Code).Required(true).IF(service.CheckSubjectCodeExists(Id, Code)).ErrorMsg(string.Format("Subject \"{0}\" is already exists!", Code));
+                }));
             }
 
+            if (helper.Errors.Count > 0)
+            {
+                foreach (var error in helper.Errors)
+                    yield return error;
+            }
         }
     }
 }

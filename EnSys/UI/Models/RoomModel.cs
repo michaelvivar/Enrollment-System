@@ -4,6 +4,7 @@ using BL.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using UI.Helpers;
 using Util.Enums;
 
 namespace UI.Models
@@ -22,43 +23,27 @@ namespace UI.Models
     {
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            bool hasError = false;
+            IValidationResultHelper<RoomModel> helper = new ValidationResultHelper<RoomModel>(this);
 
-            if (string.IsNullOrWhiteSpace(Number) || string.IsNullOrEmpty(Number))
-            {
-                hasError = true;
-                yield return new ValidationResult("Number field is required", new[] { nameof(Number) });
-            }
+            helper.Validate(model => model.Number).Required(true).ErrorMsg("Number field is required");
 
-            if ((!Capacity.HasValue) || Capacity <= 0)
-            {
-                hasError = true;
-                yield return new ValidationResult("Capacity must be greater than to 0(zero)", new[] { nameof(Capacity) });
-            }
+            helper.Validate(model => model.Capacity).Required(true).GreaterThan(0).ErrorMsg("Capacity must be greater than 0(Zero)");
 
-            if ((!Status.HasValue) || Status <= 0)
-            {
-                hasError = true;
-                yield return new ValidationResult("Status field is required", new[] { nameof(Status) });
-            }
+            helper.Validate(model => model.Status).Required(true).GreaterThan(0).ErrorMsg("Status field is required");
 
-            if (!hasError)
+            if (helper.Errors.Count == 0)
             {
-                List<ValidationResult> result = new List<ValidationResult>();
-                Transaction.Scope(scope =>
+                Transaction.Scope(scope => scope.Service<RoomValidatorService>(service =>
                 {
-                    scope.Service<RoomValidatorService>(service =>
-                    {
-                        if (service.CheckRoomNumberExists(Id, Number))
-                            result.Add(new ValidationResult(string.Format("Room number/name \"{0}\" is already exists!", Number), new[] { nameof(Number) }));
-                    });
-                });
-
-                if (result.Count > 0)
-                    foreach (var i in result)
-                        yield return i;
+                    helper.Validate(model => model.Number).Required(true).IF(service.CheckRoomNumberExists(Id, Number)).ErrorMsg(string.Format("Room number/name \"{0}\" is already exists!", Number));
+                }));
             }
-                
+
+            if (helper.Errors.Count > 0)
+            {
+                foreach (var error in helper.Errors)
+                    yield return error;
+            }
         }
     }
 }

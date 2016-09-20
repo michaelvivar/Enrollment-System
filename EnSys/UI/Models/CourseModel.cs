@@ -37,23 +37,11 @@ namespace UI.Models
                 yield return new ValidationResult("Status field is required", new[] { nameof(Status) });
             }
 
-            if (!hasError)
-            {
-                List<ValidationResult> result = new List<ValidationResult>();
-                Transaction.Scope(scope =>
-                {
-                    scope.Service<CourseValidatorService>(service =>
-                    {
-                        if (service.CheckCourseCodeExists(Id, Code))
-                            result.Add(new ValidationResult(string.Format("Course \"{0}\" is already exists!", Code), new[] { nameof(Code) }));
-                    });
-                });
+            if (hasError)
+                yield break;
 
-                if (result.Count > 0)
-                    foreach (var i in result)
-                        yield return i;
-            }
-
+            if (Transaction.Scope(scope => scope.Service<CourseValidatorService, bool>(service => service.CheckCourseCodeExists(Id, Code))))
+                yield return new ValidationResult(string.Format("Course \"{0}\" is already exists!", Code), new[] { nameof(Code) });
         }
     }
 }

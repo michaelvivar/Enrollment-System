@@ -165,6 +165,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ValidationResultHelper.cs" />
     <Compile Include="Models\ContactInfoModel.cs" />
     <Compile Include="Models\RoomModel.cs" />
     <Compile Include="Models\SectionModel.cs" />
@@ -305,7 +306,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Helpers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

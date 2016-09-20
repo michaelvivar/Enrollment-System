@@ -4,7 +4,7 @@ using BL.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data.SqlTypes;
+using UI.Helpers;
 using Util.Enums;
 
 namespace UI.Models
@@ -25,86 +25,54 @@ namespace UI.Models
         public string SectionCode { get; set; }
         [DataType(DataType.Date)] [Display(Name = "Date Enrolled")]
         public DateTime? CreatedDate { get; set; }
+        public string ContactInfo
+        {
+            get { return "Contact Information"; }
+        }
     }
 
     public class ValidateStudentModel : StudentModel, IValidatableObject
     {
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            bool hasError = false;
+            IValidationResultHelper<StudentModel> helper = new ValidationResultHelper<StudentModel>(this);
 
-            if (string.IsNullOrEmpty(FirstName) && string.IsNullOrWhiteSpace(FirstName))
+            helper.Validate(model => model.CourseId).Required(true).GreaterThan(0).ErrorMsg("Course field is required");
+
+            helper.Validate(model => model.Level).Required(true).GreaterThan(0).ErrorMsg("Level field is required");
+
+            helper.Validate(model => model.SectionId).Required(true).GreaterThan(0).ErrorMsg("Section field is required");
+
+            helper.Validate(model => model.FirstName).Required(true).NotEmpty().ErrorMsg("First Name field is required");
+
+            helper.Validate(model => model.LastName).Required(true).NotEmpty().ErrorMsg("Last Name field is required");
+
+            helper.Validate(model => model.BirthDate).Required(true).LessThan(DateTime.Now).ErrorMsg("Invalid date of birth");
+
+            helper.Validate(model => model.Gender).Required(true).GreaterThan(0).ErrorMsg("Gender field is required");
+
+            helper.Validate(model => model.Status).Required(true).GreaterThan(0).ErrorMsg("Status field is required");
+
+            helper.Validate(model => model.Email).Required(false).EmailAddress().ErrorMsg("Invalid email address");
+
+            helper.Validate(model => model.ContactInfo).Required(false).IF(string.IsNullOrEmpty(Email) && string.IsNullOrEmpty(Telephone) && string.IsNullOrEmpty(Mobile)).ErrorMsg("Please fill atleast one of the contact information");
+
+            if (helper.Errors.Count == 0)
             {
-                hasError = true;
-                yield return new ValidationResult("First Name is required", new[] { nameof(FirstName) });
-            }
-
-            if (string.IsNullOrEmpty(LastName) && string.IsNullOrWhiteSpace(LastName))
-            {
-                hasError = true;
-                yield return new ValidationResult("Last Name is required", new[] { nameof(LastName) });
-            }
-
-            if ((!BirthDate.HasValue) || (BirthDate < (DateTime)SqlDateTime.MinValue && BirthDate > DateTime.Now))
-            {
-                hasError = true;
-                yield return new ValidationResult(string.Format("Invalid date of birth"), new[] { nameof(BirthDate) });
-            }
-
-
-            if ((!CourseId.HasValue) || CourseId <= 0)
-            {
-                hasError = true;
-                yield return new ValidationResult("Course field is required", new[] { nameof(CourseId) });
-            }
-
-            if ((!Level.HasValue) || Level <= 0)
-            {
-                hasError = true;
-                yield return new ValidationResult("Year Level field is required", new[] { nameof(Level) });
-            }
-
-            if ((!SectionId.HasValue) || SectionId <= 0)
-            {
-                hasError = true;
-                yield return new ValidationResult("Section field is required", new[] { nameof(SectionId) });
-            }
-
-            if (string.IsNullOrEmpty(Email) && string.IsNullOrEmpty(Telephone) && string.IsNullOrEmpty(Mobile))
-            {
-                hasError = true;
-                yield return new ValidationResult("Please fill atleast one of the contact information", new[] { "ContactInfo" });
-            }
-
-            if ((!Gender.HasValue) || Gender <= 0)
-            {
-                hasError = true;
-                yield return new ValidationResult("Gender field is required", new[] { nameof(Gender) });
-            }
-
-            if ((!Status.HasValue) || Status <= 0)
-            {
-                hasError = true;
-                yield return new ValidationResult("Status field is required", new[] { nameof(Status) });
-            }
-
-            if (!hasError)
-            {
-                List<ValidationResult> result = new List<ValidationResult>();
-                Transaction.Scope(scope =>
+                Transaction.Scope(scope => scope.Service<ValidatorService>(service =>
                 {
-                    scope.Service<ValidatorService>(service =>
-                    {
-                        if (service.CheckPersonExists(PersonId, FirstName, LastName, BirthDate))
-                            result.Add(new ValidationResult(string.Format("Person with name \"{0} {1}\" and birth date \"{2}\" is already exists!", FirstName, LastName, ((DateTime)BirthDate).ToShortDateString())));
+                    helper.Validate(model => model.FirstName).Required(true).IF(service.CheckPersonExists(Id, FirstName, LastName, BirthDate))
+                        .ErrorMsg(string.Format("Person with name \"{0} {1}\" and birth date \"{2}\" is already exists!", FirstName, LastName, ((DateTime)BirthDate).ToShortDateString()));
 
-                        if (service.CheckEmailExists(ContactInfoId, Email))
-                            result.Add(new ValidationResult(string.Format("Email address \"{0}\" is already exists!", Email)));
-                    });
-                });
+                    helper.Validate(model => model.Email).Required(false).IF(service.CheckEmailExists(ContactInfoId, Email))
+                        .ErrorMsg(string.Format("Email address \"{0}\" is already exists!", Email));
+                }));
+            }
 
-                foreach (var i in result)
-                    yield return i;
+            if (helper.Errors.Count > 0)
+            {
+                foreach (var error in helper.Errors)
+                    yield return error;
             }
         }
     }
