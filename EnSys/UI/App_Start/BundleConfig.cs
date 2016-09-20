@@ -25,6 +25,7 @@ namespace UI
                       "~/Scripts/bootstrap-datepicker.js",
                       "~/Scripts/bootstrap-timepicker.js",
                       "~/Scripts/jquery.bootstrap-touchspin.js",
+                      "~/Scripts/jquery.blockui.js",
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(

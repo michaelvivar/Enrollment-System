@@ -48,27 +48,32 @@
             //    ignore: []
             //});
             $('form').submit(function (e) {
-                $.post($(this).attr('action'), $(this).serializeArray(), function (result) {
-                    $('span.field-validation-valid').text('');
-                    if (result.Status == 3) {
-                        $.each(result.Data, function (i, obj) {
-                            if (obj.Errors.length > 0) {
-                                if (obj.Field == 'validation-summary-top') {
-                                    $('span[data-valmsg-for="' + obj.Field + '"]').empty().html('<ul></ul>');
-                                    $.each(obj.Errors, function (i, ele) {
-                                        $('span[data-valmsg-for="' + obj.Field + '"] ul').append('<li>' + obj.Errors[0] + '</li>');
-                                    });
+                $.blockUI();
+                $form = $(this);
+                setTimeout(function () {
+                    $.post($form.attr('action'), $form.serializeArray(), function (result) {
+                        $.unblockUI();
+                        $('span.field-validation-valid').text('');
+                        if (result.Status == 3) {
+                            $.each(result.Data, function (i, obj) {
+                                if (obj.Errors.length > 0) {
+                                    if (obj.Field == 'validation-summary-top') {
+                                        $('span[data-valmsg-for="' + obj.Field + '"]').empty().html('<ul></ul>');
+                                        $.each(obj.Errors, function (i, ele) {
+                                            $('span[data-valmsg-for="' + obj.Field + '"] ul').append('<li>' + obj.Errors[0] + '</li>');
+                                        });
+                                    }
+                                    else {
+                                        $('span[data-valmsg-for="' + obj.Field + '"]').text(obj.Errors[0]);
+                                    }
                                 }
-                                else {
-                                    $('span[data-valmsg-for="' + obj.Field + '"]').text(obj.Errors[0]);
-                                }
-                            }
-                        });
-                    }
-                    else if (result.Status == 1) {
-                        window.location = result.Url;
-                    }
-                });
+                            });
+                        }
+                        else if (result.Status == 1) {
+                            window.location = result.Url;
+                        }
+                    });
+                }, 500);
                 return false;
             });
             $('input[type="datetime"]').each(function () {
