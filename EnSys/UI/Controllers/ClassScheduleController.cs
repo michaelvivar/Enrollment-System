@@ -59,7 +59,10 @@ namespace UI.Controllers
         {
             return Transaction.Scope(scope => scope.Service<ClassScheduleService, ActionResult>(service =>
             {
-                return PartialView("Table", service.GetClassesFiltered(Convert.ToInt32(day), Convert.ToInt32(instructor), Convert.ToInt32(subject), Convert.ToInt32(section), Convert.ToInt32(room)).Select(o => MapDtoToModel(o)));
+                return PartialView("Table", service.GetClassesFiltered(
+                    Convert.ToInt32(day), Convert.ToInt32(instructor),
+                    Convert.ToInt32(subject), Convert.ToInt32(section),
+                    Convert.ToInt32(room)).Select(o => MapDtoToModel(o)));
             }));
 
         }
