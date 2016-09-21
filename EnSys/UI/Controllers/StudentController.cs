@@ -66,7 +66,7 @@ namespace UI.Controllers
 
         public ActionResult Schedule(int id)
         {
-            return Transaction.Scope(scope => scope.Service<ClassScheduleService, ActionResult>(service => PartialView("Table", service.GetClassesByStudentId(id).Select(o => MapScheduleDtoToModel(o)))));
+            return Transaction.Scope(scope => scope.Service<ClassScheduleService, ActionResult>(service => PartialView("Schedule", service.GetClassesByStudentId(id).Select(o => MapScheduleDtoToModel(o)))));
         }
     }
 }

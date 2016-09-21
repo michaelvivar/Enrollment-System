@@ -1,18 +1,32 @@
 ﻿@model IEnumerable<UI.Models.ClassScheduleModel>
 
-<tbody id="data-table">
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Day)
+        </th>
+        <th>
+            From - to
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Subject)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Section)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Room)
+        </th>
+    </tr>
+
     @foreach (var item in Model)
     {
         <tr>
-            <td width="20"><a href="@Url.Action("Edit", new { id = item.Id })" class="glyphicon glyphicon-pencil"></a></td>
             <td>
                 @Html.DisplayFor(modelItem => item.Day)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TimeStart) - @Html.DisplayFor(modelItem => item.TimeEnd)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.InstructorFirstName) @Html.DisplayFor(modelItem => item.InstructorLastName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Subject)
@@ -23,7 +37,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Room)
             </td>
-            <td>@Html.ActionLink("Details", "Details", new { id = item.Id })</td>
         </tr>
     }
-</tbody>
+
+</table>

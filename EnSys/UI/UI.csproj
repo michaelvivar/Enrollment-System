@@ -311,7 +311,9 @@
     <Content Include="Views\ClassSchedule\Edit.cshtml" />
     <Content Include="Views\ClassSchedule\Table.cshtml" />
     <Content Include="Views\Student\Details.cshtml" />
-    <Content Include="Views\Student\Table.cshtml" />
+    <Content Include="Views\Student\Schedule.cshtml" />
+    <Content Include="Views\Instructor\Details.cshtml" />
+    <Content Include="Views\Instructor\Schedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

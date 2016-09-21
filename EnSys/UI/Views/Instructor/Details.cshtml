@@ -1,0 +1,114 @@
+﻿@model UI.Models.InstructorModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+@Html.HiddenFor(model => model.Id)
+
+<p>
+    <a href="@Url.Action("Index")" class="glyphicon glyphicon-circle-arrow-left icon-link"></a>
+</p>
+
+<div class="row">
+    <div class="col-md-4">
+        <dl class="dl-horizontal">
+
+            <dt>
+                Name
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.LastName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.BirthDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.BirthDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Age)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Age)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Gender)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.GenderId)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Status)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.StatusId)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Mobile)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Mobile)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Telephone)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Telephone)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CreatedDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ContactInfo)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ContactInfo)
+            </dd>
+
+        </dl>
+        <p style="text-align: center">
+            <a href="@Url.Action("Edit", new { id = Model.Id })" class="glyphicon glyphicon-pencil icon-link"></a> <a href="@Url.Action("Delete", new { id = Model.Id })" class="glyphicon glyphicon-trash icon-link"></a>
+        </p>
+    </div>
+    <div class="col-md-8" id="data-table"></div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.get('/Instructor/Schedule', { id: $('input#Id').val() }, function (result) {
+                $('#data-table').html(result);
+            });
+        });
+    </script>
+}
