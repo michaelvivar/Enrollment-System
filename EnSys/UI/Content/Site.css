@@ -31,3 +31,10 @@ span.field-validation-valid {
     padding: 0;
     margin-bottom: 50px;
 }
+
+.icon-link {
+    font-size: 30px;
+}
+.icon-link:hover {
+    text-decoration: none !important;
+}

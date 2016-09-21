@@ -113,12 +113,12 @@ namespace BL.Services
         {
             return Query(context =>
             {
-                return (from a in context.StudentClassMapping
-                        join b in Classes()
-                        on a.StudentId equals b.Id
-                        where a.Id == id
-                        orderby b.Day, b.TimeStart
-                        select b);
+                return (from a in Classes()
+                        join b in context.Students
+                        on a.SectionId equals b.SectionId
+                        where b.Id == id
+                        orderby a.Day, a.TimeStart
+                        select a).ToList();
             });
         }
 
