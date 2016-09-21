@@ -16,6 +16,11 @@ namespace UI.Controllers
             return TinyMapper.Map<ClassScheduleModel>(dto);
         }
 
+        private StudentModel MapStudentDtoToModel(IStudent dto)
+        {
+            return TinyMapper.Map<StudentModel>(dto);
+        }
+
         [Route("")]
         public ActionResult Index()
         {
@@ -53,6 +58,16 @@ namespace UI.Controllers
                 return JsonUrlSuccess(Url.Action("Index"));
             }
             return JsonFormError(ModelState);
+        }
+
+        public ActionResult Details(int id)
+        {
+            return Transaction.Scope(scope => scope.Service<ClassScheduleService, ActionResult>(service => View(MapDtoToModel(service.GetClass(id)))));
+        }
+
+        public ActionResult Students(int id)
+        {
+            return Transaction.Scope(scope => scope.Service<StudentService, ActionResult>(service => PartialView("Students", service.GetStudentsByClassId(id).Select(o => MapStudentDtoToModel(o)))));
         }
 
         public ActionResult FilterData(int? day, int? instructor, int? subject, int? section, int? room)

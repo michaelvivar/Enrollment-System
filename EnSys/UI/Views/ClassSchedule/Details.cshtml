@@ -1,0 +1,95 @@
+﻿@model UI.Models.ClassScheduleModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+@Html.HiddenFor(model => model.Id)
+<p>
+    <a href="@Url.Action("Index")" class="glyphicon glyphicon-circle-arrow-left icon-link"></a>
+</p>
+
+<div class="row">
+    <div class="col-md-4">
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Day)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Day)
+            </dd>
+
+            <dt>
+                Time
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.TimeStart) - @Html.DisplayFor(model => model.TimeEnd)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Capacity)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Capacity)
+            </dd>
+
+            <dt>
+                Instructor
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.InstructorFirstName) @Html.DisplayFor(model => model.InstructorLastName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Subject)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Subject)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Section)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Section)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Room)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Room)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Remarks)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Remarks)
+            </dd>
+        </dl>
+        <p style="text-align: center">
+            <a href="@Url.Action("Edit", new { id = Model.Id })" class="glyphicon glyphicon-pencil icon-link"></a> <a href="@Url.Action("Delete", new { id = Model.Id })" class="glyphicon glyphicon-trash icon-link"></a>
+        </p>
+    </div>
+    <div class="col-md-8" id="data-table"></div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.get('/ClassSchedule/Students', { id: $('input#Id').val() }, function (result) {
+                $('#data-table').html(result);
+            });
+        });
+    </script>
+}

@@ -90,6 +90,16 @@ namespace BL.Services
             return Students().OrderBy(o => o.Status).ThenBy(o => o.FirstName).ThenBy(o => o.LastName).ToList();
         }
 
+        public IEnumerable<IStudent> GetStudentsFiltered(int level, int section, int course, int status)
+        {
+            return Students()
+                .Where(o => (level == 0 ? true : o.Level == (YearLevel)level) &&
+                (section == 0 ? true : o.SectionId == section) &&
+                (course == 0 ? true : o.CourseId == course) &&
+                (status == 0 ? true : o.Status == (Status)status))
+                .OrderBy(o => o.Status).ThenBy(o => o.FirstName).ThenBy(o => o.LastName).ToList();
+        }
+
         public IEnumerable<IStudent> GetStudentsByCourseId(int id)
         {
             return Students().Where(o => o.CourseId == id && o.Status == Status.Active)
@@ -100,11 +110,11 @@ namespace BL.Services
         {
             return Query(context =>
             {
-                return (from a in context.StudentClassMapping
-                        join b in Students()
-                        on a.StudentId equals b.Id
-                        where a.ClassId == id && b.Status == Status.Active
-                        select b).ToList();
+                return (from a in Students()
+                        join b in context.Classes
+                        on a.SectionId equals b.SectionId
+                        where b.Id == id && a.Status == Status.Active
+                        select a).ToList();
             });
         }
     }

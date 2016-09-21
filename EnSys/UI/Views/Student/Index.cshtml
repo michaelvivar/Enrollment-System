@@ -32,32 +32,57 @@
         </th>
         <th></th>
     </tr>
-
-@foreach (var item in Model) {
     <tr>
-        <td width="20"><a href="@Url.Action("Edit", new { Id = item.Id })" class="glyphicon glyphicon-pencil"></a></td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Level) Year
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SectionCode)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Course)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Status)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreatedDate)
-        </td>
-        <td>
-            @Html.ActionLink("Details", "Details", new { id=item.Id })
-        </td>
+        <td></td>
+        <td></td>
+        <td><select name="Level" data-url="/DropDownMenu/YearLevels" style="width:100px"></select></td>
+        <td><select name="Section" data-url="/DropDownMenu/Sections" style="width:100px"></select></td>
+        <td><select name="Course" data-url="/DropDownMenu/Courses" style="width:100px"></select></td>
+        <td><select name="Status" data-url="/DropDownMenu/Status" style="width:100px"></select></td>
+        <td></td>
+        <td><button class="btn btn-default btn-sm" id="Reset">Reset</button></td>
     </tr>
-}
 
+    @{ Html.RenderPartial("Table", Model); }
 </table>
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('select').on('select2:select', function () {
+                var query = {
+                    level: $('select[name="Level"]').val(),
+                    section: $('select[name="Section"]').val(),
+                    course: $('select[name="Course"]').val(),
+                    status: $('select[name="Status"]').val()
+                };
+                $.blockUI();
+                setTimeout(function () {
+                    $.get('/Student/FilterData', query, function (result) {
+                        $.unblockUI();
+                        $('#data-table').replaceWith(result);
+                    });
+                }, 500);
+            });
+            $('button#Reset').on('click', function () {
+                var query = {
+                    level: '',
+                    section: '',
+                    course: '',
+                    status: ''
+                };
+                $('select[name="Level"]').val('').trigger('change');
+                $('select[name="Section"]').val('').trigger('change');
+                $('select[name="Course"]').val('').trigger('change');
+                $('select[name="Status"]').val('').trigger('change');
+                $.blockUI();
+                setTimeout(function () {
+                    $.get('/Student/FilterData', query, function (result) {
+                        $.unblockUI();
+                        $('#data-table').replaceWith(result);
+                    });
+                }, 500);
+            });
+        });
+    </script>
+}

@@ -100,7 +100,7 @@ namespace BL.Services
 
         public IEnumerable<IClassSchedule> GetClassesFiltered(int day, int instructor, int subject, int section, int room)
         {
-            return Classes().OrderBy(o => o.Day)
+            return Classes()
                 .Where(o => (day == 0 ? true : o.Day == (DayOfWeek)day) &&
                 (instructor == 0 ? true : o.InstructorId == instructor) &&
                 (subject == 0 ? true : o.SubjectId == subject) &&

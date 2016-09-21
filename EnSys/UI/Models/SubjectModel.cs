@@ -13,6 +13,7 @@ namespace UI.Models
     {
         public int Id { get; set; }
         public string Code { get; set; }
+        [Display(Name = "No. of Units")]
         public Unit? Units { get; set; }
         public int UnitId { get { return Convert.ToInt32(Units); } }
         public string Remarks { get; set; }
