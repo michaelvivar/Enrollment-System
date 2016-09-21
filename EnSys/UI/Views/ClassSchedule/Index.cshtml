@@ -7,19 +7,17 @@
 <h2>Class Schedules</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Add", "Create", null, new { @class = "btn btn-primary" })
 
 </p>
 <table class="table">
     <tr>
+        <th></th>
         <th>
             @Html.DisplayNameFor(model => model.Day)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.TimeStart)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TimeEnd)
+            From - to
         </th>
         <th>
             @Html.DisplayNameFor(model => model.InstructorId)
@@ -36,8 +34,8 @@
         <th></th>
     </tr>
     <tr>
-        <td><select name="Day" data-url="/DropDownMenu/Days"></select></td>
         <td></td>
+        <td><select name="Day" data-url="/DropDownMenu/Days"></select></td>
         <td></td>
         <td><select name="Instructor" data-url="/DropDownMenu/Instructors" style="width:100px"></select></td>
         <td><select name="Subject" data-url="/DropDownMenu/Subjects" style="width:100px"></select></td>
