@@ -43,10 +43,31 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     <script type="text/javascript">
+
         $(document).ready(function () {
             //$('form').validate({
             //    ignore: []
             //});
+            $('a[data-action="delete"]').on('click', function (e) {
+                e.preventDefault();
+                var result = confirm('Are you sure you want to delete a record?');
+                if (result) {
+                    $this = $(this);
+                    $.blockUI();
+                    $.getJSON($this.attr('href'), function (data) {
+                        $.unblockUI();
+                        if (data.hasOwnProperty('Status')){
+                            if (data.Status == 1 && data.hasOwnProperty('Url')) {
+                                window.location = data.Url;
+                            }
+                            else if (data.Status == 3 && data.hasOwnProperty('Messages')) {
+                                alert(data.Messages[0]);
+                            }
+                        }
+                    });
+                }
+                return false;
+            });
             $('form').submit(function (e) {
                 $.blockUI();
                 $form = $(this);

@@ -50,7 +50,7 @@ namespace UI.Helpers.Validators
         public T2 IF(bool expression)
         {
             if (!Failed)
-                if (IsRequired ? false : expression)
+                if ((_property.Value == null) ? IsRequired : expression)
                     Failed = true;
 
             return Instance2;
