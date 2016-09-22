@@ -67,10 +67,10 @@ namespace BL
 
         internal static void Service<TService>(Context context, Action<TService> action) where TService : IService
         {
-            Service<TService, TService>(context, service =>
+            Service<TService, bool>(context, service =>
             {
                 action.Invoke(service);
-                return service;
+                return true;
             });
         }
 
