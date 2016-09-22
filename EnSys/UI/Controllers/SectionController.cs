@@ -61,5 +61,13 @@ namespace UI.Controllers
             }
             return JsonFormError(ModelState);
         }
+
+        public JsonResult Delete(int id)
+        {
+            if (Transaction.Scope(scope => scope.Service<SectionService, bool>(service => service.DeleteSection(id))))
+                return JsonUrlSuccess(Url.Action("Index"));
+
+            return JsonResultError("Failed to delete a record");
+        }
     }
 }

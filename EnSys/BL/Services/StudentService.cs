@@ -47,6 +47,11 @@ namespace BL.Services
             Repository<Student>(repo => repo.Update(MapDtoToEntity(dto), x => x.CreatedDate).Save());
         }
 
+        public void DeleteStudent(int id)
+        {
+            Repository<Student>(repo => repo.Remove(repo.Get(id)).Save());
+        }
+
 
         internal IQueryable<IStudent> Students()
         {

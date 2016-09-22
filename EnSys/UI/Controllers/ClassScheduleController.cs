@@ -79,7 +79,12 @@ namespace UI.Controllers
                     Convert.ToInt32(subject), Convert.ToInt32(section),
                     Convert.ToInt32(room)).Select(o => MapDtoToModel(o)));
             }));
+        }
 
+        public JsonResult Delete(int id)
+        {
+            Transaction.Scope(scope => scope.Service<ClassScheduleService>(service => service.DeleteClassSchedule(id)));
+            return JsonUrlSuccess(Url.Action("Index"));
         }
     }
 }

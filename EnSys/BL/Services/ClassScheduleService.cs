@@ -51,11 +51,7 @@ namespace BL.Services
 
         public void DeleteClassSchedule(int id)
         {
-            Repository<ClassSchedule>(repo =>
-            {
-                ClassSchedule entity = repo.Get(id);
-                repo.Remove(entity);
-            });
+            Repository<ClassSchedule>(repo => repo.Remove(repo.Get(id)).Save());
         }
 
 

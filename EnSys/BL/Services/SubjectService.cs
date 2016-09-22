@@ -35,13 +35,13 @@ namespace BL.Services
             Repository<Subject>(repo => repo.Update(MapDtoToEntity(dto)));
         }
 
-        public void DeleteSubject(int id)
+        public bool DeleteSubject(int id)
         {
-            Repository<Subject>(repo =>
-            {
-                Subject subject = repo.Get(id);
-                repo.Remove(subject);
-            });
+            if (Repository<ClassSchedule, bool>(repo => repo.Get(o => o.SubjectId == id).Any()))
+                return false;
+
+            Repository<Subject>(repo => repo.Remove(repo.Get(id)));
+            return true;
         }
 
 

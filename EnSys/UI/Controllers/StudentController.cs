@@ -80,5 +80,11 @@ namespace UI.Controllers
                    ).Select(o => MapDtoToModel(o)));
             }));
         }
+
+        public JsonResult Delete(int id)
+        {
+            Transaction.Scope(scope => scope.Service<StudentService>(service => service.DeleteStudent(id)));
+            return JsonUrlSuccess(Url.Action("Index"));
+        }
     }
 }

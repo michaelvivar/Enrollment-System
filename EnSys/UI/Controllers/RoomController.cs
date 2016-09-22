@@ -61,6 +61,14 @@ namespace UI.Controllers
             return JsonFormError(ModelState);
         }
 
+        public JsonResult Delete(int id)
+        {
+            if (Transaction.Scope(scope => scope.Service<RoomService, bool>(service => service.DeleteRoom(id))))
+                return JsonUrlSuccess(Url.Action("Index"));
+
+            return JsonResultError("Failed to delete a record");
+        }
+
         public JsonResult GetCapacityByRoomId(int id)
         {
             var capacity = Transaction.Scope(scope => scope.Service<RoomService, int?>(service => service.GetRoom(id).Capacity));

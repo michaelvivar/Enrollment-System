@@ -33,9 +33,13 @@ namespace BL.Services
             Repository<Course>(repo => repo.Update(MapDtoToEntity(dto)).Save());
         }
 
-        public void DeleteCourse(int id)
+        public bool DeleteCourse(int id)
         {
-            Repository<Course>(repo => repo.Remove(repo.SingleOrDefault(o => o.Id == id)).Save());
+            if (Repository<Student, bool>(repo => repo.Get(o => o.CourseId == id).Any()))
+                return false;
+
+            Repository<Course>(repo => repo.Remove(repo.Get(id)).Save());
+            return true;
         }
 
 
