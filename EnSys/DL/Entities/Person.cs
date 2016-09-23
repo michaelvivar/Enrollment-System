@@ -10,10 +10,8 @@ using Util.Enums;
 namespace DL.Entities
 {
     [Table("Person")]
-    public class Person
+    public class Person : Entity
     {
-        [Key]
-        public int Id { get; set; }
         [Required]
         public string FirstName { get; set; }
         [Required]
@@ -22,6 +20,8 @@ namespace DL.Entities
         public DateTime BirthDate { get; set; }
         [Required]
         public Gender Gender { get; set; }
+        [NotMapped]
+        public override DateTime? CreatedDate { get; set; }
 
         public int ContactInfoId { get; set; }
         public virtual ContactInfo ContactInfo { get; set; }

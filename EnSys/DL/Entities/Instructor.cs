@@ -10,14 +10,10 @@ using Util.Enums;
 namespace DL.Entities
 {
     [Table("Instructor")]
-    public class Instructor
+    public class Instructor : Entity
     {
-        [Key]
-        public int Id { get; set; }
         [Required]
         public Status Status { get; set; }
-        [Required]
-        public DateTime CreatedDate { get; set; }
 
         //public int CreatedBy { get; set; }
         //[ForeignKey("CreatedBy")]

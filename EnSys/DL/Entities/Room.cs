@@ -10,13 +10,10 @@ using Util.Enums;
 namespace DL.Entities
 {
     [Table("Room")]
-    public class Room
+    public class Room : Entity
     {
-        [Key]
-        public int Id { get; set; }
         [Required]
         public string Number { get; set; }
-        public string Remarks { get; set; }
         [Required]
         public int Capacity { get; set; }
         public Status Status { get; set; }

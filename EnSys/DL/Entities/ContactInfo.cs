@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 namespace DL.Entities
 {
     [Table("ContactInfo")]
-    public class ContactInfo
+    public class ContactInfo : Entity
     {
-        [Key]
-        public int Id { get; set; }
         public string Email { get; set; }
         public string Telephone { get; set; }
         public string Mobile { get; set; }
+        [NotMapped]
+        public override DateTime? CreatedDate { get; set; }
     }
 }

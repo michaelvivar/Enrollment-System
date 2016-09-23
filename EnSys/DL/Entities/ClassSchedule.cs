@@ -5,10 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DL.Entities
 {
     [Table("Class")]
-    public class ClassSchedule
+    public class ClassSchedule : Entity
     {
-        [Key]
-        public int Id { get; set; }
         [Required]
         public DayOfWeek Day { get; set; }
         [Required]
@@ -16,7 +14,6 @@ namespace DL.Entities
         [Required]
         public DateTime TimeEnd { get; set; }
         public int Capacity { get; set; }
-        public string Remarks { get; set; }
 
         public int InstructorId { get; set; }
         [ForeignKey("InstructorId")]

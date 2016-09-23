@@ -10,16 +10,13 @@ using Util.Enums;
 namespace DL.Entities
 {
     [Table("Student")]
-    public class Student
+    public class Student : Entity
     {
-        [Key]
-        public int Id { get; set; }
         [Required]
         public YearLevel Level { get; set; }
         [Required]
         public Status Status { get; set; }
         [Required]
-        public DateTime CreatedDate { get; set; }
 
         public int CourseId { get; set; }
         [ForeignKey("CourseId")]

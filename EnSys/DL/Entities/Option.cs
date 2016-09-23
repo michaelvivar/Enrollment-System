@@ -10,9 +10,8 @@ using Util.Enums;
 namespace DL.Entities
 {
     [Table("Option")]
-    public class Option
+    public class Option : Entity
     {
-        public int Id { get; set; }
         [Required]
         public OptionType Type { get; set; }
         [Required]

@@ -16,14 +16,14 @@ namespace DL
         public DbSet<ClassSchedule> Classes { get; set; }
         public DbSet<ContactInfo> ContactInfo { get; set; }
         public DbSet<Course> Courses { get; set; }
-        public DbSet<CourseSubjectMapping> CourseSubjectMapping { get; set; }
+        //public DbSet<CourseSubjectMapping> CourseSubjectMapping { get; set; }
         public DbSet<Option> Options { get; set; } 
         public DbSet<Instructor> Instrcutors { get; set; }
         public DbSet<Person> Persons { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Section> Sections { get; set; }
         public DbSet<Student> Students { get; set; }
-        public DbSet<StudentClassMapping> StudentClassMapping { get; set; }
+        //public DbSet<StudentClassMapping> StudentClassMapping { get; set; }
         public DbSet<Subject> Subjects { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

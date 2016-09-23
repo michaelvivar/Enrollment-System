@@ -54,6 +54,7 @@
     <Compile Include="Entities\ContactInfo.cs" />
     <Compile Include="Entities\Course.cs" />
     <Compile Include="Entities\CourseSubjectMapping.cs" />
+    <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Option.cs" />
     <Compile Include="Entities\Person.cs" />
     <Compile Include="Entities\Room.cs" />

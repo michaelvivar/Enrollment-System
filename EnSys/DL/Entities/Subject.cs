@@ -5,17 +5,14 @@ using Util.Enums;
 namespace DL.Entities
 {
     [Table("Subject")]
-    public class Subject
+    public class Subject : Entity
     {
-        [Key]
-        public int Id { get; set; }
         [Required]
         public string Code { get; set; }
         [Required]
         public YearLevel Level { get; set; }
         [Required]
         public Unit Units { get; set; }
-        public string Remarks { get; set; }
         [Required]
         public Status Status { get; set; }
     }
