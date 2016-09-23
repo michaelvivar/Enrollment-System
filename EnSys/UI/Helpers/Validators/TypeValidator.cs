@@ -14,6 +14,7 @@
     public interface ITypeValidator1
     {
         ITypeValidator2 GreaterThan(int num);
+        ITypeValidator2 IF(bool expression);
     }
 
     public interface ITypeValidator2 : ITypeValidator1

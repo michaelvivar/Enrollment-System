@@ -38,6 +38,7 @@ namespace UI.Helpers.Validators
     {
         IDateTimeValidator2 GreaterThan(DateTime date);
         IDateTimeValidator2 LessThan(DateTime date);
+        IDateTimeValidator2 IF(bool expression);
     }
 
     public interface IDateTimeValidator2 : IDateTimeValidator1
