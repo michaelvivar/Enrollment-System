@@ -9,7 +9,5 @@ namespace DL.Entities
     {
         [Required]
         public string Code { get; set; }
-        [Required]
-        public Status Status { get; set; }
     }
 }

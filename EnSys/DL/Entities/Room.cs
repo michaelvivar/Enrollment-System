@@ -16,6 +16,5 @@ namespace DL.Entities
         public string Number { get; set; }
         [Required]
         public int Capacity { get; set; }
-        public Status Status { get; set; }
     }
 }

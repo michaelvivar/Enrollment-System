@@ -20,10 +20,15 @@ namespace DL.Entities
         public DateTime BirthDate { get; set; }
         [Required]
         public Gender Gender { get; set; }
-        [NotMapped]
-        public override DateTime? CreatedDate { get; set; }
 
         public int ContactInfoId { get; set; }
         public virtual ContactInfo ContactInfo { get; set; }
+
+        [NotMapped]
+        public override Status Status { get; set; }
+        [NotMapped]
+        public override string Remarks { get; set; }
+        [NotMapped]
+        public override DateTime? CreatedDate { get; set; }
     }
 }

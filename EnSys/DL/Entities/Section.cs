@@ -16,7 +16,5 @@ namespace DL.Entities
         public string Code { get; set; }
         [Required]
         public YearLevel Level { get; set; }
-        [Required]
-        public Status Status { get; set; }
     }
 }

@@ -13,7 +13,5 @@ namespace DL.Entities
         public YearLevel Level { get; set; }
         [Required]
         public Unit Units { get; set; }
-        [Required]
-        public Status Status { get; set; }
     }
 }
