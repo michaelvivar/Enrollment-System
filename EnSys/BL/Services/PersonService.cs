@@ -14,12 +14,12 @@ namespace BL.Services
         {
             return new Person
             {
-                Id = (int)dto.PersonId,
+                Id = dto.PersonId,
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 BirthDate = (DateTime)dto.BirthDate,
                 Gender = (Gender)dto.Gender,
-                ContactInfoId = (int)dto.ContactInfoId
+                ContactInfoId = dto.ContactInfoId
             };
         }
 
@@ -27,10 +27,10 @@ namespace BL.Services
         {
             return new ContactInfo
             {
-                Id = (int)dto.ContactInfoId,
+                Id = dto.ContactInfoId,
                 Email = dto.Email,
                 Telephone = dto.Telephone,
-                Mobile = dto.Mobile,
+                Mobile = dto.Mobile
             };
         }
 

@@ -18,7 +18,7 @@ namespace BL.Services
             {
                 Id = dto.Id,
                 Status = (Status)dto.Status,
-                PersonId = (int)dto.PersonId,
+                PersonId = dto.PersonId
             };
         }
 

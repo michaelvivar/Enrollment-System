@@ -19,7 +19,7 @@ namespace BL.Services
                 Id = dto.Id,
                 CourseId = (int)dto.CourseId,
                 Level = (YearLevel)dto.Level,
-                PersonId = (int)dto.PersonId,
+                PersonId = dto.PersonId,
                 Status = (Status)dto.Status,
                 SectionId = (int)dto.SectionId
             };
