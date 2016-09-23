@@ -8,7 +8,7 @@ namespace UI.Models
 {
     public class PersonalInfoModel : ContactInfoModel, IPersonalInfo
     {
-        public int? PersonId { get; set; }
+        public int PersonId { get; set; }
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
         [Display(Name = "Last Name")]

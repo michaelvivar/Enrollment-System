@@ -5,7 +5,7 @@ namespace UI.Models
 {
     public class ContactInfoModel : IContactInfo
     {
-        public int? ContactInfoId { get; set; }
+        public int ContactInfoId { get; set; }
         [Display(Name = "Email Address")] [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
         [Display(Name = "Mobile No.")]
