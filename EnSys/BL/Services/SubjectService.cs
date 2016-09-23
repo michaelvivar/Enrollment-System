@@ -69,19 +69,6 @@ namespace BL.Services
             return Subjects().Where(o => o.Id == id).FirstOrDefault();
         }
 
-        public IEnumerable<ISubject> GetSubjectByCourseId(int id)
-        {
-            return Query(context =>
-            {
-                return (from a in context.CourseSubjectMapping
-                        join b in Subjects()
-                        on a.SubjectId equals b.Id
-                        where a.CourseId == id && b.Status == Status.Active
-                        orderby b.Code
-                        select b).ToList();
-            });
-        }
-
         public IEnumerable<ISubject> GetActiveSubjects()
         {
             return Subjects().Where(o => o.Status == Status.Active).OrderBy(o => o.Level).ThenBy(o => o.Code).ToList();
