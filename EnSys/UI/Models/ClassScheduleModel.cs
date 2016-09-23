@@ -4,6 +4,7 @@ using BL.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using UI.Helpers;
 
 namespace UI.Models
 {
@@ -40,92 +41,66 @@ namespace UI.Models
     {
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            bool hasError = false;
-
             if (DayId != 0)
                 Days[0] = DayId;
 
-            if (!TimeStart.HasValue)
-            {
-                hasError = true;
-                yield return new ValidationResult("Time Start field is required", new[] { nameof(TimeStart) });
-            }
+            IValidationResultHelper<ClassScheduleModel> helper = new ValidationResultHelper<ClassScheduleModel>(this);
 
-            if (!TimeEnd.HasValue)
-            {
-                hasError = true;
-                yield return new ValidationResult("Time End field is required", new[] { nameof(TimeEnd) });
-            }
+            helper.Validate(model => model.TimeStart).Required(true).ErrorMsg("Time Start field is required");
 
-            if (TimeStart.HasValue && TimeEnd.HasValue && TimeStart >= TimeEnd)
-            {
-                hasError = true;
-                yield return new ValidationResult("Time End field must be greater than Time Start", new[] { nameof(TimeEnd) });
-            }
+            helper.Validate(model => model.TimeEnd).Required(true).ErrorMsg("Time End field is required")
+                .IF(TimeStart >= TimeEnd).ErrorMsg("Time End field must be greater than Time Start");
 
-            if (Days == null || Days.Length <= 0 || (Days.Length == 1 && Days[0] == null))
-            {
-                hasError = true;
-                yield return new ValidationResult("Day(s) of the Week field is required", new[] { nameof(DayId) });
-            }
+            helper.Validate(model => model.DayId).Required(true).IF(Days == null || Days.Length <= 0 || (Days.Length == 1 && Days[0] == null)).ErrorMsg("Status field is required");
 
-            if ((!RoomId.HasValue) || RoomId <= 0)
-            {
-                hasError = true;
-                yield return new ValidationResult("Room field is required", new[] { nameof(RoomId) });
-            }
+            helper.Validate(model => model.RoomId).Required(true).GreaterThan(0).ErrorMsg("Room field is required");
 
-            if ((!SectionId.HasValue) || RoomId <= 0)
-            {
-                hasError = true;
-                yield return new ValidationResult("Section field is required", new[] { nameof(SectionId) });
-            }
-                        if ((!SubjectId.HasValue) || RoomId <= 0)
-            {
-                hasError = true;
-                yield return new ValidationResult("Subject field is required", new[] { nameof(SubjectId) });
-            }
+            helper.Validate(model => model.SectionId).Required(true).GreaterThan(0).ErrorMsg("Section field is required");
 
-            if ((!InstructorId.HasValue) || RoomId <= 0)
-            {
-                hasError = true;
-                yield return new ValidationResult("Instructor field is required", new[] { nameof(InstructorId) });
-            }
+            helper.Validate(model => model.SubjectId).Required(true).GreaterThan(0).ErrorMsg("Subject field is required");
 
-            if ((!Capacity.HasValue) || Capacity <= 0)
-            {
-                hasError = true;
-                yield return new ValidationResult("Capacity field is required and must be greater than to 0(zero)", new[] { nameof(Capacity) });
-            }
+            helper.Validate(model => model.InstructorId).Required(true).GreaterThan(0).ErrorMsg("Instructor field is required");
 
-            if (hasError)
-                yield break;
+            helper.Validate(model => model.Capacity).Required(true).GreaterThan(0).ErrorMsg("Capacity field is required and must be greater than to 0(Zero)");
 
-            List<ValidationResult> result = new List<ValidationResult>();
-            Transaction.Scope(scope =>
+            if (!helper.Failed)
             {
-                foreach (DayOfWeek day in Days)
+                Transaction.Scope(scope =>
                 {
-                    if ((!scope.Service<RoomValidatorService, bool>(service => service.CheckRoomAvailavility(Id, RoomId, (DateTime)TimeStart, (DateTime)TimeEnd, day))))
-                        result.Add(new ValidationResult(string.Format("Room is not available, between {0} to {1}",
-                                ((DateTime)TimeStart).ToShortTimeString(),
-                                ((DateTime)TimeEnd).ToShortTimeString()),
-                                new[] { nameof(RoomId) }));
-                }
-                if ((!scope.Service<SectionValidatorService, bool>(service => service.CheckSectionAvailability(Id, SectionId, (DateTime)TimeStart, (DateTime)TimeEnd, (DayOfWeek)Day))))
-                    result.Add(new ValidationResult(string.Format("Section is not available, between {0} to {1}",
-                                ((DateTime)TimeStart).ToShortTimeString(),
-                                ((DateTime)TimeEnd).ToShortTimeString()),
-                                new[] { nameof(SectionId) }));
-                if ((!scope.Service<InstructorValidatorService, bool>(service => service.CheckInstructorAvailability(Id, InstructorId, (DateTime)TimeStart, (DateTime)TimeEnd, (DayOfWeek)Day))))
-                    result.Add(new ValidationResult(string.Format("Instructor is not available, between {0} to {1}",
-                                ((DateTime)TimeStart).ToShortTimeString(),
-                                ((DateTime)TimeEnd).ToShortTimeString()),
-                                new[] { nameof(InstructorId) }));
-            });
+                    foreach (DayOfWeek day in Days)
+                    {
+                        helper.Validate(model => model.RoomId).IF(!scope.Service<RoomValidatorService, bool>(service => service.CheckRoomAvailavility(
+                            Id, RoomId, (DateTime)TimeStart, (DateTime)TimeEnd, day)))
+                            .ErrorMsg(string.Format("Room is not available, between {0} to {1}",
+                                    ((DateTime)TimeStart).ToShortTimeString(),
+                                    ((DateTime)TimeEnd).ToShortTimeString())
+                            );
 
-            foreach (var i in result)
-                yield return i;
+                        helper.Validate(model => model.SectionId).IF(!scope.Service<SectionValidatorService, bool>(service => service.CheckSectionAvailability(
+                            Id, SectionId, (DateTime)TimeStart, (DateTime)TimeEnd, day)))
+                            .ErrorMsg(string.Format("Section is not available, between {0} to {1}",
+                                    ((DateTime)TimeStart).ToShortTimeString(),
+                                    ((DateTime)TimeEnd).ToShortTimeString())
+                            );
+
+                        helper.Validate(model => model.InstructorId).IF(!scope.Service<InstructorValidatorService, bool>(service => service.CheckInstructorAvailability(
+                            Id, InstructorId, (DateTime)TimeStart, (DateTime)TimeEnd, day)))
+                            .ErrorMsg(string.Format("Instructor is not available, between {0} to {1}",
+                                    ((DateTime)TimeStart).ToShortTimeString(),
+                                    ((DateTime)TimeEnd).ToShortTimeString())
+                            );
+
+                        if (helper.Failed)
+                            break;
+                    }
+                });
+            }
+
+            if (helper.Failed)
+            {
+                foreach (var error in helper.Errors)
+                    yield return error;
+            }
         }
     }
 }
