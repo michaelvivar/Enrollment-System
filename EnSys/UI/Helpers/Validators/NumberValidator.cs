@@ -1,24 +1,29 @@
-﻿namespace UI.Helpers.Validators
+﻿using System;
+
+namespace UI.Helpers.Validators
 {
-    public class NumberValidator<TModel> : Validator<INumberValidator1, INumberValidator2, TModel, int?>, INumberValidator1, INumberValidator2, IValidator_Required<INumberValidator2>
+    public class NumberValidator<TModel> : Validator<INumber_Validator, INumberValidator, TModel, int?>, INumberValidator, IValidator<INumberValidator>
     {
         public NumberValidator(ValidationResultHelper<TModel> helper, IModelProperty<int?> property)
         {
-            Instance1 = this;
-            Instance2 = this;
             _helper = helper;
             _property = property;
         }
+
+        protected override IValidator Instance()
+        {
+            return this;
+        }
     }
 
-    public interface INumberValidator1
+    public interface INumber_Validator : IValidator
     {
-        INumberValidator2 GreaterThan(int num);
-        INumberValidator2 IF(bool expression);
+        INumberValidator GreaterThan(int num);
+        INumberValidator IF(bool expression);
     }
 
-    public interface INumberValidator2 : INumberValidator1
+    public interface INumberValidator : INumber_Validator
     {
-        INumberValidator1 ErrorMsg(string message);
+        INumber_Validator ErrorMsg(string message);
     }
 }

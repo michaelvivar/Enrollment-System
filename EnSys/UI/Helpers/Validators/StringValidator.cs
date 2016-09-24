@@ -1,24 +1,23 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 
 namespace UI.Helpers.Validators
 {
-    public class StringValidator<TModel> : Validator<IStringValidator1, IStringValidator2, TModel, string>, IStringValidator1, IStringValidator2, IValidator_Required<IStringValidator2>
+    public class StringValidator<TModel> : Validator<IString_Validator, IStringValidator, TModel, string>, IStringValidator, IValidator<IStringValidator>
     {
         public StringValidator(IValidationResultHelper<TModel> helper, IModelProperty<string> property)
         {
-            Instance1 = this;
-            Instance2 = this;
             _helper = helper;
             _property = property;
         }
 
-        public IStringValidator2 EmailAddress()
+        public IStringValidator EmailAddress()
         {
             if (!Failed)
                 if ((_property.Value == null) ? IsRequired : !(ValidateEmailAddress(_property.Value)))
                     Failed = true;
 
-            return Instance2;
+            return this;
         }
 
         private bool ValidateEmailAddress(string email)
@@ -26,45 +25,52 @@ namespace UI.Helpers.Validators
             return Regex.IsMatch(email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase);
         }
 
-        public IStringValidator2 NotEmpty()
+        public IStringValidator NotEmpty()
         {
             if (!Failed)
                 if ((_property.Value == null) ? IsRequired : (string.IsNullOrWhiteSpace(_property.Value) || string.IsNullOrEmpty(_property.Value)))
                     Failed = true;
 
-            return Instance2;
+            return this;
         }
 
-        public IStringValidator2 MinLength(int length)
+        public IStringValidator MinLength(int length)
         {
             if (!Failed)
                 if ((_property.Value == null) ? IsRequired : _property.Value.Length < length)
                     Failed = true;
 
-            return Instance2;
+            return this;
         }
 
-        public IStringValidator2 MaxLength(int length)
+        public IStringValidator MaxLength(int length)
         {
             if (!Failed)
                 if ((_property.Value == null) ? IsRequired : _property.Value.Length > length)
                     Failed = true;
 
-            return Instance2;
+            return this;
+        }
+
+        protected override IValidator Instance()
+        {
+            return this;
         }
     }
 
-    public interface IStringValidator1
+
+
+    public interface IString_Validator : IValidator
     {
-        IStringValidator2 NotEmpty();
-        IStringValidator2 EmailAddress();
-        IStringValidator2 MinLength(int length);
-        IStringValidator2 MaxLength(int length);
-        IStringValidator2 IF(bool expression);
+        IStringValidator NotEmpty();
+        IStringValidator EmailAddress();
+        IStringValidator MinLength(int length);
+        IStringValidator MaxLength(int length);
+        IStringValidator IF(bool expression);
     }
 
-    public interface IStringValidator2 : IStringValidator1
+    public interface IStringValidator : IString_Validator
     {
-        IStringValidator1 ErrorMsg(string message);
+        IString_Validator ErrorMsg(string message);
     }
 }

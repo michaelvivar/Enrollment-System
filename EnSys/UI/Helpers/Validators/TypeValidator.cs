@@ -1,25 +1,30 @@
-﻿namespace UI.Helpers.Validators
+﻿using System;
+
+namespace UI.Helpers.Validators
 {
-    public class TypeValidator<TModel, T> : Validator<ITypeValidator1, ITypeValidator2, TModel, T>, ITypeValidator1, ITypeValidator2, IValidator_Required<ITypeValidator2>
+    public class TypeValidator<TModel, T> : Validator<IType_Validator, ITypeValidator, TModel, T>, ITypeValidator, IValidator<ITypeValidator>
     {
         public TypeValidator(ValidationResultHelper<TModel> helper, IModelProperty<T> property)
         {
-            Instance1 = this;
-            Instance2 = this;
             _helper = helper;
             _property = property;
         }
+
+        protected override IValidator Instance()
+        {
+            return this;
+        }
     }
 
-    public interface ITypeValidator1
+    public interface IType_Validator : IValidator
     {
-        ITypeValidator2 GreaterThan(int num);
-        ITypeValidator2 IF(bool expression);
+        ITypeValidator GreaterThan(int num);
+        ITypeValidator IF(bool expression);
     }
 
-    public interface ITypeValidator2 : ITypeValidator1
+    public interface ITypeValidator : IType_Validator
     {
-        ITypeValidator1 ErrorMsg(string message);
+        IType_Validator ErrorMsg(string message);
     }
 
 

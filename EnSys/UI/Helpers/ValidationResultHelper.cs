@@ -8,10 +8,10 @@ namespace UI.Helpers
 {
     public interface IValidationResultHelper<TModel>
     {
-        IValidator_Required<IStringValidator2> Validate(Expression<Func<TModel, string>> property);
-        IValidator_Required<IDateTimeValidator2> Validate(Expression<Func<TModel, DateTime?>> property);
-        IValidator_Required<INumberValidator2> Validate(Expression<Func<TModel, int?>> property);
-        IValidator_Required<ITypeValidator2> Validate<T>(Expression<Func<TModel, T>> property);
+        IValidator<IStringValidator> Validate(Expression<Func<TModel, string>> property);
+        IValidator<IDateTimeValidator> Validate(Expression<Func<TModel, DateTime?>> property);
+        IValidator<INumberValidator> Validate(Expression<Func<TModel, int?>> property);
+        IValidator<ITypeValidator> Validate<T>(Expression<Func<TModel, T>> property);
         IConditionValidator IF(bool expression);
 
         List<ValidationResult> Errors { get; set; }
@@ -78,25 +78,25 @@ namespace UI.Helpers
         {
             return new ConditionValidator(this).IF(expression);
         }
-        public IValidator_Required<IStringValidator2> Validate(Expression<Func<TModel, string>> property)
+        public IValidator<IStringValidator> Validate(Expression<Func<TModel, string>> property)
         {
             string name = GetPropertyName(property);
             string value = GetPropertyValue<string>(name);
             return new StringValidator<TModel>(this, new ModelProperty<string> { Name = name, Value = value });
         }
-        public IValidator_Required<INumberValidator2> Validate(Expression<Func<TModel, int?>> property)
+        public IValidator<INumberValidator> Validate(Expression<Func<TModel, int?>> property)
         {
             string name = GetPropertyName(property);
             int? value = GetPropertyValue<int?>(name);
             return new NumberValidator<TModel>(this, new ModelProperty<int?> { Name = name, Value = value });
         }
-        public IValidator_Required<IDateTimeValidator2> Validate(Expression<Func<TModel, DateTime?>> property)
+        public IValidator<IDateTimeValidator> Validate(Expression<Func<TModel, DateTime?>> property)
         {
             string name = GetPropertyName(property);
             DateTime? value = GetPropertyValue<DateTime?>(name);
             return new DateTimeValidator<TModel>(this, new ModelProperty<DateTime?> { Name = name, Value = value });
         }
-        public IValidator_Required<ITypeValidator2> Validate<T>(Expression<Func<TModel, T>> property)
+        public IValidator<ITypeValidator> Validate<T>(Expression<Func<TModel, T>> property)
         {
             string name = GetPropertyName(property);
             T value = GetPropertyValue<T>(name);
