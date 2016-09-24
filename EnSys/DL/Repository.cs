@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DL
 {
-    public class Repository<TEntity> : IRepository<TEntity>, IRepository_Save<TEntity> where TEntity : class
+    public class Repository<TEntity> : IRepository<TEntity>, IRepository where TEntity : class
     {
         private DbContext Context { get; set; }
         public Repository(DbContext context)
@@ -16,25 +16,25 @@ namespace DL
             Context = context;
         }
 
-        public IRepository_Save<TEntity> Add(TEntity entity)
+        public IRepository Add(TEntity entity)
         {
             Context.Set<TEntity>().Add(entity);
             return this;
         }
 
-        public IRepository_Save<TEntity> AddRange(IEnumerable<TEntity> entities)
+        public IRepository AddRange(IEnumerable<TEntity> entities)
         {
             Context.Set<TEntity>().AddRange(entities);
             return this;
         }
 
-        public IRepository_Save<TEntity> Update(TEntity entity)
+        public IRepository Update(TEntity entity)
         {
             Context.Entry(entity).State = EntityState.Modified;
             return this;
         }
 
-        public IRepository_Save<TEntity> Update(TEntity entity, params Expression<Func<TEntity, object>>[] properties)
+        public IRepository Update(TEntity entity, params Expression<Func<TEntity, object>>[] properties)
         {
             var entry = Context.Entry(entity);
             entry.State = EntityState.Modified;
@@ -45,7 +45,7 @@ namespace DL
             return this;
         }
 
-        public IRepository_Save<TEntity> Set(TEntity entity, params Expression<Func<TEntity, object>>[] properties)
+        public IRepository Set(TEntity entity, params Expression<Func<TEntity, object>>[] properties)
         {
             var entry = Context.Entry(entity);
             Context.Set<TEntity>().Attach(entity);
@@ -56,13 +56,13 @@ namespace DL
             return this;
         }
 
-        public IRepository_Save<TEntity> Remove(TEntity entity)
+        public IRepository Remove(TEntity entity)
         {
             Context.Set<TEntity>().Remove(entity);
             return this;
         }
 
-        public IRepository_Save<TEntity> RemoveRange(IEnumerable<TEntity> entities)
+        public IRepository RemoveRange(IEnumerable<TEntity> entities)
         {
             Context.Set<TEntity>().RemoveRange(entities);
             return this;
@@ -91,19 +91,19 @@ namespace DL
 
     public interface IRepository<TEntity>
     {
-        IRepository_Save<TEntity> Add(TEntity entity);
-        IRepository_Save<TEntity> AddRange(IEnumerable<TEntity> entities);
-        IRepository_Save<TEntity> Update(TEntity entity);
-        IRepository_Save<TEntity> Update(TEntity entity, params Expression<Func<TEntity, object>>[] properties);
-        IRepository_Save<TEntity> Set(TEntity entity, params Expression<Func<TEntity, object>>[] properties);
-        IRepository_Save<TEntity> Remove(TEntity entity);
-        IRepository_Save<TEntity> RemoveRange(IEnumerable<TEntity> entities);
+        IRepository Add(TEntity entity);
+        IRepository AddRange(IEnumerable<TEntity> entities);
+        IRepository Update(TEntity entity);
+        IRepository Update(TEntity entity, params Expression<Func<TEntity, object>>[] properties);
+        IRepository Set(TEntity entity, params Expression<Func<TEntity, object>>[] properties);
+        IRepository Remove(TEntity entity);
+        IRepository RemoveRange(IEnumerable<TEntity> entities);
         TEntity Get(int id);
         IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate);
         TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate);
     }
 
-    public interface IRepository_Save<TEntity>
+    public interface IRepository
     {
         void Save();
     }
