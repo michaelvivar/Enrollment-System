@@ -6,9 +6,9 @@ namespace BL.Dto
     {
         public int Id { get; set; }
         public string Number { get; set; }
-        public int? Capacity { get; set; }
+        public int Capacity { get; set; }
         public string Remarks { get; set; }
-        public Status? Status { get; set; }
+        public Status Status { get; set; }
     }
 
     public interface IRoom
@@ -16,7 +16,7 @@ namespace BL.Dto
         int Id { get; set; }
         string Number { get; set; }
         string Remarks { get; set; }
-        int? Capacity { get; set; }
-        Status? Status { get; set; }
+        int Capacity { get; set; }
+        Status Status { get; set; }
     }
 }
