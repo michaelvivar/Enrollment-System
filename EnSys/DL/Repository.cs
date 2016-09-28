@@ -78,11 +78,6 @@ namespace DL
             return Context.Set<TEntity>().Where(predicate);
         }
 
-        public TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
-        {
-            return Context.Set<TEntity>().SingleOrDefault(predicate);
-        }
-
         public void Save()
         {
             Context.SaveChanges();
@@ -100,7 +95,6 @@ namespace DL
         IRepository RemoveRange(IEnumerable<TEntity> entities);
         TEntity Get(int id);
         IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate);
-        TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate);
     }
 
     public interface IRepository
