@@ -3,7 +3,9 @@ using BL.Dto;
 using BL.Services;
 using System.Linq;
 using System.Web.Mvc;
+using UI.Filters;
 using UI.Models;
+using UI.Validators;
 
 namespace UI.Controllers
 {
@@ -34,14 +36,11 @@ namespace UI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(ValidateRoomModel model)
+        [ValidateModel(Validator = typeof(RoomModelValidator))]
+        public ActionResult Create(RoomModel model)
         {
-            if (ModelState.IsValid)
-            {
-                Transaction.Scope(scope => scope.Service<RoomService>(service => service.AddRoom(model)));
-                return JsonUrlSuccess(Url.Action("Index"));
-            }
-            return JsonFormError(ModelState);
+            Transaction.Scope(scope => scope.Service<RoomService>(service => service.AddRoom(model)));
+            return JsonUrlSuccess(Url.Action("Index"));
         }
          
         [HttpGet]
@@ -51,14 +50,11 @@ namespace UI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(ValidateRoomModel model)
+        [ValidateModel(Validator = typeof(RoomModelValidator))]
+        public ActionResult Edit(RoomModel model)
         {
-            if (ModelState.IsValid)
-            {
-                Transaction.Scope(scope => scope.Service<RoomService>(service => service.UpdateRoom(model)));
-                return JsonUrlSuccess(Url.Action("Index"));
-            }
-            return JsonFormError(ModelState);
+            Transaction.Scope(scope => scope.Service<RoomService>(service => service.UpdateRoom(model)));
+            return JsonUrlSuccess(Url.Action("Index"));
         }
 
         public JsonResult Delete(int id)
