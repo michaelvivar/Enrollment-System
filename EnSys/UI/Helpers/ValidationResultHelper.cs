@@ -15,6 +15,7 @@ namespace UI.Helpers
         IConditionValidator IF(bool expression);
 
         List<ValidationResult> Errors { get; set; }
+        List<KeyValuePair<string, string>> ErrorMessages { get; set; }
         bool Failed { get; set; }
     }
 
@@ -22,10 +23,12 @@ namespace UI.Helpers
     {
         public bool Failed { get; set; }
         public List<ValidationResult> Errors { get; set; }
+        public List<KeyValuePair<string, string>> ErrorMessages { get; set; }
 
         public void AddError(string message, string property)
         {
             Errors.Add(new ValidationResult(message, new[] { property }));
+            ErrorMessages.Add(new KeyValuePair<string, string>(property, message));
             Failed = true;
         }
     }
@@ -33,7 +36,7 @@ namespace UI.Helpers
     public class ValidationResultHelper<TModel> : ValidationResultHelper, IValidationResultHelper<TModel>
     {
         private readonly TModel Model;
-        public ValidationResultHelper(TModel model) { Model = model; Errors = new List<ValidationResult>(); }
+        public ValidationResultHelper(TModel model) { Model = model; Errors = new List<ValidationResult>(); ErrorMessages = new List<KeyValuePair<string, string>>(); }
 
         private string GetPropertyName<T>(Expression<Func<TModel, T>> expression)
         {
